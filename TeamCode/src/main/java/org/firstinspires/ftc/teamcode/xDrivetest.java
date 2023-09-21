@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
 
 @TeleOp
     public class xDrivetest extends LinearOpMode {
@@ -49,7 +51,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
             left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            Imu imu = new Imu(this);
+            Imu imu = new Imu(hardwareMap, RevHubOrientationOnRobot.UsbFacingDirection.UP, RevHubOrientationOnRobot.LogoFacingDirection.FORWARD);
 
             float powerFactor = 1.0f;
             Vec2 prevVel = new Vec2(0,0);
