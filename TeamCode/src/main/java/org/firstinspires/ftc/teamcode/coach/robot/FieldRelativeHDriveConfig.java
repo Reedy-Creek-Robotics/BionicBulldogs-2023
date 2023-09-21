@@ -4,13 +4,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 public class FieldRelativeHDriveConfig extends HDriveConfig {
-    IMU imu;
+    public IMU imu;
 
     public FieldRelativeHDriveConfig(HardwareMap hardwareMap) {
         super(hardwareMap);
-    }
-
-    public IMU imu() {
-        return this.hardwareMap.get(IMU.class, "imu");
+        this.imu = hardwareMap.get(IMU.class, "imu");
     }
 }

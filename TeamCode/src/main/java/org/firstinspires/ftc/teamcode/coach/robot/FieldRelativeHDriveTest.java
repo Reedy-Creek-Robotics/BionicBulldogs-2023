@@ -12,17 +12,18 @@ public class FieldRelativeHDriveTest extends OpMode {
     public void init() {
         FieldRelativeHDriveConfig config = new FieldRelativeHDriveConfig(hardwareMap);
         this.hDrive = new FieldRelativeHDrive(
-            config.getDriveFront(),
-            config.getDriveBack(),
-            config.getDriveLeft(),
-            config.getDriveRight(),
-            config.imu()
+            config.front,
+            config.back,
+            config.left,
+            config.right,
+            config.imu
         );
         this.hDrive.initialize();
     }
 
     @Override
     public void loop() {
+        // TODO: need heading
         float forwardBackward = -gamepad1.left_stick_y;
         float leftRight = gamepad1.left_stick_x;
         float rotate = -gamepad1.right_stick_x;
