@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.modules.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.config.RobotConfig;
+import org.firstinspires.ftc.teamcode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 
 public class XDrive implements HDrive {
@@ -13,11 +12,11 @@ public class XDrive implements HDrive {
     DcMotor left;
     DcMotor right;
 
-    public void init(HardwareMap hmap){
-        front = RobotConfig.getFront(hmap);
-        back = RobotConfig.getBack(hmap);
-        left = RobotConfig.getLeft(hmap);
-        right = RobotConfig.getRight(hmap);
+    public void init(XDriveConfig config){
+        front = config.getFront();
+        back = config.getBack();
+        left = config.getLeft();
+        right = config.getRight();
 
         motors.addMotor(front);
         motors.addMotor(back);
