@@ -8,7 +8,7 @@ public class HDriveTest extends OpMode {
     @Override
     public void init() {
         HDriveConfig config = new HDriveConfig(hardwareMap);
-        this.hDrive = new HDrive(config.getDriveFront(), config.getDriveBack(), config.getDriveLeft(), config.getDriveRight());
+        this.hDrive = new HDrive(config.front, config.back, config.left, config.right);
         this.hDrive.initialize();
     }
 

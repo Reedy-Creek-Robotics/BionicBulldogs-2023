@@ -8,30 +8,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * This is for a simple test
  */
 public class HDriveConfig {
-    public final static String MOTOR_DRIVE_FRONT = "front";
-    public final static String MOTOR_DRIVE_BACK = "back";
-    public final static String MOTOR_DRIVE_LEFT = "left";
-    public final static String MOTOR_DRIVE_RIGHT = "right";
-
-    HardwareMap hardwareMap;
+    public DcMotorEx front;
+    public DcMotorEx back;
+    public DcMotorEx left;
+    public DcMotorEx right;
 
     public HDriveConfig(HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
-    }
-
-    public DcMotorEx getDriveFront() {
-        return (DcMotorEx) this.hardwareMap.dcMotor.get(MOTOR_DRIVE_FRONT);
-    }
-
-    public DcMotorEx getDriveBack() {
-        return (DcMotorEx) this.hardwareMap.dcMotor.get(MOTOR_DRIVE_BACK);
-    }
-
-    public DcMotorEx getDriveLeft() {
-        return (DcMotorEx) this.hardwareMap.dcMotor.get(MOTOR_DRIVE_LEFT);
-    }
-
-    public DcMotorEx getDriveRight() {
-        return (DcMotorEx) this.hardwareMap.dcMotor.get(MOTOR_DRIVE_RIGHT);
+        this.front = (DcMotorEx) hardwareMap.dcMotor.get("front");
+        this.back = (DcMotorEx) hardwareMap.dcMotor.get("back");
+        this.left = (DcMotorEx) hardwareMap.dcMotor.get("left");
+        this.right = (DcMotorEx) hardwareMap.dcMotor.get("right");
     }
 }
