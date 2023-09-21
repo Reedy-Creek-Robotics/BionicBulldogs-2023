@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
 
 @TeleOp
     public class xDrivetest extends LinearOpMode {
@@ -25,7 +23,7 @@ import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
         }
         public void runOpMode(){
 
-            telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+            //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
             DcMotor front = hardwareMap.dcMotor.get("front");
             DcMotor back = hardwareMap.dcMotor.get("back");
             DcMotor left = hardwareMap.dcMotor.get("left");
@@ -51,7 +49,7 @@ import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
             left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            Imu imu = new Imu(hardwareMap, RevHubOrientationOnRobot.UsbFacingDirection.UP, RevHubOrientationOnRobot.LogoFacingDirection.FORWARD);
+            //Imu imu = new Imu(this);
 
             float powerFactor = 1.0f;
             Vec2 prevVel = new Vec2(0,0);
@@ -63,7 +61,7 @@ import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
             float brEnc = 0;
             ElapsedTime e = new ElapsedTime();
             while(opModeIsActive()){
-                float angle = imu.getHeading(AngleUnit.RADIANS);
+                //float angle = imu.getHeading(AngleUnit.RADIANS);
                 float forward = -gamepad1.left_stick_y;
                 float strafe = gamepad1.left_stick_x;
                 float rotate = -gamepad1.right_stick_x * powerFactor;
@@ -126,7 +124,7 @@ import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
                 telemetry.addData("frPwr", (vel.x * powerFactor) - (vel.y * powerFactor) - rotate);
                 telemetry.addData("blPwr", (vel.x * powerFactor) - (vel.y * powerFactor) + rotate);
                 telemetry.addData("brPwr", (vel.x * powerFactor) + (vel.y * powerFactor) - rotate);
-                telemetry.addData("heading", imu.getHeading(AngleUnit.DEGREES));
+                //telemetry.addData("heading", imu.getHeading(AngleUnit.DEGREES));
                 //telemetry.addData("vel: ", vel.x + ", " + vel.y);
                 //telemetry.addData("prevVel: ", prevVel.x + ", " + prevVel.y);
                 flEnc = currentFlEnc;

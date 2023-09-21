@@ -13,7 +13,7 @@ public class HDriveConfig {
     public final static String MOTOR_DRIVE_LEFT = "left";
     public final static String MOTOR_DRIVE_RIGHT = "right";
 
-    private HardwareMap hardwareMap;
+    HardwareMap hardwareMap;
 
     public HDriveConfig(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
