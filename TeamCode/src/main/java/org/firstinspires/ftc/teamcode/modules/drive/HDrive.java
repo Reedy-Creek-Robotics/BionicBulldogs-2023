@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules.drive;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.config.XDriveConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 
 public interface HDrive {
     void init(XDriveConfig config);

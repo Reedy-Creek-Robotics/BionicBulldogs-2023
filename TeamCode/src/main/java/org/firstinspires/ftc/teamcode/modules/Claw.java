@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.config.ClawConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 
 public class Claw {
     float topClose = 1;

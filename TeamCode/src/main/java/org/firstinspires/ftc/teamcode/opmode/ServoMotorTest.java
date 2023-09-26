@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.config.ServoMotorTestConfig;
-import org.firstinspires.ftc.teamcode.config.XDriveConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.ServoMotorTestConfig;
+
 @TeleOp
 public class ServoMotorTest extends LinearOpMode {
     public void runOpMode(){
