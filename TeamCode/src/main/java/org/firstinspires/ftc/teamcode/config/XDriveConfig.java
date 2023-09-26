@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.config;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
@@ -28,7 +29,7 @@ public class XDriveConfig {
     public DcMotor getRight(){
         return hw.dcMotor.get(right);
     }
-    public Imu getImu(){
-        return new Imu(hw);
+    public IMU getImu(){
+        return hw.get(IMU.class, "imu");
     }
 }

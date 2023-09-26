@@ -11,14 +11,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Imu {
     IMU imu;
 
-    public Imu(HardwareMap hmap, RevHubOrientationOnRobot.UsbFacingDirection usb, RevHubOrientationOnRobot.LogoFacingDirection logo) {
-        imu = hmap.get(IMU.class, "imu");
+    public Imu(IMU _imu, RevHubOrientationOnRobot.UsbFacingDirection usb, RevHubOrientationOnRobot.LogoFacingDirection logo) {
+        imu = _imu;
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(logo, usb)));
         imu.resetYaw();
     }
 
-    public Imu(HardwareMap hmap) {
-        imu = hmap.get(IMU.class, "imu");
+    public Imu(IMU _imu) {
+        imu = _imu;
         imu.initialize(
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
@@ -35,6 +35,7 @@ public class Imu {
     }
 
     public float getHeading(AngleUnit unit) {
-        return imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, unit).secondAngle;
+        return (float)imu.getRobotYawPitchRollAngles().getYaw(unit);
+        //return imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, unit).secondAngle;
     }
 }

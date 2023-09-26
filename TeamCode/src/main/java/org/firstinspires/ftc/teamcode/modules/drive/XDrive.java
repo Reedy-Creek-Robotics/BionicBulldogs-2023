@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.modules.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
@@ -36,7 +37,7 @@ public class XDrive implements HDrive {
         motors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motors.setZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        imu = config.getImu();
+        imu = new Imu(config.getImu());
     }
 
     public void update(float forward, float strafe, float rotate){
@@ -56,5 +57,10 @@ public class XDrive implements HDrive {
         back.setPower(strafe - rotate);
         left.setPower(forward - rotate);
         right.setPower(forward + rotate);
+    }
+    public void telem(Telemetry t){
+        t.addData("rad", imu.getHeading(AngleUnit.RADIANS));
+        t.addData("deg", imu.getHeading(AngleUnit.DEGREES));
+        t.update();
     }
 }
