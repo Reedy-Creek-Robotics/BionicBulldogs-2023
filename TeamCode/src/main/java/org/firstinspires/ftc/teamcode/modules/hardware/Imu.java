@@ -8,16 +8,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-public class Imu {
+public class ImuEx {
     IMU imu;
 
-    public Imu(IMU _imu, RevHubOrientationOnRobot.UsbFacingDirection usb, RevHubOrientationOnRobot.LogoFacingDirection logo) {
+    public ImuEx(IMU _imu, RevHubOrientationOnRobot.UsbFacingDirection usb, RevHubOrientationOnRobot.LogoFacingDirection logo) {
         imu = _imu;
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(logo, usb)));
         imu.resetYaw();
     }
 
-    public Imu(IMU _imu) {
+    public ImuEx(IMU _imu) {
         imu = _imu;
         imu.initialize(
                 new IMU.Parameters(

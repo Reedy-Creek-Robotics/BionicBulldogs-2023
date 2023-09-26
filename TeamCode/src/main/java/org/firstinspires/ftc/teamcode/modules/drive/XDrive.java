@@ -15,6 +15,8 @@ public class XDrive implements HDrive {
     DcMotor back;
     DcMotor left;
     DcMotor right;
+    float f;
+    float r;
     Imu imu;
 
     public void init(XDriveConfig config){
@@ -51,16 +53,20 @@ public class XDrive implements HDrive {
     }
 
     public void updateFR(float forward, float strafe, float rotate, float heading){
-        forward = (float)(forward * Math.cos(heading) - strafe * Math.sin(heading));
-        strafe = (float)(forward * Math.sin(heading) + strafe * Math.cos(heading));
-        front.setPower(strafe + rotate);
-        back.setPower(strafe - rotate);
-        left.setPower(forward - rotate);
-        right.setPower(forward + rotate);
+        f = (float)(forward * Math.cos(heading) - strafe * Math.sin(heading));
+        r = (float)(forward * Math.sin(heading) + strafe * Math.cos(heading));
+        front.setPower(r + rotate);
+        back.setPower(r - rotate);
+        left.setPower(f - rotate);
+        right.setPower(f + rotate);
+        f = forward;
+        r = strafe;
     }
     public void telem(Telemetry t){
         t.addData("rad", imu.getHeading(AngleUnit.RADIANS));
         t.addData("deg", imu.getHeading(AngleUnit.DEGREES));
+        t.addData("forward", f);
+        t.addData("strafe", r);
         t.update();
     }
 }
