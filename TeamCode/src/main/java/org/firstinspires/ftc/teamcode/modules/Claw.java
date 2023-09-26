@@ -9,27 +9,34 @@ public class Claw {
     float topOpen = 0.5f;
     float sideClose = 0;
     float sideOpen = 0.1f;
+
     Servo top;
     Servo side;
-    public Claw(ClawConfig config){
+
+    public Claw(ClawConfig config) {
         top = config.getTop();
         side = config.getSide();
         top.setDirection(Servo.Direction.FORWARD);
         side.setDirection(Servo.Direction.FORWARD);
     }
-    public void openTop(){
+
+    public void openTop() {
         top.setPosition(topOpen);
     }
-    public void openSide(){
+
+    public void openSide() {
         side.setPosition(sideOpen);
     }
-    public void closeTop(){
+
+    public void closeTop() {
         top.setPosition(topClose);
     }
-    public void closeSide(){
+
+    public void closeSide() {
         side.setPosition(sideClose);
     }
-    public void openSideForTime(){
+
+    public void openSideForTime() {
 
     }
 }

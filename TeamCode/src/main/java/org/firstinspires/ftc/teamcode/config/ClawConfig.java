@@ -6,13 +6,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class ClawConfig {
     HardwareMap hw;
-    public ClawConfig(HardwareMap hmap){
+
+    public ClawConfig(HardwareMap hmap) {
         hw = hmap;
     }
-    public Servo getTop(){
+
+    public Servo getTop() {
         return hw.servo.get("top");
     }
-    public Servo getSide(){
+
+    public Servo getSide() {
         return hw.servo.get("side");
     }
 }

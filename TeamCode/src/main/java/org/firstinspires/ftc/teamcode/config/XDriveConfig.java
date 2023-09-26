@@ -4,13 +4,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
+
 public class XDriveConfig {
     String front = "front";
     String back = "back";
     String left  = "left";
     String right = "right";
+
     HardwareMap hw;
+
     public XDriveConfig(HardwareMap hmap){hw = hmap;}
+
     public DcMotor getFront(){
         return hw.dcMotor.get(front);
     }
@@ -22,5 +27,8 @@ public class XDriveConfig {
     }
     public DcMotor getRight(){
         return hw.dcMotor.get(right);
+    }
+    public Imu getImu(){
+        return new Imu(hw);
     }
 }

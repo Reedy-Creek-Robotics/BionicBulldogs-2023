@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.modules.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.XDriveConfig;
+import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 
 public class XDrive implements HDrive {
@@ -11,6 +14,7 @@ public class XDrive implements HDrive {
     DcMotor back;
     DcMotor left;
     DcMotor right;
+    Imu imu;
 
     public void init(XDriveConfig config){
         front = config.getFront();
@@ -18,6 +22,12 @@ public class XDrive implements HDrive {
         left = config.getLeft();
         right = config.getRight();
 
+        front.setDirection(DcMotorSimple.Direction.FORWARD);
+        back.setDirection(DcMotorSimple.Direction.REVERSE);
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
+        right.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motors = new MotorGroup();
         motors.addMotor(front);
         motors.addMotor(back);
         motors.addMotor(left);
@@ -25,16 +35,23 @@ public class XDrive implements HDrive {
 
         motors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motors.setZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        imu = config.getImu();
     }
+
     public void update(float forward, float strafe, float rotate){
         front.setPower(strafe + rotate);
         back.setPower(strafe - rotate);
         left.setPower(forward - rotate);
         right.setPower(forward + rotate);
     }
+    public void updateFR(float forward, float strafe, float rotate){
+        updateFR(forward, strafe, rotate, imu.getHeading(AngleUnit.RADIANS));
+    }
+
     public void updateFR(float forward, float strafe, float rotate, float heading){
-        forward = (float) -(forward * Math.cos(heading) - strafe * Math.sin(heading));
-        strafe = (float) -(forward * Math.sin(heading) + strafe * Math.cos(heading));
+        forward = (float)(forward * Math.cos(heading) - strafe * Math.sin(heading));
+        strafe = (float)(forward * Math.sin(heading) + strafe * Math.cos(heading));
         front.setPower(strafe + rotate);
         back.setPower(strafe - rotate);
         left.setPower(forward - rotate);
