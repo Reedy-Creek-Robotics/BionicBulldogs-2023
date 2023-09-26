@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.config.XDriveConfig;
-import org.firstinspires.ftc.teamcode.modules.hardware.Imu;
+import org.firstinspires.ftc.teamcode.modules.hardware.ImuEx;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 
 public class XDrive implements HDrive {
@@ -17,7 +17,7 @@ public class XDrive implements HDrive {
     DcMotor right;
     float f;
     float r;
-    Imu imu;
+    ImuEx imu;
 
     public void init(XDriveConfig config){
         front = config.getFront();
@@ -39,7 +39,7 @@ public class XDrive implements HDrive {
         motors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motors.setZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        imu = new Imu(config.getImu());
+        imu = new ImuEx(config.getImu());
     }
 
     public void update(float forward, float strafe, float rotate){
