@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 
-public class Claw {
+public class Claw implements ClawSample {
     float topClose = 1;
     float topOpen = 0.5f;
     float sideClose = 0;
@@ -20,18 +20,22 @@ public class Claw {
         side.setDirection(Servo.Direction.FORWARD);
     }
 
+    @Override
     public void openTop() {
         top.setPosition(topOpen);
     }
 
+    @Override
     public void openSide() {
         side.setPosition(sideOpen);
     }
 
+    @Override
     public void closeTop() {
         top.setPosition(topClose);
     }
 
+    @Override
     public void closeSide() {
         side.setPosition(sideClose);
     }
