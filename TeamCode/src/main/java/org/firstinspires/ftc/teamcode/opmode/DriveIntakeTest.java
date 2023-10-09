@@ -6,21 +6,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.modules.Intake;
-import org.firstinspires.ftc.teamcode.modules.drive.HDrive;
+import org.firstinspires.ftc.teamcode.modules.robot.Intake;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.opmode.config.DriveIntakeConfig;
-import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 
 @TeleOp
 public class DriveIntakeTest extends LinearOpMode {
     public void runOpMode() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         DriveIntakeConfig driveIntakeConfig = new DriveIntakeConfig(hardwareMap);
-        HDrive drive = new XDrive();
+        XDrive drive = new XDrive();
         drive.init(driveIntakeConfig);
 
-        Intake intake = new Intake(driveIntakeConfig);
+        Intake intake = new Intake(driveIntakeConfig.getMotor());
         waitForStart();
         float intakePwr = 0.8f;
 

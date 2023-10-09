@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.coach.robot.MecanumDrive;
+import org.firstinspires.ftc.teamcode.modules.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.hardware.ImuEx;
 
 @TeleOp(name = "Self HDriveTeleop")

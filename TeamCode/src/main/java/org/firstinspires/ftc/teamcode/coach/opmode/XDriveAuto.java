@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.coach.robot.MecanumDrive;
+import org.firstinspires.ftc.teamcode.modules.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.hardware.ImuEx;
 
 @Autonomous(name = "XDriveAuto")

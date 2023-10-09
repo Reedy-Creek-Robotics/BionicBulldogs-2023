@@ -4,14 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
-import org.firstinspires.ftc.teamcode.modules.drive.HDrive;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 
 @TeleOp
 public class XDriveTest extends LinearOpMode {
     public void runOpMode() {
         XDriveConfig xDriveConfig = new XDriveConfig(hardwareMap);
-        HDrive drive = new XDrive();
+        XDrive drive = new XDrive();
         drive.init(xDriveConfig);
         waitForStart();
         while (opModeIsActive()) {
