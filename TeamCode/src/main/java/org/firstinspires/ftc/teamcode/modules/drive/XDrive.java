@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.modules.hardware.ImuEx;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 
-public class XDrive implements HDrive {
+public class XDrive {
     MotorGroup motors;
     DcMotor front;
     DcMotor back;
