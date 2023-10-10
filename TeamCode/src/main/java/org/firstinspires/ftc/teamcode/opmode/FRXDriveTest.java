@@ -19,8 +19,9 @@ public class FRXDriveTest extends LinearOpMode {
             float forward = -gamepad1.left_stick_y;
             float right = gamepad1.left_stick_x;
             float rotate = -gamepad1.right_stick_x;
-            drive.updateFR(forward, right, rotate);
+            drive.driveCH(forward, right, rotate);
             drive.telem(telemetry);
+            telemetry.update();
         }
     }
 }

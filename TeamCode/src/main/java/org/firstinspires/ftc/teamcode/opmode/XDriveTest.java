@@ -17,7 +17,9 @@ public class XDriveTest extends LinearOpMode {
             float forward = -gamepad1.left_stick_y;
             float right = gamepad1.left_stick_x;
             float rotate = -gamepad1.right_stick_x;
-            drive.update(forward, right, rotate);
+            drive.drive(forward, right, rotate);
+            drive.telem(telemetry);
+            telemetry.update();
         }
     }
 }

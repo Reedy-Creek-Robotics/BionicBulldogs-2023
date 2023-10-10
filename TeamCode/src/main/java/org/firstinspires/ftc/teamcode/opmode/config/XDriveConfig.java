@@ -5,26 +5,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 public class XDriveConfig {
-    String front = "front";
-    String back = "back";
-    String left  = "left";
-    String right = "right";
+    String frontLeft = "frontLeft";
+    String frontRight = "frontRight";
+    String backLeft  = "backLeft";
+    String backRight = "backRight";
 
     HardwareMap hw;
 
     public XDriveConfig(HardwareMap hmap){hw = hmap;}
 
-    public DcMotor getFront(){
-        return hw.dcMotor.get(front);
+    public DcMotor getFrontLeft(){
+        return hw.dcMotor.get(frontLeft);
     }
-    public DcMotor getBack(){
-        return hw.dcMotor.get(back);
+    public DcMotor getFrontRight(){
+        return hw.dcMotor.get(frontRight);
     }
-    public DcMotor getLeft(){
-        return hw.dcMotor.get(left);
+    public DcMotor getBackLeft(){
+        return hw.dcMotor.get(backLeft);
     }
-    public DcMotor getRight(){
-        return hw.dcMotor.get(right);
+    public DcMotor getBackRight(){
+        return hw.dcMotor.get(backRight);
     }
     public IMU getImu(){
         return hw.get(IMU.class, "imu");
