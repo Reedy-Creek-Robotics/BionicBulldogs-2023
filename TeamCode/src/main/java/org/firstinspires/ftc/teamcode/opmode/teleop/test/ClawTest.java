@@ -11,7 +11,7 @@ public class ClawTest extends BaseTeleOp {
     Claw claw;
 
     public void init() {
-        baseInit();
+        super.init();
         ClawConfig config = new ClawConfig(hardwareMap);
         claw = new Claw(config);
     }

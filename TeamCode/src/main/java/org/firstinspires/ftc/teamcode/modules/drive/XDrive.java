@@ -25,8 +25,8 @@ public class XDrive {
         backLeft = config.getBackLeft();
         backRight = config.getBackRight();
 
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -63,6 +63,8 @@ public class XDrive {
         backLeft.setPower(forward - strafe + rotate);
         frontRight.setPower(forward - strafe - rotate);
         backRight.setPower(forward + strafe - rotate);
+        f = forward;
+        r = strafe;
     }
 
     public void telem(Telemetry t){

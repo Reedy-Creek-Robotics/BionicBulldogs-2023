@@ -18,7 +18,7 @@ public class DriveIntakeTest extends BaseTeleOp {
     Intake intake;
     float intakePwr = 0.8f;
     public void init() {
-        baseInit();
+        super.init();
 
         IntakeConfig intakeConfig = new IntakeConfig(hardwareMap);
         XDriveConfig xDriveConfig = new XDriveConfig(hardwareMap);

@@ -13,7 +13,7 @@ public abstract class BaseTeleOp extends OpMode {
     /**
      * inits gamepads and telemetry for dashboard
      */
-    public final void baseInit(){
+    public void init(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
