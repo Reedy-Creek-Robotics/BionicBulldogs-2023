@@ -29,6 +29,7 @@ public class DriveIntakeTest extends BaseTeleOp {
         intake = new Intake(intakeConfig);
     }
     public void loop(){
+        copyGamepads();
         float forward = -gamepadEx1.leftStickY();
         float right = gamepadEx1.leftStickX();
         float rotate = -gamepadEx1.rightStickY();
@@ -55,6 +56,5 @@ public class DriveIntakeTest extends BaseTeleOp {
         }
         telemetry.addData("Intakes Power", intakePwr);
         telemetry.update();
-        copyGamepads();
     }
 }

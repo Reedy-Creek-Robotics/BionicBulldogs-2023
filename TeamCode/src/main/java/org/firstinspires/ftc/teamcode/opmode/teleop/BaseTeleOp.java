@@ -18,7 +18,6 @@ public abstract class BaseTeleOp extends OpMode {
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
     }
-
     /**
      * copies gamepads for rising edge detection
      */

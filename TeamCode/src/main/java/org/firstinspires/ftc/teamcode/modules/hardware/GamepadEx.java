@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class GamepadEx {
     Gamepad gamepad;
+    Gamepad curGamepad;
     Gamepad prevGamepad;
     public GamepadEx(Gamepad _gamepad){
         gamepad = _gamepad;
+        curGamepad.copy(gamepad);
         prevGamepad = new Gamepad();
     }
 
@@ -14,7 +16,8 @@ public class GamepadEx {
      * copy gamepad for rising edge detection
      */
     public void copy(){
-        prevGamepad.copy(gamepad);
+        prevGamepad.copy(curGamepad);
+        curGamepad.copy(gamepad);
     }
 
     // buttons
@@ -60,16 +63,16 @@ public class GamepadEx {
 
     //sticks
     public float leftStickX(){
-        return gamepad.right_stick_x;
-    }
-    public float leftStickY(){
-        return gamepad.right_stick_y;
-    }
-    public float rightStickX(){
         return gamepad.left_stick_x;
     }
-    public float rightStickY(){
+    public float leftStickY(){
         return gamepad.left_stick_y;
+    }
+    public float rightStickX(){
+        return gamepad.right_stick_x;
+    }
+    public float rightStickY(){
+        return gamepad.right_stick_y;
     }
 
     //triggers

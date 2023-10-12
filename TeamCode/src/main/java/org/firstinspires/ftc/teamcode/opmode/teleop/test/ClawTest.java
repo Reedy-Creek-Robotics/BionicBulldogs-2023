@@ -17,6 +17,7 @@ public class ClawTest extends BaseTeleOp {
     }
 
     public void loop() {
+        copyGamepads();
         // OPEN TOP CLAW - Triangle
         if (gamepadEx1.triangle()) {
             claw.openTop();
@@ -43,6 +44,5 @@ public class ClawTest extends BaseTeleOp {
             sleep(200);
             claw.closeSide();
         }
-        copyGamepads();
     }
 }
