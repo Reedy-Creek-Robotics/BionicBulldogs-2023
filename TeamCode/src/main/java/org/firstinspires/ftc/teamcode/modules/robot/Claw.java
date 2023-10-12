@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.modules.robot;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 
 public class Claw extends BaseComponent {
     static final float TOP_CLOSE = 1;
@@ -13,9 +14,9 @@ public class Claw extends BaseComponent {
     Servo top;
     Servo side;
 
-    public Claw(Servo top, Servo side) {
-        this.top = top;
-        this.side = side;
+    public Claw(ClawConfig config) {
+        this.top = config.getTop();
+        this.side = config.getSide();
 
         top.setDirection(Servo.Direction.FORWARD);
         side.setDirection(Servo.Direction.FORWARD);
@@ -37,6 +38,5 @@ public class Claw extends BaseComponent {
         side.setPosition(SIDE_CLOSE);
     }
 
-    @Override
     public void addTelemetry(Telemetry telemetry) {}
 }

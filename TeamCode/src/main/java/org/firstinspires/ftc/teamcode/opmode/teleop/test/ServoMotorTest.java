@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,14 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.opmode.config.ServoMotorTestConfig;
 
 @TeleOp
 public class ServoMotorTest extends LinearOpMode {
     public void runOpMode(){
-        ServoMotorTestConfig config = new ServoMotorTestConfig(hardwareMap);
-        DcMotor motor = config.getMotor();
-        Servo servo = config.getServo();
+        DcMotor motor = hardwareMap.dcMotor.get("motor");
+        Servo servo = hardwareMap.servo.get("servo");
 
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
