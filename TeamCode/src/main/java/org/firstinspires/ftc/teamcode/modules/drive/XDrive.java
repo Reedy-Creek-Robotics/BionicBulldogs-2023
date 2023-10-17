@@ -36,6 +36,7 @@ public class XDrive {
         motors.addMotor(backLeft);
         motors.addMotor(backRight);
 
+        motors.resetEncoders();
         motors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motors.setZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -72,5 +73,9 @@ public class XDrive {
         t.addData("deg", imu.getHeading(AngleUnit.DEGREES));
         t.addData("forward", f);
         t.addData("strafe", r);
+        t.addData("fl", frontLeft.getCurrentPosition());
+        t.addData("fr", frontRight.getCurrentPosition());
+        t.addData("bl", backLeft.getCurrentPosition());
+        t.addData("br", backRight.getCurrentPosition());
     }
 }

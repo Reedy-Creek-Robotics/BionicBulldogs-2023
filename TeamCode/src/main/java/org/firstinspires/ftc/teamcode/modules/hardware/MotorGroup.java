@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class MotorGroup {
 
     ArrayList<DcMotor> motors;
-    DcMotor.RunMode runMode;
+    DcMotor.RunMode runMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
     boolean runToPos = false;
     int pos;
 
