@@ -38,6 +38,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -283,11 +284,22 @@ public class SampleMecanumDrive extends MecanumDrive {
         frontRight.setPower(v3);
     }
 
-    public void telemetry(Telemetry t){
-        t.addData("fl", frontLeft.getCurrentPosition());
-        t.addData("fr", frontRight.getCurrentPosition());
-        t.addData("bl", backLeft.getCurrentPosition());
-        t.addData("br", backRight.getCurrentPosition());
+    public void telemetry(Map<String, String> t){
+        String[] names = {"fl", "bl", "br", "fr"};
+        for(DcMotorEx motor : motors){
+            t.put(names[motors.indexOf(motor)],
+                    String.format(
+                    "Pow: %5.2, Vel: %5.2f, Pos: %6d ",
+                    motor.getPower(), motor.getVelocity(), motor.getCurrentPosition())
+            );
+        }
+    }
+    public void resetEncoders(){
+        DcMotor.RunMode runMode = motors.get(0).getMode();
+        for(DcMotorEx motor : motors){
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(runMode);
+        }
     }
 
     @Override
