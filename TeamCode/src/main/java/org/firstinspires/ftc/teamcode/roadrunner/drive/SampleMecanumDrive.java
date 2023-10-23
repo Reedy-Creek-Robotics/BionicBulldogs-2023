@@ -294,6 +294,18 @@ public class SampleMecanumDrive extends MecanumDrive {
             );
         }
     }
+    public void telemetry(Telemetry t){
+        String[] names = {"fl", "bl", "br", "fr"};
+        List<Double> wheelPositions = getWheelPositions();
+        for(DcMotorEx motor : motors){
+            t.addData(names[motors.indexOf(motor)] + " encoder",
+                    motor.getCurrentPosition()
+            );
+            t.addData(names[motors.indexOf(motor)] + " position",
+                    wheelPositions.get(motors.indexOf(motor))
+            );
+        }
+    }
     public void resetEncoders(){
         DcMotor.RunMode runMode = motors.get(0).getMode();
         for(DcMotorEx motor : motors){

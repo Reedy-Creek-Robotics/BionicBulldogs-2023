@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.modules.hardware.ImuEx;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 
 public class XDrive {
-    MotorGroup motors;
+    public MotorGroup motors;
     DcMotor frontLeft;
     DcMotor frontRight;
     DcMotor backLeft;
