@@ -1,0 +1,31 @@
+
+Motors
+            Input
+    Power
+    Ticks
+    	    Output
+    Voltage(given) (TBD)
+    Current actual position
+
+            Servos
+    Input
+    Increment between 0 -1 by a set amount
+    Output
+    Current position
+
+    CrServos
+            Input
+    Speed
+            Output
+
+    IMU
+            Input
+    Physically rotate robot
+            Output
+3 rotation axis
+
+    Webcam
+            Input
+
+    Output
+    feed on monitor
