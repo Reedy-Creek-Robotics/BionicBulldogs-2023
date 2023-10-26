@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class MotorGroup {
 
     ArrayList<DcMotor> motors;
-    DcMotor.RunMode runMode;
+    DcMotor.RunMode runMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
     boolean runToPos = false;
     int pos;
 
@@ -88,5 +88,23 @@ public class MotorGroup {
             runToPos = false;
         }
     }
-
+    public void runToPositionBlock(int _pos, float power) {
+        pos = _pos;
+        runToPos = true;
+        for (DcMotor motor : motors) {
+            motor.setTargetPosition(pos);
+        }
+        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setPower(power);
+        while(runToPos) {
+            boolean moving = false;
+            for (DcMotor motor : motors) {
+                moving |= motor.isBusy();
+            }
+            if (!moving) {
+                setPower(0);
+                runToPos = false;
+            }
+        }
+    }
 }

@@ -8,6 +8,7 @@ public class GamepadEx {
     Gamepad prevGamepad;
     public GamepadEx(Gamepad _gamepad){
         gamepad = _gamepad;
+        curGamepad = new Gamepad();
         curGamepad.copy(gamepad);
         prevGamepad = new Gamepad();
     }
