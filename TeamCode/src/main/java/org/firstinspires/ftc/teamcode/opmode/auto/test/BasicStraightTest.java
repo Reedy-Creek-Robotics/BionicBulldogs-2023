@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 
 @Autonomous
-public class StraightTest extends LinearOpMode {
+public class BasicStraightTest extends LinearOpMode {
     float ticksPerIn = 537.7f / ((float)Math.PI * 4.75f);
     public void runOpMode(){
 //        XDrive xDrive = new XDrive();
