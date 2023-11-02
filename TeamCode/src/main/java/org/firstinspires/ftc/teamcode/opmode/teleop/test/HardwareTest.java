@@ -21,20 +21,32 @@ public class HardwareTest extends OpMode {
 
     @Override
     public void loop() {
-            int i = 0;
             for(DcMotor dcMotor : hardwareMap.dcMotor){
-                telemetry.addData("dcMotor" + i, dcMotor.getCurrentPosition());
-                i++;
+                StringBuilder motor = new StringBuilder();
+                motor.append("\n")
+                        .append("\tposition").append(dcMotor.getCurrentPosition())
+                        .append("\tpower").append(dcMotor.getPower())
+                        .append("\tdirection").append(dcMotor.getDirection())
+                        .append("\tname").append(dcMotor.getDeviceName());
+                telemetry.addData("dcMotor" + dcMotor.getPortNumber(), motor.toString());
             }
 
             for(Servo servo : hardwareMap.servo){
-                telemetry.addData("servo" + i, servo.getPosition());
-                i++;
+                StringBuilder servoString = new StringBuilder();
+                servoString.append("\n")
+                        .append("\tdirection").append(servo.getDirection())
+                        .append("\tport Number").append(servo.getPortNumber())
+                        .append("\tname").append(servo.getDeviceName());
+                telemetry.addData("servo" + servo.getPosition(), servoString.toString());
             }
 
             for(CRServo crservo : hardwareMap.crservo){
-                telemetry.addData("crservo" + i, i);
-                i++;
+                StringBuilder crservoString = new StringBuilder();
+                crservoString.append("\n")
+                        .append("\tpower").append(crservo.getPower())
+                        .append("\tname").append(crservo.getDeviceName())
+                        .append("\tdirection").append(crservo.getDirection());
+                telemetry.addData("crservo" ,crservoString);
             }
             IMU imu = hardwareMap.get(IMU.class, "imu");
         }

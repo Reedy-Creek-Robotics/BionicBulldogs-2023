@@ -4,7 +4,7 @@ Motors
     Power
     Ticks
     	    Output
-    Voltage(given) (TBD)
+    Voltage(given)
     Current actual position
 
             Servos
