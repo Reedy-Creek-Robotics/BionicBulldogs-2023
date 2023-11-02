@@ -84,7 +84,6 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  *
  */
-@Disabled
 @TeleOp(name="Omni Drive To AprilTag", group = "Concept")
 public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
 {
@@ -140,7 +139,7 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         if (USE_WEBCAM)
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+            setManualExposure(1, 255);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");

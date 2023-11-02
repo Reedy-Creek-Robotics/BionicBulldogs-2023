@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.auto.test;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -16,6 +18,8 @@ public class RoadRunnerTestRed extends LinearOpMode {
     public void runOpMode(){
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
@@ -35,20 +39,21 @@ public class RoadRunnerTestRed extends LinearOpMode {
                 .turn(Math.toRadians(-90))
                 .build();
         Trajectory toBackboard = drive.trajectoryBuilder(turn.end())
-                .forward(70)
+                .forward(80)
                 .build();
         Trajectory strafeToAprilTag = drive.trajectoryBuilder(toBackboard.end())
                 .strafeRight(24)
                 .build();
 
+        aprilTag.DESIRED_TAG_ID = 4;
 
         waitForStart();
-        drive.followTrajectory(forward);
+        /*drive.followTrajectory(forward);
         drive.followTrajectory(strafe);
         drive.followTrajectory(contForward);
         drive.followTrajectorySequence(turn);
         drive.followTrajectory(toBackboard);
-        drive.followTrajectory(strafeToAprilTag);
+        drive.followTrajectory(strafeToAprilTag);*/
         aprilTag.driveToTag();
     }
 }

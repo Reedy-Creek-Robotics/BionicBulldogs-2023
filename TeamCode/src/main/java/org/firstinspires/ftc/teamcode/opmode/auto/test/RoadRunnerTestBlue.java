@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.auto.test;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Line;
+import org.firstinspires.ftc.ftccommon.internal.manualcontrol.ManualControlOpMode;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
@@ -17,11 +21,13 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
 
         DriveToAprilTag aprilTag = new DriveToAprilTag(xDrive, this);
-        aprilTag.DESIRED_TAG_ID = 6;
+        aprilTag.DESIRED_TAG_ID = 3;
 
          Trajectory forward = drive.trajectoryBuilder(new Pose2d())
                 .forward(26)
@@ -36,20 +42,21 @@ public class RoadRunnerTestBlue extends LinearOpMode {
                 .turn(Math.toRadians(90))
                 .build();
         Trajectory toBackboard = drive.trajectoryBuilder(turn.end())
-                .forward(70)
+                .forward(80)
                 .build();
         Trajectory strafeToAprilTag = drive.trajectoryBuilder(toBackboard.end())
                 .strafeLeft(24)
                 .build();
 
-
         waitForStart();
+
         drive.followTrajectory(forward);
         drive.followTrajectory(strafe);
         drive.followTrajectory(contForward);
         drive.followTrajectorySequence(turn);
         drive.followTrajectory(toBackboard);
         drive.followTrajectory(strafeToAprilTag);
+
         aprilTag.driveToTag();
     }
 }

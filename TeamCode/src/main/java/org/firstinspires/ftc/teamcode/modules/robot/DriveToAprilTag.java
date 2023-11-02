@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.modules.robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
@@ -84,22 +85,24 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  *
  */
-
+@Config
 public class DriveToAprilTag
 {
     // Adjust these numbers to suit your robot.
-    final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+    public static double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+
+    public static float MIN_SPEED = 0.03f;  // minimum speed of the robot, if the robot goes below this speed then the robot stops tracking the april tag
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURN_GAIN   =  0.02  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    public static double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    public static double STRAFE_GAIN =  0.01 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    public static double TURN_GAIN   =  0.03  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
-    final double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN  = 0.2;   //  Clip the turn speed to this max value (adjust for your robot)
+    public static double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
+    public static double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
+    public static double MAX_AUTO_TURN  = 0.2;   //  Clip the turn speed to this max value (adjust for your robot)
     XDrive drive;
     LinearOpMode opMode;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
@@ -107,7 +110,6 @@ public class DriveToAprilTag
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-    private List<AprilTagDetection> currentDetections;
 
     public DriveToAprilTag(XDrive _drive, LinearOpMode op) {
         drive = _drive;
@@ -122,10 +124,12 @@ public class DriveToAprilTag
         double forward = 0;
         double strafe = 0;
         double rotate = 0;
-        boolean targetFound = false;    // Set to true when an AprilTag target is detected
         desiredTag = null;
+        boolean targetFound = false;
+        //checking condition after loop because speed starts at 0 and so the code runs at least once
         do {
-        // Step through the list of detected tags and look for a matching tag
+            // Step through the list of detected tags and look for a matching tag
+            targetFound = false;    // Set to true when an AprilTag target is detected
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.
@@ -141,7 +145,6 @@ public class DriveToAprilTag
                 }
             }
 
-
             // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
             double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
             double headingError = desiredTag.ftcPose.bearing;
@@ -154,11 +157,14 @@ public class DriveToAprilTag
             opMode.telemetry.addData("forward",forward);
             opMode.telemetry.addData("rotate",rotate);
             opMode.telemetry.addData("stafe",strafe);
+            opMode.telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
-            opMode.telemetry.update();
             drive.drive((float) forward, (float) -strafe, (float) -rotate);
-        } while((Math.abs(forward) > 0.03 || Math.abs(strafe) > 0.03 || Math.abs(rotate) > 0.03) && opMode.opModeIsActive());
+        } while((
+                Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
+                opMode.opModeIsActive() && targetFound
+        );
         drive.drive(0,0,0);
     }
     /**
