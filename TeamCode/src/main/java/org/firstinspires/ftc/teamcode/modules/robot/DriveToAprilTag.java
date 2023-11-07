@@ -33,6 +33,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -104,7 +105,7 @@ public class DriveToAprilTag
     public static double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public static double MAX_AUTO_TURN  = 0.2;   //  Clip the turn speed to this max value (adjust for your robot)
     XDrive drive;
-    LinearOpMode opMode;
+    Telemetry telemetry;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     public int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
@@ -113,64 +114,66 @@ public class DriveToAprilTag
 
     public DriveToAprilTag(XDrive _drive, LinearOpMode op) {
         drive = _drive;
-        opMode = op;
+        telemetry = op.telemetry;
         // Initialize the Apriltag Detection process
-        initAprilTag();
+        initAprilTag(op);
 
         if (USE_WEBCAM)
-            setManualExposure(1, 255);  // Use low exposure time to reduce motion blur
+            setManualExposure(1, 255, op);  // Use low exposure time to reduce motion blur
     }
-    public void driveToTag() {
+    public boolean driveToTag() {
         double forward = 0;
         double strafe = 0;
         double rotate = 0;
-        desiredTag = null;
         boolean targetFound = false;
         //checking condition after loop because speed starts at 0 and so the code runs at least once
-        do {
-            // Step through the list of detected tags and look for a matching tag
-            targetFound = false;    // Set to true when an AprilTag target is detected
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        // Yes, we want to use this tag.
-                        targetFound = true;
-                        desiredTag = detection;
-                        opMode.telemetry.addData("found tag", detection.id);
-                        break;  // don't look any further.
-                    }
+        // Step through the list of detected tags and look for a matching tag
+        targetFound = false;    // Set to true when an AprilTag target is detected
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // Look to see if we have size info on this tag.
+            if (detection.metadata != null) {
+                //  Check to see if we want to track towards this tag.
+                if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                    // Yes, we want to use this tag.
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;  // don't look any further.
                 }
             }
+        }
 
-            // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-            double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-            double headingError = desiredTag.ftcPose.bearing;
-            double yawError = desiredTag.ftcPose.yaw;
+        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+        double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+        double headingError = desiredTag.ftcPose.bearing;
+        double yawError = desiredTag.ftcPose.yaw;
 
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            forward = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            rotate = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-            opMode.telemetry.addData("forward",forward);
-            opMode.telemetry.addData("rotate",rotate);
-            opMode.telemetry.addData("stafe",strafe);
-            opMode.telemetry.update();
+        // Use the speed and turn "gains" to calculate how we want the robot to move.
+        forward = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+        rotate = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+        strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
-            // Apply desired axes motions to the drivetrain.
-            drive.drive((float) forward, (float) -strafe, (float) -rotate);
-        } while((
+        // Apply desired axes motions to the drivetrain.
+        if((
                 Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
-                opMode.opModeIsActive() && targetFound
-        );
-        drive.drive(0,0,0);
+                targetFound
+        ){
+            drive.drive((float) forward, (float) -strafe, (float) -rotate);
+            return false;
+        }else{
+            drive.drive(0,0,0);
+            return true;
+        }
+    }
+    public void telemetry() {
+        if(desiredTag != null) {
+            telemetry.addData("found tag", desiredTag.id);
+        }
     }
     /**
      * Initialize the AprilTag processor.
      */
-    private void initAprilTag() {
+    private void initAprilTag(LinearOpMode op) {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -184,7 +187,7 @@ public class DriveToAprilTag
         aprilTag.setDecimation(2);
 
         // Create the vision portal by using a builder.
-        CameraName camera = opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
+        CameraName camera = op.hardwareMap.get(WebcamName.class, "Webcam 1");
         if (USE_WEBCAM) {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(camera)
@@ -202,7 +205,7 @@ public class DriveToAprilTag
      Manually set the camera gain and exposure.
      This can only be called AFTER calling initAprilTag(), and only works for Webcams;
     */
-    private void    setManualExposure(int exposureMS, int gain) {
+    private void    setManualExposure(int exposureMS, int gain, LinearOpMode op) {
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {
@@ -211,28 +214,28 @@ public class DriveToAprilTag
 
         // Make sure camera is streaming before we try to set the exposure controls
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            opMode.telemetry.addData("Camera", "Waiting");
-            opMode.telemetry.update();
-            while (!opMode.isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                opMode.sleep(20);
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!op.isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                op.sleep(20);
             }
-            opMode.telemetry.addData("Camera", "Ready");
-            opMode.telemetry.update();
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
         }
 
         // Set camera controls unless we are stopping.
-        if (!opMode.isStopRequested())
+        if (!op.isStopRequested())
         {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
-                opMode.sleep(50);
+                op.sleep(50);
             }
             exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            opMode.sleep(20);
+            op.sleep(20);
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
-            opMode.sleep(20);
+            op.sleep(20);
         }
     }
 }

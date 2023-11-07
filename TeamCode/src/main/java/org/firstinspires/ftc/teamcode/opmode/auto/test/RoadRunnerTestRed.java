@@ -54,6 +54,10 @@ public class RoadRunnerTestRed extends LinearOpMode {
         drive.followTrajectorySequence(turn);
         drive.followTrajectory(toBackboard);
         drive.followTrajectory(strafeToAprilTag);*/
-        aprilTag.driveToTag();
+        boolean movingToTag = false;
+        while(!movingToTag && opModeIsActive()) {
+            movingToTag = aprilTag.driveToTag();
+            aprilTag.telemetry();
+        }
     }
 }

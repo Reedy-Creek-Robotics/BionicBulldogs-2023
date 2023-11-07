@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto.test;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.ftccommon.internal.manualcontrol.ManualControlOpMod
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
@@ -31,6 +33,11 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 
          Trajectory forward = drive.trajectoryBuilder(new Pose2d())
                 .forward(26)
+                 /*.splineTo(
+                         new Vector2d(20), 0,
+                         SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                 )*/
                 .build();
         Trajectory strafe = drive.trajectoryBuilder(forward.end())
                 .strafeRight(24)
@@ -57,6 +64,10 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         drive.followTrajectory(toBackboard);
         drive.followTrajectory(strafeToAprilTag);
 
-        aprilTag.driveToTag();
+        boolean movingToTag = false;
+        while(!movingToTag && opModeIsActive()) {
+            movingToTag = aprilTag.driveToTag();
+            aprilTag.telemetry();
+        }
     }
 }
