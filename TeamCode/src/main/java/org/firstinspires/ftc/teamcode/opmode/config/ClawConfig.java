@@ -9,9 +9,9 @@ public class ClawConfig {
         hw = hmap;
     }
     public Servo getTop(){
-        return hw.servo.get("top");
+        return hw.servo.get("claw");
     }
     public Servo getSide(){
-        return hw.servo.get("side");
+        return hw.servo.get("flicker");
     }
 }

@@ -7,26 +7,37 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 
 public class Intake extends BaseComponent {
+    public enum IntakeState{
+        Intake,
+        Outtake,
+        Stop
+    }
     DcMotor motor;
-
+    IntakeState state;
     public Intake(IntakeConfig config){
-        this.motor = config.getMotor();
-        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor = config.getMotor();
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        state = IntakeState.Stop;
     }
 
     public void intake(double power) {
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setPower(power);
+        state = IntakeState.Intake;
     }
 
     public void outtake(double power) {
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        motor.setPower(power);
+        motor.setPower(-power);
+        state = IntakeState.Outtake;
     }
 
     public void stop() {
         motor.setPower(0);
+        state = IntakeState.Stop;
+    }
+    public IntakeState getState(){
+        return state;
     }
 
     @Override

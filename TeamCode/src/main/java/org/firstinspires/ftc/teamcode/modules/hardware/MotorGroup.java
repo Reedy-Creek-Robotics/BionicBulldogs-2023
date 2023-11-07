@@ -65,7 +65,26 @@ public class MotorGroup {
         }
     }
 
+    public int getPosition(){
+        int pos = 0;
+        for(DcMotor motor : motors){
+            pos += motor.getCurrentPosition();
+        }
+        pos /= motors.size();
+        return pos;
+    }
+
+    public int getTargetPosition(){
+        int pos = 0;
+        for(DcMotor motor : motors){
+            pos += motor.getTargetPosition();
+        }
+        pos /= motors.size();
+        return pos;
+    }
+
     public void runToPosition(int _pos, float power) {
+        setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pos = _pos;
         runToPos = true;
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
