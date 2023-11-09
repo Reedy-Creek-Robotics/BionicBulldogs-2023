@@ -10,9 +10,9 @@ public class Intake extends BaseComponent {
     DcMotor motor;
 
     public Intake(IntakeConfig config){
-        this.motor = config.getMotor();
-        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor = config.getMotor();
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void intake(double power) {
