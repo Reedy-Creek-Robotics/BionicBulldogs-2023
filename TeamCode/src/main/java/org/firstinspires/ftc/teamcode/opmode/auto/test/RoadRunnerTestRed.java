@@ -45,8 +45,6 @@ public class RoadRunnerTestRed extends LinearOpMode {
                 .strafeRight(24)
                 .build();
 
-        aprilTag.DESIRED_TAG_ID = 4;
-
         waitForStart();
         /*drive.followTrajectory(forward);
         drive.followTrajectory(strafe);
@@ -56,7 +54,7 @@ public class RoadRunnerTestRed extends LinearOpMode {
         drive.followTrajectory(strafeToAprilTag);*/
         boolean movingToTag = false;
         while(!movingToTag && opModeIsActive()) {
-            movingToTag = aprilTag.driveToTag();
+            movingToTag = aprilTag.driveToTag(4);
             aprilTag.telemetry();
         }
     }

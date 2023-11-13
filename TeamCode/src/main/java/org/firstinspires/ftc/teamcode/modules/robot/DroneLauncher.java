@@ -9,6 +9,8 @@ public class DroneLauncher {
     static final float launchPosition = 0.2f;
     public DroneLauncher(DroneLauncherConfig cfg){
         servo = cfg.getServo();
+    }
+    public void reset(){
         servo.setPosition(0);
     }
     public void launch(){

@@ -29,15 +29,9 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         xDrive.init(new XDriveConfig(hardwareMap));
 
         DriveToAprilTag aprilTag = new DriveToAprilTag(xDrive, this);
-        aprilTag.DESIRED_TAG_ID = 3;
 
          Trajectory forward = drive.trajectoryBuilder(new Pose2d())
                 .forward(26)
-                 /*.splineTo(
-                         new Vector2d(20), 0,
-                         SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
-                 )*/
                 .build();
         Trajectory strafe = drive.trajectoryBuilder(forward.end())
                 .strafeRight(24)
@@ -64,10 +58,10 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         drive.followTrajectory(toBackboard);
         drive.followTrajectory(strafeToAprilTag);
 
-        boolean movingToTag = false;
-        while(!movingToTag && opModeIsActive()) {
-            movingToTag = aprilTag.driveToTag();
-            aprilTag.telemetry();
-        }
+       // boolean movingToTag = false;
+        //while(!movingToTag && opModeIsActive()) {
+        //    movingToTag = aprilTag.driveToTag(3);
+        //    aprilTag.telemetry();
+        //}
     }
 }

@@ -12,6 +12,9 @@ public class DroneLauncherTest extends BaseTeleOp {
         super.init();
         droneLauncher = new DroneLauncher(new DroneLauncherConfig(hardwareMap));
     }
+    public void start(){
+        droneLauncher.reset();
+    }
     public void loop(){
         if(gamepadEx1.cross()){
             droneLauncher.launch();
