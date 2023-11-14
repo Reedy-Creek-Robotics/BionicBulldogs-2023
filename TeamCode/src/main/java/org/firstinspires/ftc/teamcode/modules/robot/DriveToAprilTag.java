@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.modules.robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -110,6 +111,7 @@ public class DriveToAprilTag
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+    boolean targetFound = false;
 
     public DriveToAprilTag(XDrive _drive, LinearOpMode op) {
         drive = _drive;
@@ -124,8 +126,7 @@ public class DriveToAprilTag
         double forward = 0;
         double strafe = 0;
         double rotate = 0;
-        boolean targetFound = false;
-        //checking condition after loop because speed starts at 0 and so the code runs at least once
+        targetFound = false;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -141,7 +142,10 @@ public class DriveToAprilTag
                 }
             }
         }
-
+        if(desiredTag == null){
+            drive.drive(0,0,0);
+            return false;
+        }
         // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
         double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
         double headingError = desiredTag.ftcPose.bearing;
@@ -153,11 +157,11 @@ public class DriveToAprilTag
         strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
         // Apply desired axes motions to the drivetrain.
-        if((
-                Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
+        if(
+                (Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
                 targetFound
         ){
-            drive.drive((float) forward, (float) -strafe, (float) -rotate);
+            drive.drive((float) -forward, (float) strafe, (float) -rotate);
             return true;
         }else{
             drive.drive(0,0,0);
@@ -168,6 +172,7 @@ public class DriveToAprilTag
         if(desiredTag != null) {
             telemetry.addData("found tag", desiredTag.id);
         }
+        telemetry.addData("was tag found", targetFound);
     }
     /**
      * Initialize the AprilTag processor.
@@ -200,6 +205,12 @@ public class DriveToAprilTag
         }
     }
 
+    void delay(float ms){
+        ElapsedTime elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
+        while(elapsedTime.milliseconds() < ms);
+    }
+
     /*
      Manually set the camera gain and exposure.
      This can only be called AFTER calling initAprilTag(), and only works for Webcams;
@@ -215,9 +226,8 @@ public class DriveToAprilTag
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             telemetry.addData("Camera", "Waiting");
             telemetry.update();
-            while (!op.isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                op.sleep(20);
-            }
+            while (!op.isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING));
+
             telemetry.addData("Camera", "Ready");
             telemetry.update();
         }
@@ -228,13 +238,13 @@ public class DriveToAprilTag
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
-                op.sleep(50);
+                delay(50);
             }
             exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            op.sleep(20);
+            delay(20);
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
-            op.sleep(20);
+            delay(20);
         }
     }
 }

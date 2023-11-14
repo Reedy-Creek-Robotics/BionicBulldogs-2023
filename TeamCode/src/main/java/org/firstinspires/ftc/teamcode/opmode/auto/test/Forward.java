@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+
+import java.util.List;
+
 @Autonomous
 public class Forward extends LinearOpMode {
     public void runOpMode(){
@@ -20,9 +23,14 @@ public class Forward extends LinearOpMode {
         waitForStart();
 
         elapsedTime.reset();
-        drive.followTrajectory(trajectory);
-        telemetry.addData("time", elapsedTime.milliseconds());
-        telemetry.update();
-        while (opModeIsActive());
+        drive.followTrajectoryAsync(trajectory);
+        while (opModeIsActive()){
+            drive.update();
+            List<Double> velocities = drive.getWheelVelocities();
+            for(int i = 0; i < 4; i++){
+                telemetry.addData(i + "", velocities.get(i));
+            }
+            telemetry.update();
+        }
     }
 }
