@@ -25,19 +25,13 @@ public class Claw extends BaseComponent {
     boolean scoring = false;
 
     public Claw(ClawConfig config) {
-        this.top = config.getTop();
-        this.side = config.getSide();
-
-        top.setDirection(Servo.Direction.FORWARD);
-        side.setDirection(Servo.Direction.FORWARD);
-
-        top.setPosition(TOP_OPEN);
-        side.setPosition(SIDE_CLOSE);
+        top = config.getClaw();
+        side = config.getFlicker();
 
         elapsedTime = new ElapsedTime();
     }
 
-    public void initMotors(){
+    public void initServos(){
         top.setDirection(Servo.Direction.FORWARD);
         side.setDirection(Servo.Direction.FORWARD);
 

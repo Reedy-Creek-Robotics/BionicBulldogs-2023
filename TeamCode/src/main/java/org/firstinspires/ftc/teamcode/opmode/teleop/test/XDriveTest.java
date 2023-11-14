@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
-@Disabled
 @TeleOp
 public class XDriveTest extends LinearOpMode {
     public void runOpMode() {

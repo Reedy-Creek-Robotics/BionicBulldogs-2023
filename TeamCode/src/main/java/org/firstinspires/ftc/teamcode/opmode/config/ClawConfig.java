@@ -8,10 +8,10 @@ public class ClawConfig {
     public ClawConfig(HardwareMap hmap){
         hw = hmap;
     }
-    public Servo getTop(){
+    public Servo getClaw(){
         return hw.servo.get("claw");
     }
-    public Servo getSide(){
+    public Servo getFlicker(){
         return hw.servo.get("flicker");
     }
 }

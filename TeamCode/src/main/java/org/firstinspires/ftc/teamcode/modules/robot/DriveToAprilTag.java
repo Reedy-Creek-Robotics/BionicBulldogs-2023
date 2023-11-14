@@ -158,10 +158,10 @@ public class DriveToAprilTag
                 targetFound
         ){
             drive.drive((float) forward, (float) -strafe, (float) -rotate);
-            return false;
+            return true;
         }else{
             drive.drive(0,0,0);
-            return true;
+            return false;
         }
     }
     public void telemetry() {

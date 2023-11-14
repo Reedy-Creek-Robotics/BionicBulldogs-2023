@@ -65,7 +65,7 @@ public class MotorGroup {
         }
     }
 
-    public int getPosition(){
+    public int getAveragePosition(){
         int pos = 0;
         for(DcMotor motor : motors){
             pos += motor.getCurrentPosition();

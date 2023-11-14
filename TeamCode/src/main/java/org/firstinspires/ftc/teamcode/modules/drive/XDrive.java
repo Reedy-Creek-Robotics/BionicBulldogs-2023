@@ -25,10 +25,10 @@ public class XDrive {
         backLeft = config.getBackLeft();
         backRight = config.getBackRight();
 
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motors = new MotorGroup();
         motors.addMotor(frontLeft);
@@ -60,10 +60,10 @@ public class XDrive {
     }
 
     public void drive(float forward, float strafe, float rotate){
-        frontLeft.setPower(forward + strafe + rotate);
-        backLeft.setPower(forward - strafe + rotate);
-        frontRight.setPower(forward - strafe - rotate);
-        backRight.setPower(forward + strafe - rotate);
+        frontLeft.setPower(forward + strafe - rotate);
+        backLeft.setPower(forward - strafe - rotate);
+        frontRight.setPower(forward - strafe + rotate);
+        backRight.setPower(forward + strafe + rotate);
         f = forward;
         r = strafe;
     }

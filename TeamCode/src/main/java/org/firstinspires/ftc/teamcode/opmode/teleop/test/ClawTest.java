@@ -16,19 +16,19 @@ public class ClawTest extends BaseTeleOp {
         claw = new Claw(config);
     }
     public void start(){
-        claw.initMotors();
+        claw.initServos();
     }
 
     public void loop() {
         copyGamepads();
         // CLOSE TOP CLAW - Triangle
         if (gamepadEx1.triangle()) {
-            claw.openTop();
+            claw.closeTop();
         }
 
         // OPEN TOP CLAW - Cross
         if (gamepadEx1.cross()) {
-            claw.closeTop();
+            claw.openTop();
         }
 
         // SCORE - square
