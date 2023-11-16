@@ -59,7 +59,7 @@ public class GamepadEx {
 
     //options
     public boolean options(){
-        return gamepad.options && ! prevGamepad.options;
+        return gamepad.options && !prevGamepad.options;
     }
 
     //sticks
@@ -82,5 +82,8 @@ public class GamepadEx {
     }
     public float rightTrigger(){
         return gamepad.right_trigger;
+    }
+    public boolean touchpad(){
+        return gamepad.touchpad && !prevGamepad.touchpad;
     }
 }

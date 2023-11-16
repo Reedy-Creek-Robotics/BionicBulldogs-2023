@@ -15,34 +15,27 @@ public class ClawTest extends BaseTeleOp {
         ClawConfig config = new ClawConfig(hardwareMap);
         claw = new Claw(config);
     }
+    public void start(){
+        claw.initServos();
+    }
 
     public void loop() {
         copyGamepads();
-        // OPEN TOP CLAW - Triangle
+        // CLOSE TOP CLAW - Triangle
         if (gamepadEx1.triangle()) {
-            claw.openTop();
-        }
-
-        // CLOSE TOP CLAW - Cross
-        if (gamepadEx1.cross()) {
             claw.closeTop();
         }
 
-        // OPEN SIDE CLAW - Square
+        // OPEN TOP CLAW - Cross
+        if (gamepadEx1.cross()) {
+            claw.openTop();
+        }
+
+        // SCORE - square
         if (gamepadEx1.square()) {
-            claw.openSide();
+            claw.score();
         }
 
-        // CLOSE SIDE CLAW - Circle
-        if (gamepadEx1.circle()) {
-            claw.closeSide();
-        }
-
-        // OPEN and CLOSE SIDE CLAW - Dpad Up
-        if (gamepadEx1.dpadUp()) {
-            claw.openSide();
-            sleep(200);
-            claw.closeSide();
-        }
+        claw.scoreUpdate();
     }
 }
