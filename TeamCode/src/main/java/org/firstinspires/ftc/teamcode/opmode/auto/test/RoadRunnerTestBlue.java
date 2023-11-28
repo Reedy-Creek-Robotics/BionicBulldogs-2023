@@ -16,53 +16,26 @@ import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Autonomous
 public class RoadRunnerTestBlue extends LinearOpMode {
     public void runOpMode(){
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.resetEncoders();
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        XDrive xDrive = new XDrive();
-        xDrive.init(new XDriveConfig(hardwareMap));
+        Pose2d startPose = new Pose2d(-35, 60, Math.toRadians(-90));
 
-        DriveToAprilTag aprilTag = new DriveToAprilTag(xDrive, this);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive.resetEncoders();
+        drive.setPoseEstimate(startPose);
 
-         Trajectory forward = drive.trajectoryBuilder(new Pose2d())
-                .forward(26)
-                .build();
-        Trajectory strafe = drive.trajectoryBuilder(forward.end())
-                .strafeRight(24)
-                .build();
-        Trajectory contForward = drive.trajectoryBuilder(strafe.end())
-                .forward(24)
-                .build();
-        TrajectorySequence turn = drive.trajectorySequenceBuilder(contForward.end())
-                .turn(Math.toRadians(90))
-                .build();
-        Trajectory toBackboard = drive.trajectoryBuilder(turn.end())
-                .forward(80)
-                .build();
-        Trajectory strafeToAprilTag = drive.trajectoryBuilder(toBackboard.end())
-                .strafeLeft(24)
+        TrajectorySequence sequence = drive.trajectorySequenceBuilder(startPose)
+                .splineToLinearHeading(new Pose2d(-16, 5),  Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(40,25, Math.toRadians(180)), Math.toRadians(180))
                 .build();
 
         waitForStart();
 
-        /*(drive.followTrajectory(forward);
-        drive.followTrajectory(strafe);
-        drive.followTrajectory(contForward);
-        drive.followTrajectorySequence(turn);
-        drive.followTrajectory(toBackboard);
-        drive.followTrajectory(strafeToAprilTag);*/
-
-        boolean movingToTag = true;
-        while(movingToTag && opModeIsActive()) {
-            movingToTag = aprilTag.driveToTag(3);
-            aprilTag.telemetry();
-            telemetry.update();
-        }
+        drive.followTrajectorySequence(sequence);
     }
 }
