@@ -286,14 +286,17 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public void telemetry(Map<String, String> t){
         String[] names = {"fl", "bl", "br", "fr"};
-        for(DcMotorEx motor : motors){
+        /*for(DcMotorEx motor : motors){
             t.put(names[motors.indexOf(motor)],
                     String.format(
                     "Pow: %5.2, Vel: %5.2f, Pos: %6d ",
                     motor.getPower(), motor.getVelocity(), motor.getCurrentPosition())
             );
         }
+
+         */
     }
+
     public void telemetry(Telemetry t){
         String[] names = {"fl", "bl", "br", "fr"};
         List<Double> wheelPositions = getWheelPositions();

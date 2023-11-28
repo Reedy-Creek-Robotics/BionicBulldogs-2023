@@ -21,16 +21,30 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 public class RoadRunnerTestBlue extends LinearOpMode {
     public void runOpMode(){
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.resetEncoders();
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        Pose2d startpose = new Pose2d(-36,62, Math.toRadians(-90));
 
-        XDrive xDrive = new XDrive();
-        xDrive.init(new XDriveConfig(hardwareMap));
+        drive.setPoseEstimate(startpose);
 
-        DriveToAprilTag aprilTag = new DriveToAprilTag(xDrive, this);
+        TrajectorySequence blueMid = drive.trajectorySequenceBuilder(startpose)
+                //.lineToConstantHeading(new Vector2d(-36,26))
+                .lineToConstantHeading(new Vector2d(-36, 36))
+                .lineToLinearHeading(new Pose2d(-55, 36, Math.toRadians(180)))
+                .strafeLeft(20)
+                .splineToConstantHeading(new Vector2d(12,14), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(48,24), Math.toRadians(0))
 
-         Trajectory forward = drive.trajectoryBuilder(new Pose2d())
+
+                .build();
+
+        waitForStart();
+        drive.followTrajectorySequence(blueMid);
+
+
+    }
+
+    private void old(SampleMecanumDrive drive) {
+        Trajectory forward = drive.trajectoryBuilder(new Pose2d())
                 .forward(26)
                 .build();
         Trajectory strafe = drive.trajectoryBuilder(forward.end())
@@ -51,18 +65,16 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 
         waitForStart();
 
-        /*(drive.followTrajectory(forward);
+        drive.followTrajectory(forward);
         drive.followTrajectory(strafe);
         drive.followTrajectory(contForward);
         drive.followTrajectorySequence(turn);
         drive.followTrajectory(toBackboard);
-        drive.followTrajectory(strafeToAprilTag);*/
+        drive.followTrajectory(strafeToAprilTag);
 
-        boolean movingToTag = true;
-        while(movingToTag && opModeIsActive()) {
-            movingToTag = aprilTag.driveToTag(3);
-            aprilTag.telemetry();
-            telemetry.update();
-        }
+
     }
+
 }
+
+
