@@ -8,10 +8,7 @@ public class SlideConfig {
     public SlideConfig(HardwareMap h){
         hmap = h;
     }
-    public DcMotor getLeft(){
-        return hmap.dcMotor.get("slideLeft");
-    }
-    public DcMotor getRight(){
-        return hmap.dcMotor.get("slideRight");
+    public DcMotor getSlides(){
+        return hmap.dcMotor.get("slides");
     }
 }

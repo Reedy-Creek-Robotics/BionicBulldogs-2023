@@ -19,6 +19,13 @@ public class XDrive {
     float r;
     ImuEx imu;
 
+    public XDrive(){
+
+    }
+    public XDrive(XDriveConfig cfg){
+        init(cfg);
+    }
+
     public void init(XDriveConfig config){
         frontLeft = config.getFrontLeft();
         frontRight = config.getFrontRight();
