@@ -14,7 +14,7 @@ public class SlideTest extends BaseTeleOp {
     }
 
     public void loop(){
-        if(gamepadEx1.dpadUp()){
+        /*if(gamepadEx1.dpadUp()){
             slides.up1Pixel();
         }
         if(gamepadEx1.dpadDown()){
@@ -28,7 +28,14 @@ public class SlideTest extends BaseTeleOp {
         }
         if(gamepadEx1.options()){
             slides.resetLastPosition();
+        }*/
+        if(gamepadEx1.cross()){
+            slides.resetRotator();
         }
+        if(gamepadEx1.circle()){
+            slides.scoreRotator();
+        }
+        slides.setPower(gamepadEx1.leftStickY());
         slides.telem(telemetry);
         copyGamepads();
     }

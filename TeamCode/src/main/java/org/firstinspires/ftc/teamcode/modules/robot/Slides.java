@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
@@ -8,11 +9,16 @@ import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 
 public class Slides {
     DcMotor motor;
+    Servo servo;
     int lastPosition = 0;
     int pixelHeight = 20; //encoder ticks to go up one pixel
-    float slideSpeed = 0.5f;
+    int slidePosToMoveServo = -1000;
+    float slideSpeed = 0.8f;
+    float servoStartPos = 0.5f;
+    float servoScorePos = 0.2f;
     public Slides(SlideConfig cfg){
-        motor = cfg.getLeft();
+        servo = cfg.getRotator();
+        motor = cfg.getMotor();
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -50,8 +56,22 @@ public class Slides {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setPower(power * slideSpeed);
     }
+    public void updateClawServo(){
+        if(motor.getCurrentPosition() > slidePosToMoveServo){
+            servo.setPosition(servoScorePos);
+        }else{
+            servo.setPosition(servoStartPos);
+        }
+    }
+    public void resetRotator(){
+        servo.setPosition(servoStartPos);
+    }
+    public void scoreRotator(){
+        servo.setPosition(servoScorePos);
+    }
     public void telem(Telemetry t){
         t.addLine("Slides");
+        t.addData("power", motor.getPower());
         t.addData("last position", lastPosition);
         t.addData("current position", motor.getCurrentPosition());
         t.addData("target position", motor.getTargetPosition());
