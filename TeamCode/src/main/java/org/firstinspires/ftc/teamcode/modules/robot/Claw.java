@@ -10,7 +10,7 @@ public class Claw extends BaseComponent {
     //top motor position for open
     static final float TOP_OPEN = 0;
     //top motor position for close
-    static final float TOP_CLOSE = 0.35f;
+    static final float TOP_CLOSE = 0.18f;
     //flicker default position
     static final float SIDE_CLOSE = 0;
     //flicker position for pushing a pixel out
@@ -20,9 +20,8 @@ public class Claw extends BaseComponent {
     Servo side;
 
     int scoringStep = 0;
+    int pixelsToScore = 0;
     ElapsedTime elapsedTime;
-
-    boolean scoring = false;
 
     public Claw(ClawConfig config) {
         top = config.getClaw();
@@ -48,16 +47,25 @@ public class Claw extends BaseComponent {
     }
 
     public void score(){
-        scoring = true;
-        side.setPosition(SIDE_OPEN);
+        score(1);
+    }
+    public void score(int pixelCount){
+        pixelsToScore = pixelCount;
         elapsedTime.reset();
     }
 
     public void scoreUpdate(){
-        if(scoring){
-            if(elapsedTime.seconds() >= 0.5f){
-                scoring = false;
+        if(pixelsToScore > 0){
+            if(scoringStep == 0 && elapsedTime.seconds() >= 0.5f){
+                side.setPosition(SIDE_OPEN);
+                elapsedTime.reset();
+                scoringStep = 1;
+            }
+            if(scoringStep == 1 && elapsedTime.seconds() >= 0.5f){
+                scoringStep = 0;
+                elapsedTime.reset();
                 side.setPosition(SIDE_CLOSE);
+                pixelsToScore--;
             }
         }
     }

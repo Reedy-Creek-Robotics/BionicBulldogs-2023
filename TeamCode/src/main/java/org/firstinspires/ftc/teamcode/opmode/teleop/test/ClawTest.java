@@ -16,6 +16,7 @@ public class ClawTest extends BaseTeleOp {
         claw = new Claw(config);
     }
     public void start(){
+        super.start();
         claw.initServos();
     }
 
