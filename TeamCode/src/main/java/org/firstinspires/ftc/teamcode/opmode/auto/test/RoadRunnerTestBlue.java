@@ -51,12 +51,12 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 
         waitForStart();
 
-        /*(drive.followTrajectory(forward);
+        drive.followTrajectory(forward);
         drive.followTrajectory(strafe);
         drive.followTrajectory(contForward);
         drive.followTrajectorySequence(turn);
         drive.followTrajectory(toBackboard);
-        drive.followTrajectory(strafeToAprilTag);*/
+        drive.followTrajectory(strafeToAprilTag);
 
         boolean movingToTag = true;
         while(movingToTag && opModeIsActive()) {

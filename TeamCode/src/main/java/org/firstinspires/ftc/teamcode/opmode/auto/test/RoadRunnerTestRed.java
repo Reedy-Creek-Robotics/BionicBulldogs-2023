@@ -41,17 +41,17 @@ public class RoadRunnerTestRed extends LinearOpMode {
         Trajectory toBackboard = drive.trajectoryBuilder(turn.end())
                 .forward(80)
                 .build();
-        Trajectory strafeToAprilTag = drive.trajectoryBuilder(toBackboard.end())
-                .strafeRight(24)
-                .build();
+        //Trajectory strafeToAprilTag = drive.trajectoryBuilder(toBackboard.end())
+                //.strafeRight(24)
+                //.build();
 
         waitForStart();
-        /*drive.followTrajectory(forward);
+        drive.followTrajectory(forward);
         drive.followTrajectory(strafe);
         drive.followTrajectory(contForward);
         drive.followTrajectorySequence(turn);
         drive.followTrajectory(toBackboard);
-        drive.followTrajectory(strafeToAprilTag);*/
+        //drive.followTrajectory(strafeToAprilTag);
         boolean movingToTag = true;
         while(movingToTag && opModeIsActive()) {
             movingToTag = aprilTag.driveToTag(4);
