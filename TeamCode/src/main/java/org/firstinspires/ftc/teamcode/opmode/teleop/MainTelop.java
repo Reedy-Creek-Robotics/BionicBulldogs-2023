@@ -15,7 +15,7 @@ public class MainTelop extends BaseTeleOp{
     Intake intake;
 
     float driveSpeed = 1;
-    float intakeSpeed = 0.4f;
+    float intakeSpeed = 1;
 
     public void init(){
         super.init();
@@ -25,6 +25,7 @@ public class MainTelop extends BaseTeleOp{
         intake = new Intake(new IntakeConfig(hardwareMap));
     }
     public void start(){
+        super.start();
         claw.initServos();
     }
     public void loop(){
@@ -38,11 +39,15 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.rightBumper()){
             intake.intake(intakeSpeed);
         }
+        if(gamepadEx1.leftBumper()){
+            intake.intake(-intakeSpeed);
+        }
         if(gamepadEx1.square()){
             intake.stop();
         }
 
         //slides
+        /*
         if(gamepadEx1.dpadUp()){
             slides.up1Pixel();
         }
@@ -55,17 +60,32 @@ public class MainTelop extends BaseTeleOp{
         }
         if(gamepadEx1.dpadLeft()){
             slides.goToLastPosition();
+        }*/
+        if(gamepad1.dpad_up){
+            slides.setPower(-1);
+        }else if(gamepad1.dpad_down){
+            slides.setPower(1);
+        }else{
+            slides.setPower(0);
+        }
+        if(gamepadEx1.dpadLeft()){
+            slides.gotoPosition();
         }
 
         //claw
-        if(gamepadEx1.leftBumper()){
+        if(gamepadEx1.triangle()){
             claw.closeTop();
+        }
+        if(gamepadEx1.cross()){
+            claw.openTop();
         }
         if(gamepadEx1.touchpad()){
             claw.score();
         }
         claw.scoreUpdate();
-
+        slides.updateClawServo();
+        slides.telem(telemetry);
+        telemetry.update();
         copyGamepads();
     }
 }

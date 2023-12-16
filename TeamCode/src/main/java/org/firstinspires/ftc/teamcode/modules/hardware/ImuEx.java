@@ -19,8 +19,8 @@ public class ImuEx {
         imu.initialize(
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                                RevHubOrientationOnRobot.UsbFacingDirection.UP
+                                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
                         )
                 )
         );

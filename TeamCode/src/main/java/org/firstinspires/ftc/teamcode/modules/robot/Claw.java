@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 
 public class Claw extends BaseComponent {
     //top motor position for open
-    static final float TOP_OPEN = 0;
+    static final float TOP_OPEN = 0.1f;
     //top motor position for close
     static final float TOP_CLOSE = 0.35f;
     //flicker default position

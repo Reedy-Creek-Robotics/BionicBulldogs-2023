@@ -26,9 +26,9 @@ public class Forward extends LinearOpMode {
         drive.followTrajectoryAsync(trajectory);
         while (opModeIsActive()){
             drive.update();
-            List<Double> velocities = drive.getWheelVelocities();
+            List<Double> position = drive.getWheelPositions();
             for(int i = 0; i < 4; i++){
-                telemetry.addData(i + "", velocities.get(i));
+                telemetry.addData(i + "", position.get(i));
             }
             telemetry.update();
         }
