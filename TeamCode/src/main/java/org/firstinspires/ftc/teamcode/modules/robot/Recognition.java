@@ -26,6 +26,7 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
@@ -50,6 +51,7 @@ public class Recognition
 {
     OpenCvWebcam webcam;
     SkystoneDeterminationPipeline pipeline;
+
 
     static int target = 300;
 
@@ -78,45 +80,7 @@ public class Recognition
             public void onOpened()
             {
                 Log.d("OPENCV", "WEBCAM STARTED STREAMING");
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode)
-            {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
-            }
-        });
-    }
-
-    public Recognition(OpMode opmode)
-    {
-        /**
-         * NOTE: Many comments have been omitted from this sample for the
-         * sake of conciseness. If you're just starting out with EasyOpenCv,
-         * you should take a look at {@link InternalCamera1Example} or its
-         * webcam counterpart, {@link WebcamExample} first.
-         */
-
-        int cameraMonitorViewId = opmode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", opmode.hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(opmode.hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
-        webcam.setPipeline(pipeline);
-
-        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
-        // out when the RC activity is in portrait. We do our actual image processing assuming
-        // landscape orientation, though.
-        webcam.setViewportRenderingPolicy(OpenCvWebcam.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                Log.d("OPENCV", "WEBCAM STARTED STREAMING");
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -154,7 +118,10 @@ public class Recognition
     public int getHue3() {
         return pipeline.hue3;
     }
-    public boolean getInitialized(){return pipeline.isInitialized;};
+    public boolean getInitialized(){
+        Log.d("PIPELINE", String.valueOf(pipeline.getInitialized()));
+        return pipeline.getInitialized();
+    };
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline
     {
@@ -176,17 +143,19 @@ public class Recognition
         static final Scalar RED = new Scalar(255, 0, 0);
         static final Scalar PURPLE = new Scalar(255, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
-        static final Scalar LOW_RED = new Scalar(130, 0, 20);
+        static final Scalar LOW_RED = new Scalar(140, 0, 20);
         static final Scalar HIGH_RED = new Scalar(180, 255, 255);
+        static final Scalar LOW_BLUE = new Scalar(90, 180, 20);
+        static final Scalar HIGH_BLUE = new Scalar(130, 255, 255);
 
         /*
          * The core values which define the location and size of the sample regions
          */
-        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(150,0);
-        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(150,90);
-        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(150,190);
-        static int REGION_WIDTH = 60;
-        static int REGION_HEIGHT = 50;
+        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,75);
+        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(275,50);
+        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(490,75);
+        static int REGION_WIDTH = 120;
+        static int REGION_HEIGHT = 100;
 
         /*
          * Points which actually define the sample region rectangles, derived from above values
@@ -232,7 +201,7 @@ public class Recognition
         Mat inRangeMat = new Mat();
         int nonZero1, nonZero2, nonZero3;
 
-        boolean isInitialized = false;
+        private volatile boolean isInitialized = false;
         int hue1, hue2, hue3;
 
         // Volatile since accessed by OpMode thread w/o synchronization
@@ -260,12 +229,14 @@ public class Recognition
             region1 = hsvMat.submat(new Rect(region1_pointA, region1_pointB));
             region2 = hsvMat.submat(new Rect(region2_pointA, region2_pointB));
             region3 = hsvMat.submat(new Rect(region3_pointA, region3_pointB));
+
         }
 
         @Override
         public Mat processFrame(Mat input)
         {
             isInitialized = true;
+            Log.d("OPENCV", "INITIALIZED");
             inputToHSVMat(input);
 
             Mat inRangeMat1 = new Mat();
@@ -330,7 +301,7 @@ public class Recognition
             if(max == nonZero1) // Was it from region 1?
             {
                 position = ElementPosition.Left; // Record our analysis
-                Log.d("OPENCV", "RIGHT-TOP");
+                Log.d("OPENCV", "LEFT-TOP");
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -362,7 +333,7 @@ public class Recognition
             else if(max == nonZero3) // Was it from region 3?
             {
                 position = ElementPosition.Right; // Record our analysis
-                Log.d("OPENCV", "LEFT-LOW");
+                Log.d("OPENCV", "RIGHT-LOW");
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -393,6 +364,10 @@ public class Recognition
         public ElementPosition getAnalysis()
         {
             return position;
+        }
+
+        public boolean getInitialized() {
+            return isInitialized;
         }
     }
 }

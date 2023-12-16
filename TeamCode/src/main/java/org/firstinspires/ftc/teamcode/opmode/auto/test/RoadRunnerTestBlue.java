@@ -14,6 +14,7 @@ import org.firstinspires.ftc.ftccommon.internal.manualcontrol.ManualControlOpMod
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
+import org.firstinspires.ftc.teamcode.modules.robot.Recognition;
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
@@ -37,10 +38,21 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         Intake intake = new Intake(new IntakeConfig(hardwareMap));
         Slides slides = new Slides(new SlideConfig(hardwareMap));
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
+/*
+        Recognition recognition = new Recognition(this);
+        while (!recognition.getInitialized()){
+            telemetry.addData("recognition", "NOT INITIALIZED");
+            telemetry.update();
+        }
+        telemetry.addData("recognition", "INITIALIZED");
+        telemetry.update();
 
+        Recognition.SkystoneDeterminationPipeline.ElementPosition position = recognition.getBarcode();
+        telemetry.addData("position", position);
+        telemetry.update();
+*/
 //        TrajectorySequence path = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
 //                .splineTo(new Vector2d(-36, 30), Math.toRadians(-90))
 //                .waitSeconds(1)
@@ -72,6 +84,6 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 
         waitForStart();
 
-        drive.followTrajectorySequence(path);
+        //drive.followTrajectorySequence(path);
     }
 }
