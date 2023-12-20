@@ -10,7 +10,7 @@ public class Claw extends BaseComponent {
     //top motor position for open
     static final float TOP_OPEN = 0.1f;
     //top motor position for close
-    static final float TOP_CLOSE = 0.35f;
+    static final float TOP_CLOSE = 0.325f;
     //flicker default position
     static final float SIDE_CLOSE = 0;
     //flicker position for pushing a pixel out

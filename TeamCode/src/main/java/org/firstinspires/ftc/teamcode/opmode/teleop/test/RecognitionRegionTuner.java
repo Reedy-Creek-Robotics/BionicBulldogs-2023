@@ -24,7 +24,7 @@ public class RecognitionRegionTuner extends BaseTeleOp {
 
     public void init(){
         super.init();
-        recognition = new Recognition(this);
+        //recognition = new Recognition(this);
         ui = new UI(telemetry, gamepad1);
         box1x = new IntEx();
         box1x.value = (int)Recognition.SkystoneDeterminationPipeline.REGION1_TOPLEFT_ANCHOR_POINT.x;

@@ -14,8 +14,9 @@ public class Slides {
     int pixelHeight = 20; //encoder ticks to go up one pixel
     int slidePosToMoveServo = -1000;
     float slideSpeed = 0.8f;
-    float servoStartPos = 0.47f;
-    float servoScorePos = 0.2f;
+    float servoStartPos = 0.975f; //0.47f;
+    float servoScorePos = 0.3f; //0.2f;
+
     public Slides(SlideConfig cfg){
         servo = cfg.getRotator();
         motor = cfg.getMotor();

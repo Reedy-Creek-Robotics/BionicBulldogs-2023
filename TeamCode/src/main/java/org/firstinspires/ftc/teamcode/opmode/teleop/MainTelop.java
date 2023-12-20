@@ -71,6 +71,12 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.dpadLeft()){
             slides.gotoPosition();
         }
+        if(gamepadEx1.circle()) {
+            slides.scoreRotator();
+        }
+        if(gamepadEx1.options()) {
+            slides.resetRotator();
+        }
 
         //claw
         if(gamepadEx1.triangle()){
@@ -82,8 +88,9 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.touchpad()){
             claw.score();
         }
+
         claw.scoreUpdate();
-        slides.updateClawServo();
+        //slides.updateClawServo();
         slides.telem(telemetry);
         telemetry.update();
         copyGamepads();
