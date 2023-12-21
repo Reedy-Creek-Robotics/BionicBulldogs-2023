@@ -41,24 +41,20 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.rightBumper()){
             intake.intake(intakeSpeed);
         }
-        /*
-        if(gamepadEx1.leftBumper()){
-            intakeOn = !intakeOn;
-        }
-        if(intakeOn){
-            intake.intake(-intakeSpeed);
-        }
-        else{
-            intake.stop();
-        }
-         */
 
+        if(gamepadEx1.leftBumper()){
+            toggleIntake();
+        }
+        telemetry.addData("Intake", intake.getState());
+
+        /*
         if(gamepadEx1.leftBumper()){
             intake.intake(-intakeSpeed);
         }
         if(gamepadEx1.square()){
             intake.stop();
         }
+        */
 
 
         //slides
@@ -111,4 +107,16 @@ public class MainTelop extends BaseTeleOp{
         telemetry.update();
         copyGamepads();
     }
+
+    protected void toggleIntake() {
+        if(intake.getState() == Intake.IntakeState.Intake) {
+            intake.intake(-intakeSpeed);
+        }
+
+        if(intake.getState() == Intake.IntakeState.Stop) {
+            intake.stop();
+        }
+
+    }
+
 }
