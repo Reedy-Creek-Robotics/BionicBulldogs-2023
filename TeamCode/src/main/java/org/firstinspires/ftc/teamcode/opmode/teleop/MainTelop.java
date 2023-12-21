@@ -14,8 +14,10 @@ public class MainTelop extends BaseTeleOp{
     XDrive xDrive;
     Intake intake;
 
+
     float driveSpeed = 1;
     float intakeSpeed = 1;
+    boolean intakeOn = false;
 
     public void init(){
         super.init();
@@ -39,12 +41,25 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.rightBumper()){
             intake.intake(intakeSpeed);
         }
+        /*
+        if(gamepadEx1.leftBumper()){
+            intakeOn = !intakeOn;
+        }
+        if(intakeOn){
+            intake.intake(-intakeSpeed);
+        }
+        else{
+            intake.stop();
+        }
+         */
+
         if(gamepadEx1.leftBumper()){
             intake.intake(-intakeSpeed);
         }
         if(gamepadEx1.square()){
             intake.stop();
         }
+
 
         //slides
         /*
@@ -77,6 +92,7 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.options()) {
             slides.resetRotator();
         }
+
 
         //claw
         if(gamepadEx1.triangle()){

@@ -16,3 +16,7 @@ public class SlideConfig {
         return hmap.servo.get("rotator");
     }
 }
+
+
+
+
