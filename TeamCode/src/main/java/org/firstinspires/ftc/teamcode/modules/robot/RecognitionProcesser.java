@@ -9,6 +9,7 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -105,10 +106,15 @@ public class RecognitionProcesser implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        initialized = true;
-        Log.d("OPENCV", "INITIALIZED");
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
+        if( !initialized ) {
+            region1 = hsvMat.submat(new Rect(region1_pointA, region1_pointB));
+            region2 = hsvMat.submat(new Rect(region2_pointA, region2_pointB));
+            region3 = hsvMat.submat(new Rect(region3_pointA, region3_pointB));
 
+            this.initialized = true;
+            Log.d("OPENCV", "INITIALIZED");
+        }
         Mat inRangeMat1 = new Mat();
         Core.inRange(region1, LOW_RED, HIGH_RED, inRangeMat1);
         Mat inRangeMat2 = new Mat();
