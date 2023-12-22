@@ -19,10 +19,10 @@ public class RecognitionProcesser implements VisionProcessor {
     static final Scalar RED = new Scalar(255, 0, 0);
     static final Scalar PURPLE = new Scalar(255, 0, 255);
     static final Scalar GREEN = new Scalar(0, 255, 0);
-    static final Scalar LOW_RED = new Scalar(140, 0, 20);
+    static final Scalar LOW_RED = new Scalar(140, 150, 20);
     static final Scalar HIGH_RED = new Scalar(180, 255, 255);
-    static final Scalar LOW_BLUE = new Scalar(90, 180, 20);
-    static final Scalar HIGH_BLUE = new Scalar(130, 255, 255);
+    static final Scalar LOW_BLUE = new Scalar(90, 150, 20);
+    static final Scalar HIGH_BLUE = new Scalar(125, 255, 255);
 
     /*
      * The core values which define the location and size of the sample regions
@@ -116,11 +116,11 @@ public class RecognitionProcesser implements VisionProcessor {
             Log.d("OPENCV", "INITIALIZED");
         }
         Mat inRangeMat1 = new Mat();
-        Core.inRange(region1, LOW_RED, HIGH_RED, inRangeMat1);
+        Core.inRange(region1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
         Mat inRangeMat2 = new Mat();
-        Core.inRange(region2, LOW_RED, HIGH_RED, inRangeMat2);
+        Core.inRange(region2, LOW_BLUE, HIGH_BLUE, inRangeMat2);
         Mat inRangeMat3 = new Mat();
-        Core.inRange(region3, LOW_RED, HIGH_RED, inRangeMat3);
+        Core.inRange(region3, LOW_BLUE, HIGH_BLUE, inRangeMat3);
 
         nonZero1 = (int) Core.countNonZero(inRangeMat1);
         nonZero2 = (int) Core.countNonZero(inRangeMat2);
