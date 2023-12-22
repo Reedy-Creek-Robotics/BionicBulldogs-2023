@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.checkerframework.checker.units.qual.C;
@@ -17,8 +19,14 @@ public class MainTelop extends BaseTeleOp{
 
     float driveSpeed = 1;
     float intakeSpeed = 1;
-    boolean intakeOn = false;
 
+    public enum ScoringState{
+        Up,
+        Down,
+        Score
+
+    }
+    ScoringState scoreState = ScoringState.Down;
     public void init(){
         super.init();
         claw = new Claw(new ClawConfig(hardwareMap));
@@ -29,8 +37,11 @@ public class MainTelop extends BaseTeleOp{
     public void start(){
         super.start();
         claw.initServos();
+        slides.resetRotator();
     }
     public void loop(){
+        copyGamepads();
+
         //drive
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
@@ -39,14 +50,15 @@ public class MainTelop extends BaseTeleOp{
 
         //intake
         if(gamepadEx1.rightBumper()){
-            intake.intake(intakeSpeed);
+            Log.d("INTAKE", "Right Bumper Pressed");
+            reverseIntake();
         }
 
         if(gamepadEx1.leftBumper()){
-            intakeOn = !intakeOn;
+            Log.d("INTAKE", "Left Bumper Pressed");
+            updateIntake();
         }
-        updateIntake();
-        telemetry.addData("Intake (expected, actual)", intakeOn + "," + intake.getState());
+        telemetry.addData("Intake", intake.getState());
 
         /*
         if(gamepadEx1.leftBumper()){
@@ -83,6 +95,9 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.dpadLeft()){
             slides.gotoPosition();
         }
+        if(gamepadEx1.dpadRight()){
+            slides.reset();
+        }
         if(gamepadEx1.circle()) {
             slides.scoreRotator();
         }
@@ -98,25 +113,90 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.cross()){
             claw.openTop();
         }
-        if(gamepadEx1.touchpad()){
+        if(gamepadEx1.square()){
             claw.score();
+            claw.scoreUpdate();
         }
 
-        claw.scoreUpdate();
+        //Score
+        if(gamepadEx1.touchpad()){
+            updateScore();
+            /*
+            //close claw, move slides, rotate claw, flick, flick, rotate claw back, lower slides, open claw
+            claw.closeTop();
+            slides.gotoPosition();
+            //slides.scoreRotator();
+            //claw.score();
+            //claw.score();
+
+             */
+        }
+
+        //claw.scoreUpdate();
         //slides.updateClawServo();
         slides.telem(telemetry);
         telemetry.update();
-        copyGamepads();
     }
 
     protected void updateIntake() {
-        if(intakeOn) {
-            intake.intake(-intakeSpeed);
-        }
-        else {
+        if(intake.getState() == Intake.IntakeState.Intake) {
             intake.stop();
         }
+        else {
+            intake.intake(intakeSpeed);
+        }
+        /*
+        switch(intake.getState()) {
+            case Intake:
+                Log.d("INTAKE", "Stopping Intake");
+                intake.stop();
+                break;
+            case Stop:
+                Log.d("INTAKE", "Starting Intake");
+                intake.intake(intakeSpeed);
+                break;
+            default:
+                Log.d("INTAKE", intake.getState().toString());
+        }
+
+         */
 
     }
-
+    protected void reverseIntake(){
+        if(intake.getState() == Intake.IntakeState.Outtake) {
+            intake.stop();
+        }
+        else {
+            intake.outtake(intakeSpeed);
+        }
+    }
+    protected void updateScore(){
+        switch (scoreState) {
+            case Down:
+                //MOVE TO UP STATE
+                claw.closeTop();
+                slides.gotoPosition();
+                scoreState = ScoringState.Up;
+                break;
+            case Up:
+                //MOVE TO SCORE STATE
+                slides.scoreRotator();
+                sleep(250);
+                claw.score();
+                claw.scoreUpdate();
+                sleep(100);
+                claw.score();
+                claw.scoreUpdate();
+                scoreState = ScoringState.Score;
+                break;
+            case Score:
+                //MOVE TO DOWN STATE
+                slides.resetRotator();
+                sleep(250);
+                slides.reset();
+                claw.openTop();
+                scoreState = ScoringState.Down;
+                break;
+        }
+    }
 }

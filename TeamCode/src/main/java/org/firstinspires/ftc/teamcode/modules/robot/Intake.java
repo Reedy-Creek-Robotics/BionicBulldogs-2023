@@ -23,12 +23,12 @@ public class Intake extends BaseComponent {
     }
 
     public void intake(double power) {
-        motor.setPower(power);
+        motor.setPower(-power);
         state = IntakeState.Intake;
     }
 
     public void outtake(double power) {
-        motor.setPower(-power);
+        motor.setPower(power);
         state = IntakeState.Outtake;
     }
 

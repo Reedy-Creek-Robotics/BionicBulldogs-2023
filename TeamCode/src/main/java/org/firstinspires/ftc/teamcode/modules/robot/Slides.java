@@ -74,6 +74,7 @@ public class Slides {
     }
     public void scoreRotator(){
         servo.setPosition(servoScorePos);
+
     }
     public void gotoPosition(){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
