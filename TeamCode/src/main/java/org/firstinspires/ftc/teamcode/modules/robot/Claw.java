@@ -47,6 +47,14 @@ public class Claw extends BaseComponent {
         top.setPosition(TOP_CLOSE);
     }
 
+    public void push(){
+        side.setPosition(SIDE_OPEN);
+    }
+
+    public void resetFlicker(){
+        side.setPosition(SIDE_CLOSE);
+    }
+
     public void score(){
         scoring = true;
         side.setPosition(SIDE_OPEN);

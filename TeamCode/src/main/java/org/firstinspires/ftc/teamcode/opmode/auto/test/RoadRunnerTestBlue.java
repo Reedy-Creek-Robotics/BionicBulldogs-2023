@@ -63,21 +63,27 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 //                .build();
 
         TrajectorySequence path = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
-                .addDisplacementMarker(() -> {
+                /*.addDisplacementMarker(() -> {
                     slides.resetRotator();
                 })
+
+                 */
                 .splineTo(new Vector2d(-36, 32), Math.toRadians(-90))
-                .addDisplacementMarker(() -> {
+                /*.addDisplacementMarker(() -> {
                     intake.outtake(-0.3);
                 })
+
+                 */
                 //.waitSeconds(1)
                 .lineToConstantHeading(new Vector2d(-36, 48))
-                .addDisplacementMarker(() -> {
+                /*.addDisplacementMarker(() -> {
                     intake.stop();
                 })
+
+                 */
                 .splineTo(new Vector2d(-24, 60), Math.toRadians(-0))
                 .splineTo(new Vector2d(12, 60), Math.toRadians(-0))
-                .addDisplacementMarker(()->{
+                /*.addDisplacementMarker(()->{
                     slides.gotoPosition();
                 })
                 .addDisplacementMarker(() -> {
@@ -86,6 +92,8 @@ public class RoadRunnerTestBlue extends LinearOpMode {
                 .addDisplacementMarker(() -> {
                     slides.resetRotator();
                 })
+
+                 */
                 .lineToConstantHeading(new Vector2d(48, 36))
 
 

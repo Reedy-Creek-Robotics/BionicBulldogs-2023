@@ -6,9 +6,13 @@ import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 
+import java.util.concurrent.Delayed;
+
 @TeleOp
 public class ClawTest extends BaseTeleOp {
     Claw claw;
+    long delayMs;
+    static long INCREMENT = 50;
 
     public void init() {
         super.init();
@@ -16,8 +20,10 @@ public class ClawTest extends BaseTeleOp {
         claw = new Claw(config);
     }
     public void start(){
+        super.start();
         claw.initServos();
     }
+
 
     public void loop() {
         copyGamepads();
@@ -37,5 +43,24 @@ public class ClawTest extends BaseTeleOp {
         }
 
         claw.scoreUpdate();
+
+        if(gamepadEx1.dpadUp()) {
+            delayMs += INCREMENT;
+        }
+
+        if( gamepadEx1.dpadDown()) {
+            delayMs -= INCREMENT;
+            if (delayMs <=0 ) {
+                delayMs = 0;
+            }
+        }
+        telemetry.addData("Push Delay (ms)", delayMs);
+        telemetry.update();
+
+        if( gamepadEx1.circle()) {
+            claw.push();
+            sleep(delayMs);
+            claw.resetFlicker();
+        }
     }
 }

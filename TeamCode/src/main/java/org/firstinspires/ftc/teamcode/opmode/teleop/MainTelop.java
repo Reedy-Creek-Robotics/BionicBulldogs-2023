@@ -171,6 +171,7 @@ public class MainTelop extends BaseTeleOp{
         }
     }
     protected void updateScore(){
+        //automatic scoring
         switch (scoreState) {
             case Down:
                 //MOVE TO UP STATE
@@ -181,16 +182,15 @@ public class MainTelop extends BaseTeleOp{
             case Up:
                 //MOVE TO SCORE STATE
                 slides.scoreRotator();
-                sleep(250);
-                claw.score();
-                claw.scoreUpdate();
-                sleep(100);
-                claw.score();
-                claw.scoreUpdate();
                 scoreState = ScoringState.Score;
                 break;
             case Score:
                 //MOVE TO DOWN STATE
+                sleep(350);
+                flicker();
+                sleep(200);
+                flicker();
+                sleep(200);
                 slides.resetRotator();
                 sleep(250);
                 slides.reset();
@@ -199,4 +199,13 @@ public class MainTelop extends BaseTeleOp{
                 break;
         }
     }
+    public void flicker(){
+        //flick the flicker on the claw
+            claw.push();
+            sleep(350);
+            claw.resetFlicker();
+    }
+
+
+
 }
