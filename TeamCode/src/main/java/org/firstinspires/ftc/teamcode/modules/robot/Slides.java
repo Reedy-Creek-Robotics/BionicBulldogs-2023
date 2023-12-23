@@ -78,7 +78,7 @@ public class Slides {
     }
     public void gotoPosition(){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setTargetPosition(-1700);
+        motor.setTargetPosition(-800);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(slideSpeed);
     }

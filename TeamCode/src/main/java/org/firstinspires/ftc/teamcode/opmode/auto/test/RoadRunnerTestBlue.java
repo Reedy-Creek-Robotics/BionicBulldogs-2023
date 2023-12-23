@@ -12,10 +12,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.firstinspires.ftc.ftccommon.internal.manualcontrol.ManualControlOpMode;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
+import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
 import org.firstinspires.ftc.teamcode.modules.robot.Recognition;
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
+import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
@@ -40,6 +42,8 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
+        Claw claw = new Claw(new ClawConfig(hardwareMap));
+
 /*
         Recognition recognition = new Recognition(this);
         while (!recognition.getInitialized()){
@@ -63,38 +67,44 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 //                .build();
 
         TrajectorySequence path = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
-                /*.addDisplacementMarker(() -> {
+                .addDisplacementMarker(() -> {
                     slides.resetRotator();
                 })
 
-                 */
-                .splineTo(new Vector2d(-36, 32), Math.toRadians(-90))
-                /*.addDisplacementMarker(() -> {
-                    intake.outtake(-0.3);
-                })
 
-                 */
-                //.waitSeconds(1)
-                .lineToConstantHeading(new Vector2d(-36, 48))
-                /*.addDisplacementMarker(() -> {
+                .lineToConstantHeading(new Vector2d(-36, 30))
+                .addDisplacementMarker(() -> {
+                    intake.outtake(0.3);
+                })
+                .waitSeconds(.5)
+                .lineToConstantHeading(new Vector2d(-36, 55))
+                .lineToConstantHeading(new Vector2d(30,55))
+                .addDisplacementMarker(() -> {
                     intake.stop();
                 })
 
-                 */
-                .splineTo(new Vector2d(-24, 60), Math.toRadians(-0))
-                .splineTo(new Vector2d(12, 60), Math.toRadians(-0))
-                /*.addDisplacementMarker(()->{
+                .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(-180)), Math.toRadians(0))
+                //.splineTo(new Vector2d(12, 60), Math.toRadians(-0))
+                .addDisplacementMarker(()->{
                     slides.gotoPosition();
-                })
-                .addDisplacementMarker(() -> {
+                    sleep(1500);
                     slides.scoreRotator();
-                })
-                .addDisplacementMarker(() -> {
+                    sleep(350);
+                    flicker(claw);
+                    sleep(200);
+                    flicker(claw);
+                    sleep(200);
                     slides.resetRotator();
-                })
+                    sleep(250);
+                    slides.reset();
+                    claw.openTop();
 
-                 */
-                .lineToConstantHeading(new Vector2d(48, 36))
+                })
+                .lineToConstantHeading(new Vector2d(50,24))
+
+
+
+                //.lineToConstantHeading(new Vector2d(48, 36))
 
 
                 .build();
@@ -105,4 +115,11 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 
         drive.followTrajectorySequence(path);
     }
+    public void flicker(Claw claw){
+        //flick the flicker on the claw
+        claw.push();
+        sleep(350);
+        claw.resetFlicker();
+    }
+
 }
