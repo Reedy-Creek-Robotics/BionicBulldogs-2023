@@ -22,6 +22,13 @@ public class IntakeTest extends BaseTeleOp {
     public void loop(){
         copyGamepads();
 
+        if(gamepadEx1.dpadUp()){
+            intakePwr += 0.1;
+        }
+        if(gamepadEx1.dpadDown()){
+            intakePwr -= 0.1;
+        }
+
         //intake start
         if (gamepadEx1.leftBumper()) {
             if(intake.getState() == Intake.IntakeState.Stop) {
@@ -39,5 +46,8 @@ public class IntakeTest extends BaseTeleOp {
                 intake.stop();
             }
         }
+
+        telemetry.addData("intake power", intakePwr);
+        telemetry.update();
     }
 }

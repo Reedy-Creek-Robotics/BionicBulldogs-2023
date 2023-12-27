@@ -4,29 +4,29 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.apache.commons.math3.geometry.euclidean.twod.Line;
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.ManualControlOpMode;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
-import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
+import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
-import org.firstinspires.ftc.teamcode.modules.robot.Recognition;
+import org.firstinspires.ftc.teamcode.modules.robot.RecognitionProcesser;
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous
-public class RoadRunnerTestBlue extends LinearOpMode {
+public class BlueStack extends LinearOpMode {
     void delay(float time){
         ElapsedTime t = new ElapsedTime();
         t.reset();
@@ -43,6 +43,25 @@ public class RoadRunnerTestBlue extends LinearOpMode {
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
         Claw claw = new Claw(new ClawConfig(hardwareMap));
+
+        RecognitionProcesser recognitionProcesser = new RecognitionProcesser();
+        CameraName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .setCamera(camera)
+                .addProcessor(recognitionProcesser)
+                .build();
+
+        while(opModeInInit()){
+            telemetry.addData("initialized", recognitionProcesser.isInitialized());
+            if(recognitionProcesser.isInitialized()){
+                ElementPosition position = recognitionProcesser.getPosition();
+                telemetry.addData("Result", position);
+                telemetry.addData("region-one", recognitionProcesser.getNonZero1());
+                telemetry.addData("region-two", recognitionProcesser.getNonZero2());
+                telemetry.addData("region-three", recognitionProcesser.getNonZero3());
+            }
+            telemetry.update();
+        }
 
 /*
         Recognition recognition = new Recognition(this);
@@ -66,22 +85,33 @@ public class RoadRunnerTestBlue extends LinearOpMode {
 //                .lineToConstantHeading(new Vector2d(48, 36))
 //                .build();
 
-        TrajectorySequence path = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
-                .addDisplacementMarker(() -> {
-                    slides.resetRotator();
-                })
+        waitForStart();
 
+        slides.resetRotator();
 
-                .lineToConstantHeading(new Vector2d(-36, 30))
-                .addDisplacementMarker(() -> {
-                    intake.outtake(0.3);
-                })
-                .waitSeconds(.5)
-                .lineToConstantHeading(new Vector2d(-36, 55))
-                .lineToConstantHeading(new Vector2d(30,55))
-                .addDisplacementMarker(() -> {
-                    intake.stop();
-                })
+        TrajectorySequence scorePreloadPath;
+        switch (recognitionProcesser.getPosition()){
+            default:
+            case Center:
+                scorePreloadPath = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(-36, 36, Math.toRadians(-90)))
+                        .build();
+                break;
+            case Left:
+                scorePreloadPath = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(-36, 30, Math.toRadians(0)))
+                        .build();
+                break;
+            case Right:
+                scorePreloadPath = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(-36, 30, Math.toRadians(-180)))
+                        .build();
+                break;
+        }
+
+        TrajectorySequence path = drive.trajectorySequenceBuilder(scorePreloadPath.end())
+                .lineToConstantHeading(new Vector2d(-36, 62))
+                .lineToConstantHeading(new Vector2d(30,62))
 
                 .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(-180)), Math.toRadians(0))
                 //.splineTo(new Vector2d(12, 60), Math.toRadians(-0))
@@ -100,18 +130,19 @@ public class RoadRunnerTestBlue extends LinearOpMode {
                     claw.openTop();
 
                 })
-                .lineToConstantHeading(new Vector2d(50,24))
-
-
+                .lineToConstantHeading(new Vector2d(45,24))
 
                 //.lineToConstantHeading(new Vector2d(48, 36))
 
-
                 .build();
 
-         drive.setPoseEstimate(path.start());
+        drive.setPoseEstimate(scorePreloadPath.start());
 
-        waitForStart();
+        drive.followTrajectorySequence(scorePreloadPath);
+
+        intake.outtake(0.5);
+        sleep(500);
+        intake.stop();
 
         drive.followTrajectorySequence(path);
     }

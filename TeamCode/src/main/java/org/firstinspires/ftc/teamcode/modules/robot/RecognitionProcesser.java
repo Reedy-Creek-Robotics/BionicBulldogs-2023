@@ -27,9 +27,9 @@ public class RecognitionProcesser implements VisionProcessor {
     /*
      * The core values which define the location and size of the sample regions
      */
-    public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,75);
-    public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(275,50);
-    public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(490,75);
+    public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,175);
+    public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(275,150);
+    public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(490,175);
     static int REGION_WIDTH = 120;
     static int REGION_HEIGHT = 100;
 
@@ -46,7 +46,7 @@ public class RecognitionProcesser implements VisionProcessor {
      *   |                                  |
      *   |                                  |
      *   |                                  |
-     *   |                  Point B (70,50) |
+     *   |               Point B (640, 480) |
      *   ------------------------------------
      *
      */
