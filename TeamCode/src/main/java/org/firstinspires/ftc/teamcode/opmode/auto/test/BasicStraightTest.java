@@ -5,39 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
+import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 
 @Autonomous
 public class BasicStraightTest extends LinearOpMode {
-    float ticksPerIn = 537.7f / ((float)Math.PI * 4.75f);
+    float ticksPerIn = 384.5f / ((float)Math.PI * 4.75f);//25.7
     public void runOpMode(){
-//        XDrive xDrive = new XDrive();
-//        xDrive.init(new XDriveConfig(hardwareMap));
-//
-//        waitForStart();
-//
-//        xDrive.motors.runToPositionBlock((int)(60 * ticksPerIn), 0.5f);
-//        xDrive.telem(telemetry);
-        MotorGroup motorGroup = new MotorGroup();
-
-        DcMotor left = hardwareMap.dcMotor.get("frontLeft");
-        DcMotor right = hardwareMap.dcMotor.get("backRight");
-
-        left.setDirection(DcMotorSimple.Direction.REVERSE);
-        right.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        motorGroup.addMotor(left);
-        motorGroup.addMotor(right);
-
-        motorGroup.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        XDrive xDrive = new XDrive();
+        xDrive.init(new XDriveConfig(hardwareMap));
 
         waitForStart();
 
-        motorGroup.runToPositionBlock((int)(60 * ticksPerIn), 0.5f);
-
-        telemetry.addData("left", left.getCurrentPosition());
-        telemetry.addData("right", right.getCurrentPosition());
-        telemetry.update();
+        xDrive.motors.runToPositionBlock((int)(60 * ticksPerIn), 0.5f);
+        xDrive.telem(telemetry);
 
         while (opModeIsActive());
     }

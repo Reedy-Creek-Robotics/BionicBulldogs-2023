@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.Recognition;
 import org.firstinspires.ftc.teamcode.modules.robot.RecognitionProcesser;
+import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -24,6 +25,7 @@ public class RecognitionTest extends BaseTeleOp {
         super.init();
         // Create the AprilTag processor by using a builder.
         recognitionProcesser = new RecognitionProcesser();
+        recognitionProcesser.setTeam(RobotTeam.Blue);
 
         // Create the vision portal by using a builder.
         CameraName camera = hardwareMap.get(WebcamName.class, "Webcam 1");

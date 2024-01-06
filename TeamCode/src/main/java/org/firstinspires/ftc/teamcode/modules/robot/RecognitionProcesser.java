@@ -27,9 +27,9 @@ public class RecognitionProcesser implements VisionProcessor {
     /*
      * The core values which define the location and size of the sample regions
      */
-    public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,175);
-    public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(275,150);
-    public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(490,175);
+    public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(15,100);
+    public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(275,75);
+    public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(490,100);
     static int REGION_WIDTH = 120;
     static int REGION_HEIGHT = 100;
 
@@ -76,6 +76,8 @@ public class RecognitionProcesser implements VisionProcessor {
     Mat hsvMat = new Mat();
     int nonZero1, nonZero2, nonZero3;
 
+    RobotTeam team = RobotTeam.Blue;
+
     private ElementPosition position = ElementPosition.UNKNOWN;
     private boolean initialized = false;
 
@@ -99,6 +101,10 @@ public class RecognitionProcesser implements VisionProcessor {
         return nonZero3;
     }
 
+    public void setTeam(RobotTeam newTeam){
+        team = newTeam;
+    }
+
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
 
@@ -116,12 +122,19 @@ public class RecognitionProcesser implements VisionProcessor {
             Log.d("OPENCV", "INITIALIZED");
         }
         Mat inRangeMat1 = new Mat();
-        Core.inRange(region1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
-        Mat inRangeMat2 = new Mat();
-        Core.inRange(region2, LOW_BLUE, HIGH_BLUE, inRangeMat2);
-        Mat inRangeMat3 = new Mat();
-        Core.inRange(region3, LOW_BLUE, HIGH_BLUE, inRangeMat3);
 
+        Mat inRangeMat2 = new Mat();
+
+        Mat inRangeMat3 = new Mat();
+        if(team == RobotTeam.Blue) {
+            Core.inRange(region1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
+            Core.inRange(region2, LOW_BLUE, HIGH_BLUE, inRangeMat2);
+            Core.inRange(region3, LOW_BLUE, HIGH_BLUE, inRangeMat3);
+        }else{
+            Core.inRange(region1, LOW_RED, HIGH_RED, inRangeMat1);
+            Core.inRange(region2, LOW_RED, HIGH_RED, inRangeMat2);
+            Core.inRange(region3, LOW_RED, HIGH_RED, inRangeMat3);
+        }
         nonZero1 = (int) Core.countNonZero(inRangeMat1);
         nonZero2 = (int) Core.countNonZero(inRangeMat2);
         nonZero3 = (int) Core.countNonZero(inRangeMat3);

@@ -99,7 +99,7 @@ public class BlueStack extends LinearOpMode {
                 break;
             case Left:
                 scorePreloadPath = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
-                        .lineToLinearHeading(new Pose2d(-36, 30, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-36, 0, Math.toRadians(0)))// -36, 0, 0
                         .build();
                 break;
             case Right:
@@ -116,7 +116,7 @@ public class BlueStack extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(-180)), Math.toRadians(0))
                 //.splineTo(new Vector2d(12, 60), Math.toRadians(-0))
                 .addDisplacementMarker(()->{
-                    slides.gotoPosition();
+                    /*slides.gotoPosition();
                     sleep(1500);
                     slides.scoreRotator();
                     sleep(350);
@@ -127,8 +127,7 @@ public class BlueStack extends LinearOpMode {
                     slides.resetRotator();
                     sleep(250);
                     slides.reset();
-                    claw.openTop();
-
+                    claw.openTop();*/
                 })
                 .lineToConstantHeading(new Vector2d(45,24))
 
