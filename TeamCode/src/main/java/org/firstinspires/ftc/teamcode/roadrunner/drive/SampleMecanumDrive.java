@@ -45,8 +45,8 @@ import java.util.Map;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(3.5, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.01;
 
@@ -296,14 +296,17 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void telemetry(Telemetry t){
-        String[] names = {"fl", "bl", "br", "fr"};
+        String[] names = {"_fl", "_bl", "_br", "_fr"};
         List<Double> wheelPositions = getWheelPositions();
         for(DcMotorEx motor : motors){
-            t.addData(names[motors.indexOf(motor)] + " encoder",
+            /*t.addData(names[motors.indexOf(motor)] + " encoder",
                     motor.getCurrentPosition()
             );
             t.addData(names[motors.indexOf(motor)] + " position",
-                    wheelPositions.get(motors.indexOf(motor))
+                        wheelPositions.get(motors.indexOf(motor))
+            );*/
+            t.addData(names[motors.indexOf(motor)] + " velocity",
+                    motor.getVelocity()
             );
         }
     }

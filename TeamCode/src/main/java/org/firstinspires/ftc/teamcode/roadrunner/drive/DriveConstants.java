@@ -72,8 +72,8 @@ public class DriveConstants {
      * inches.
      */
     //86.5 is 80% of the robots max velocity
-    public static double MAX_VEL = 60;
-    public static double MAX_ACCEL = 60;
+    public static double MAX_VEL = 70;
+    public static double MAX_ACCEL = 70;
     public static double MAX_ANG_VEL = 2.5049446105957034;
     public static double MAX_ANG_ACCEL = Math.toRadians(60);
 
