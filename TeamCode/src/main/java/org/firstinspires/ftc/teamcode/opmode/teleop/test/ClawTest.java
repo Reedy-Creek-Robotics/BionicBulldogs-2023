@@ -12,7 +12,7 @@ import java.util.concurrent.Delayed;
 public class ClawTest extends BaseTeleOp {
     Claw claw;
     long delayMs;
-    static long INCREMENT = 50;
+    static long INCREMENT = 25;
 
     public void init() {
         super.init();
@@ -39,7 +39,7 @@ public class ClawTest extends BaseTeleOp {
 
         // SCORE - square
         if (gamepadEx1.square()) {
-            claw.score();
+           claw.score();
         }
 
         claw.scoreUpdate();
@@ -58,6 +58,16 @@ public class ClawTest extends BaseTeleOp {
         telemetry.update();
 
         if( gamepadEx1.circle()) {
+            claw.push();
+            sleep(delayMs);
+            claw.resetFlicker();
+        }
+
+        if( gamepadEx1.rightBumper()) {
+            claw.push();
+            sleep(delayMs);
+            claw.resetFlicker();
+            sleep(delayMs);
             claw.push();
             sleep(delayMs);
             claw.resetFlicker();

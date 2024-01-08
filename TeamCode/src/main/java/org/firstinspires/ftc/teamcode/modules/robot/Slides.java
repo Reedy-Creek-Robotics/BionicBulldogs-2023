@@ -15,7 +15,7 @@ public class Slides {
     int slidePosToMoveServo = -1000;
     float slideSpeed = 0.8f;
     float servoStartPos = 0.975f; //0.47f;
-    float servoScorePos = 0.3f; //0.2f;
+    float servoScorePos = 0.4f; //0.2f;
 
     public Slides(SlideConfig cfg){
         servo = cfg.getRotator();
@@ -78,7 +78,7 @@ public class Slides {
     }
     public void gotoPosition(){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setTargetPosition(-800);
+        motor.setTargetPosition(-1450); //-800
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(slideSpeed);
     }

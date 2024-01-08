@@ -19,6 +19,7 @@ public class MainTelop extends BaseTeleOp{
 
     float driveSpeed = 1;
     float intakeSpeed = 1;
+    static long flickerDelay = 150;
 
     public enum ScoringState{
         Up,
@@ -188,9 +189,9 @@ public class MainTelop extends BaseTeleOp{
                 //MOVE TO DOWN STATE
                 sleep(350);
                 flicker();
-                sleep(200);
+                sleep(flickerDelay); //200
                 flicker();
-                sleep(200);
+                sleep(flickerDelay); //200
                 slides.resetRotator();
                 sleep(250);
                 slides.reset();
@@ -202,7 +203,7 @@ public class MainTelop extends BaseTeleOp{
     public void flicker(){
         //flick the flicker on the claw
             claw.push();
-            sleep(350);
+            sleep(flickerDelay); //350
             claw.resetFlicker();
     }
 
