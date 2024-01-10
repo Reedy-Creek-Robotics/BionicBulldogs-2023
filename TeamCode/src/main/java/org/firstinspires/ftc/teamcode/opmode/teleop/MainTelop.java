@@ -15,6 +15,7 @@ public class MainTelop extends BaseTeleOp{
     Slides slides;
     XDrive xDrive;
     Intake intake;
+    HangingSlides hangingSlides;
 
 
     float driveSpeed = 1;
@@ -34,6 +35,7 @@ public class MainTelop extends BaseTeleOp{
         slides = new Slides(new SlideConfig(hardwareMap));
         xDrive = new XDrive(new XDriveConfig(hardwareMap));
         intake = new Intake(new IntakeConfig(hardwareMap));
+        hangingSlides = new HangingSlides(new HangingSlidesConfig(hardwareMap));
     }
     public void start(){
         super.start();
@@ -131,6 +133,14 @@ public class MainTelop extends BaseTeleOp{
             //claw.score();
 
              */
+        }
+
+        //Hanging slides
+        if(gamepadEx1.leftTriggerb()){
+            hangingSlides.up();
+        }
+        if(gamepadEx1.rightTriggerb()){
+            hangingSlides.hang();
         }
 
         //claw.scoreUpdate();

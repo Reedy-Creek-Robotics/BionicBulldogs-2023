@@ -12,6 +12,7 @@ public class HangingSlides {
     DcMotor motor;
     public HangingSlides(HangingSlidesConfig cfg){
         motor = cfg.getMotor();
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public void up(){
         motor.setTargetPosition(upPosition);

@@ -77,11 +77,17 @@ public class GamepadEx {
     }
 
     //triggers
-    public float leftTrigger(){
+    public float leftTriggerf(){
         return gamepad.left_trigger;
     }
-    public float rightTrigger(){
+    public boolean leftTriggerb(){
+        return (gamepad.left_trigger > 0.5) && !(prevGamepad.left_trigger > 0.5);
+    }
+    public float rightTriggerf(){
         return gamepad.right_trigger;
+    }
+    public boolean rightTriggerb(){
+        return (gamepad.right_trigger > 0.5) && !(prevGamepad.right_trigger > 0.5);
     }
     public boolean touchpad(){
         return gamepad.touchpad && !prevGamepad.touchpad;
