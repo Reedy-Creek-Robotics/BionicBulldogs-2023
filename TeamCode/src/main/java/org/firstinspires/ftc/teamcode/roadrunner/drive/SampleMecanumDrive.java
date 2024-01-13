@@ -289,7 +289,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         for(DcMotorEx motor : motors){
             t.put(names[motors.indexOf(motor)],
                     String.format(
-                    "Pow: %5.2, Vel: %5.2f, Pos: %6d ",
+                    "Pow: %5.2f, Vel: %5.2f, Pos: %6d ",
                     motor.getPower(), motor.getVelocity(), motor.getCurrentPosition())
             );
         }

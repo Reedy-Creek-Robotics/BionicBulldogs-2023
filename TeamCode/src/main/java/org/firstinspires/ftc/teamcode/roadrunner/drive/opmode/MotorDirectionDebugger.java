@@ -65,14 +65,14 @@ public class MotorDirectionDebugger extends LinearOpMode {
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
 
         while (!isStopRequested()) {
-            //telemetry.addLine("Press each button to turn on its respective motor");
-            //telemetry.addLine();
-            //telemetry.addLine("<font face=\"monospace\">Xbox/PS4 Button - Motor</font>");
-            //telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;X / ▢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Front Left</font>");
-            //telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;Y / Δ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Front Right</font>");
-            //telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;B / O&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Rear&nbsp;&nbsp;Right</font>");
-            //telemetry.addLine("<font face=\"monospace\">&nbsp;&nbsp;A / X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Rear&nbsp;&nbsp;Left</font>");
-            //telemetry.addLine();
+            telemetry.addLine("Press each button to turn on its respective motor");
+            telemetry.addLine();
+            telemetry.addLine("Xbox/PS4 Button - Motor");
+            telemetry.addLine("X / ▢- Front Left</font>");
+            telemetry.addLine("Y / Δ- Front Right</font>");
+            telemetry.addLine("B / O- Rear Right</font>");
+            telemetry.addLine("A / X- Rear Left</font>");
+            telemetry.addLine();
 
             if(gamepad1.x) {
                 drive.setMotorPowers(MOTOR_POWER, 0, 0, 0);

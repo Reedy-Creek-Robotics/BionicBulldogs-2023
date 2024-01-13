@@ -83,10 +83,9 @@ public class Slides {
         motor.setPower(slideSpeed);
     }
     public void telem(Telemetry t){
-        t.addLine("Slides");
-        t.addData("power", motor.getPower());
-        t.addData("last position", lastPosition);
-        t.addData("current position", motor.getCurrentPosition());
-        t.addData("target position", motor.getTargetPosition());
+        t.addData("(slides)power", motor.getPower());
+        t.addData("(slides)last position", lastPosition);
+        t.addData("(slides)current position", motor.getCurrentPosition());
+        t.addData("(slides)target position", motor.getTargetPosition());
     }
 }

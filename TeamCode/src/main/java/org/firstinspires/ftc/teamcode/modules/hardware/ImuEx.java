@@ -19,8 +19,8 @@ public class ImuEx {
         imu.initialize(
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+                                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,// Right, Back for control hub : Left, Forward for expansion hub : Forward, Up for test bot
+                                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
                         )
                 )
         );
@@ -34,5 +34,9 @@ public class ImuEx {
     public float getHeading(AngleUnit unit) {
         return (float)imu.getRobotYawPitchRollAngles().getYaw(unit);
         //return imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, unit).secondAngle;
+    }
+
+    public IMU getImu(){
+        return imu;
     }
 }

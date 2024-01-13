@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import android.app.ApplicationErrorReport;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.BatteryChecker;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.modules.robot.*;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.opmode.config.*;
@@ -16,17 +18,16 @@ public class MainTelop extends BaseTeleOp{
     XDrive xDrive;
     Intake intake;
     HangingSlides hangingSlides;
-
+    VoltageSensor voltageSensor;
 
     float driveSpeed = 1;
-    float intakeSpeed = 1;
+    float intakeSpeed = 0.8f;
     static long flickerDelay = 150;
 
     public enum ScoringState{
         Up,
         Down,
         Score
-
     }
     ScoringState scoreState = ScoringState.Down;
     public void init(){
@@ -36,11 +37,18 @@ public class MainTelop extends BaseTeleOp{
         xDrive = new XDrive(new XDriveConfig(hardwareMap));
         intake = new Intake(new IntakeConfig(hardwareMap));
         hangingSlides = new HangingSlides(new HangingSlidesConfig(hardwareMap));
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
+        telemetry.addData("battery voltage", voltageSensor.getVoltage());
+        slides.telem(telemetry);
+        xDrive.telem(telemetry);
+        xDrive.debugTelemetry(telemetry);
+        telemetry.update();
     }
     public void start(){
         super.start();
         claw.initServos();
         slides.resetRotator();
+        xDrive.start();
     }
     public void loop(){
         copyGamepads();
@@ -145,7 +153,10 @@ public class MainTelop extends BaseTeleOp{
 
         //claw.scoreUpdate();
         //slides.updateClawServo();
+        telemetry.addData("battery voltage", voltageSensor.getVoltage());
         slides.telem(telemetry);
+        xDrive.telem(telemetry);
+        xDrive.debugTelemetry(telemetry);
         telemetry.update();
     }
 

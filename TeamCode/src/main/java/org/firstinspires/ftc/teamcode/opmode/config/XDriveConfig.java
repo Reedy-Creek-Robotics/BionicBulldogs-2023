@@ -29,4 +29,7 @@ public class XDriveConfig {
     public IMU getImu(){
         return hw.get(IMU.class, "imu");
     }
+    public HardwareMap getHmap(){
+        return hw;
+    }
 }
