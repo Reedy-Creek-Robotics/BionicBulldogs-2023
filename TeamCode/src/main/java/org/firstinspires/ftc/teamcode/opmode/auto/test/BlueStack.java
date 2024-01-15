@@ -32,8 +32,8 @@ public class BlueStack extends AutoBase {
     }
     public TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition){
              return drive.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(-36, 60))
-                .lineToConstantHeading(new Vector2d(30,60))
+                .lineToConstantHeading(new Vector2d(-36, 62))
+                .lineToConstantHeading(new Vector2d(30,62))
 
                 .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(-180)), Math.toRadians(0))
                 .addDisplacementMarker(()->{

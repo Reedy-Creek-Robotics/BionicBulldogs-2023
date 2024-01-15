@@ -29,13 +29,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public abstract class AutoBase extends LinearOpMode {
     Slides slides;
     Claw claw;
-    void delay(float time){
-        ElapsedTime t = new ElapsedTime();
-        t.reset();
-        while(t.seconds() >= time){
-
-        }
-    }
     public void runOpMode(){
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
@@ -65,28 +58,6 @@ public abstract class AutoBase extends LinearOpMode {
             telemetry.update();
         }
 
-/*
-        Recognition recognition = new Recognition(this);
-        while (!recognition.getInitialized()){
-            telemetry.addData("recognition", "NOT INITIALIZED");
-            telemetry.update();
-        }
-        telemetry.addData("recognition", "INITIALIZED");
-        telemetry.update();
-
-        Recognition.SkystoneDeterminationPipeline.ElementPosition position = recognition.getBarcode();
-        telemetry.addData("position", position);
-        telemetry.update();
-*/
-//        TrajectorySequence path = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
-//                .splineTo(new Vector2d(-36, 30), Math.toRadians(-90))
-//                .waitSeconds(1)
-//                .lineToConstantHeading(new Vector2d(-36, 48))
-//                .splineTo(new Vector2d(-24, 60), Math.toRadians(-0))
-//                .splineTo(new Vector2d(12, 60), Math.toRadians(-0))
-//                .lineToConstantHeading(new Vector2d(48, 36))
-//                .build();
-
         waitForStart();
 
         slides.resetRotator();
@@ -94,8 +65,7 @@ public abstract class AutoBase extends LinearOpMode {
         TrajectorySequence scorePreloadPath;
         ElementPosition elementPosition = recognitionProcesser.getPosition();
         double preloadY = getStartPos().getY();
-        float offset = elementPosition == ElementPosition.Center ? 36 : 30;
-        preloadY = preloadY + (preloadY > 0 ? -offset : offset);
+        preloadY = preloadY + (preloadY > 0 ? -36 : 36);
         switch (elementPosition){
             default:
             case Center:
@@ -121,9 +91,9 @@ public abstract class AutoBase extends LinearOpMode {
 
         drive.followTrajectorySequence(scorePreloadPath);
 
-        //intake.outtake(0.5);
+        intake.outtake(0.5);
         sleep(500);
-        //intake.stop();
+        intake.stop();
 
         drive.followTrajectorySequence(path);
     }
