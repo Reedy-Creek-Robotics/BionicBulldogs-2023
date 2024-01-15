@@ -9,11 +9,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 public class BlueBoard extends AutoBase{
-    public Pose2d getStartPos(){
+    public Pose2d getStartPos() {
         return new Pose2d(12, 66, Math.toRadians(-90));
-    }
-    public Vector2d getPreloadPos(){
-        return new Vector2d(12, 36);
     }
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)

@@ -26,7 +26,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous
 public abstract class AutoBase extends LinearOpMode {
     Slides slides;
     Claw claw;
@@ -93,26 +92,25 @@ public abstract class AutoBase extends LinearOpMode {
         slides.resetRotator();
 
         TrajectorySequence scorePreloadPath;
-        Vector2d preloadPos = getPreloadPos();
         ElementPosition elementPosition = recognitionProcesser.getPosition();
-        double preloadX = preloadPos.getX();
+        double preloadY = getStartPos().getY();
         float offset = elementPosition == ElementPosition.Center ? 36 : 30;
-        preloadX = preloadX + (preloadX > 0 ? -offset : offset);
+        preloadY = preloadY + (preloadY > 0 ? -offset : offset);
         switch (elementPosition){
             default:
             case Center:
                 scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(preloadX, getStartPos().getY(), getStartPos().getHeading()))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading()))
                         .build();
                 break;
             case Left:
                 scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(preloadX, getStartPos().getY(), getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
                 scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(preloadX, getStartPos().getY(), getStartPos().getHeading() - Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
                         .build();
                 break;
         }
@@ -123,15 +121,14 @@ public abstract class AutoBase extends LinearOpMode {
 
         drive.followTrajectorySequence(scorePreloadPath);
 
-        intake.outtake(0.5);
+        //intake.outtake(0.5);
         sleep(500);
-        intake.stop();
+        //intake.stop();
 
         drive.followTrajectorySequence(path);
     }
 
     public abstract Pose2d getStartPos();
-    public abstract Vector2d getPreloadPos();
     public abstract TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition);
     public void flicker(Claw claw){
         //flick the flicker on the claw
