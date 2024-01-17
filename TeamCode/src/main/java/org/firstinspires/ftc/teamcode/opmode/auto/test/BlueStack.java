@@ -31,15 +31,20 @@ public class BlueStack extends AutoBase {
         return new Pose2d(-36, 66, Math.toRadians(-90));
     }
     public TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition){
-             return drive.trajectorySequenceBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(-36, 60))
-                .lineToConstantHeading(new Vector2d(30,60))
-
-                .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(-180)), Math.toRadians(0))
-                .addDisplacementMarker(()->{
-                    scoreOnBackboard();
-                })
-                .lineToConstantHeading(new Vector2d(45,24))
-                .build();
+        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startPos)
+                .lineToLinearHeading(new Pose2d(-36, 62, Math.toRadians(-90)))
+                .lineToConstantHeading(new Vector2d(30,62));
+        switch(elementPosition){
+            case Right:
+                builder.lineToLinearHeading(new Pose2d(54, 36, Math.toRadians(185)));
+                break;
+            case Center:
+                builder.lineToLinearHeading(new Pose2d(54, 42, Math.toRadians(185)));
+                break;
+            case Left:
+                builder.lineToLinearHeading(new Pose2d(54, 46, Math.toRadians(185)));
+                break;
+        }
+        return builder.build();
     }
 }

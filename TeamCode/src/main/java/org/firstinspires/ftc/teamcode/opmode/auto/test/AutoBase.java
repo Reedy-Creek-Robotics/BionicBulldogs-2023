@@ -90,11 +90,12 @@ public abstract class AutoBase extends LinearOpMode {
         waitForStart();
 
         slides.resetRotator();
+        claw.closeTop();
 
         TrajectorySequence scorePreloadPath;
         ElementPosition elementPosition = recognitionProcesser.getPosition();
         double preloadY = getStartPos().getY();
-        float offset = elementPosition == ElementPosition.Center ? 36 : 30;
+        float offset = (elementPosition == ElementPosition.Center ? 33 : 36);
         preloadY = preloadY + (preloadY > 0 ? -offset : offset);
         switch (elementPosition){
             default:
@@ -105,7 +106,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() + 2, preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
@@ -121,11 +122,14 @@ public abstract class AutoBase extends LinearOpMode {
 
         drive.followTrajectorySequence(scorePreloadPath);
 
-        //intake.outtake(0.5);
+        intake.outtake(0.3);
         sleep(500);
-        //intake.stop();
+        intake.stop();
 
         drive.followTrajectorySequence(path);
+
+        scoreOnBackboard();
+        sleep(1000);
     }
 
     public abstract Pose2d getStartPos();
@@ -139,7 +143,7 @@ public abstract class AutoBase extends LinearOpMode {
     public void scoreOnBackboard(){
         slides.gotoPosition();
         sleep(1500);
-        slides.scoreRotator();
+        slides.scoreRotator(0.2f);
         sleep(350);
         flicker(claw);
         sleep(200);

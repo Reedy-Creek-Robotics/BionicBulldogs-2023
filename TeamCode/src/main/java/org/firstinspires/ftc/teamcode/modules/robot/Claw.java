@@ -47,6 +47,13 @@ public class Claw extends BaseComponent {
         top.setPosition(TOP_CLOSE);
     }
 
+    public void toggleTop(){
+        if(top.getPosition() == TOP_OPEN){
+            top.setPosition(TOP_CLOSE);
+        }else{
+            top.setPosition(TOP_OPEN);
+        }
+    }
     public void push(){
         side.setPosition(SIDE_OPEN);
     }

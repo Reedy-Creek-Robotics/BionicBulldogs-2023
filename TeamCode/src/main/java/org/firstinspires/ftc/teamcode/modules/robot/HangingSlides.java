@@ -25,6 +25,13 @@ public class HangingSlides {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(motorPower);
     }
+    public void togglePosition(){
+        if(motor.getTargetPosition() == hangPosition){
+            up();
+        }else{
+            hang();
+        }
+    }
     public void telem(Telemetry telem){
         telem.addData("hanging slide pos", motor.getCurrentPosition());
     }

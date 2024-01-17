@@ -41,7 +41,7 @@ public class MainTelop extends BaseTeleOp{
         telemetry.addData("battery voltage", voltageSensor.getVoltage());
         slides.telem(telemetry);
         xDrive.telem(telemetry);
-        xDrive.debugTelemetry(telemetry);
+        //xDrive.debugTelemetry(telemetry);
         telemetry.update();
     }
     public void start(){
@@ -61,41 +61,18 @@ public class MainTelop extends BaseTeleOp{
 
         //intake
         if(gamepadEx1.rightBumper()){
-            Log.d("INTAKE", "Right Bumper Pressed");
+            //Log.d("INTAKE", "Right Bumper Pressed");
             reverseIntake();
         }
 
         if(gamepadEx1.leftBumper()){
-            Log.d("INTAKE", "Left Bumper Pressed");
+            //Log.d("INTAKE", "Left Bumper Pressed");
             updateIntake();
         }
-        telemetry.addData("Intake", intake.getState());
-
-        /*
-        if(gamepadEx1.leftBumper()){
-            intake.intake(-intakeSpeed);
-        }
-        if(gamepadEx1.square()){
-            intake.stop();
-        }
-        */
+        //telemetry.addData("Intake", intake.getState());
 
 
         //slides
-        /*
-        if(gamepadEx1.dpadUp()){
-            slides.up1Pixel();
-        }
-        if(gamepadEx1.dpadDown()){
-            slides.reset();
-            claw.openTop();
-        }
-        if(gamepadEx1.dpadRight()){
-            slides.down1Pixel();
-        }
-        if(gamepadEx1.dpadLeft()){
-            slides.goToLastPosition();
-        }*/
         if(gamepad1.dpad_up){
             slides.setPower(-1);
         }else if(gamepad1.dpad_down){
@@ -103,35 +80,26 @@ public class MainTelop extends BaseTeleOp{
         }else{
             slides.setPower(0);
         }
-        if(gamepadEx1.dpadLeft()){
+        if(gamepadEx1.dpadRight()){
             slides.gotoPosition();
         }
-        if(gamepadEx1.dpadRight()){
+        if(gamepadEx1.dpadLeft()){
             slides.reset();
         }
-        if(gamepadEx1.circle()) {
-            slides.scoreRotator();
-        }
-        if(gamepadEx1.options()) {
-            slides.resetRotator();
+
+        if(gamepadEx1.triangle()) {
+            slides.toggleRotator();
         }
 
 
         //claw
-        if(gamepadEx1.triangle()){
-            claw.closeTop();
-        }
         if(gamepadEx1.cross()){
-            claw.openTop();
-        }
-        if(gamepadEx1.square()){
-            claw.score();
-            claw.scoreUpdate();
+            claw.toggleTop();
         }
 
         //Score
         if(gamepadEx1.touchpad()){
-            updateScore();
+            score();
             /*
             //close claw, move slides, rotate claw, flick, flick, rotate claw back, lower slides, open claw
             claw.closeTop();
@@ -139,7 +107,6 @@ public class MainTelop extends BaseTeleOp{
             //slides.scoreRotator();
             //claw.score();
             //claw.score();
-
              */
         }
 
@@ -156,7 +123,7 @@ public class MainTelop extends BaseTeleOp{
         telemetry.addData("battery voltage", voltageSensor.getVoltage());
         slides.telem(telemetry);
         xDrive.telem(telemetry);
-        xDrive.debugTelemetry(telemetry);
+        //xDrive.debugTelemetry(telemetry);
         telemetry.update();
     }
 
@@ -192,34 +159,19 @@ public class MainTelop extends BaseTeleOp{
             intake.outtake(intakeSpeed);
         }
     }
-    protected void updateScore(){
-        //automatic scoring
-        switch (scoreState) {
-            case Down:
-                //MOVE TO UP STATE
-                claw.closeTop();
-                slides.gotoPosition();
-                scoreState = ScoringState.Up;
-                break;
-            case Up:
-                //MOVE TO SCORE STATE
-                slides.scoreRotator();
-                scoreState = ScoringState.Score;
-                break;
-            case Score:
-                //MOVE TO DOWN STATE
-                sleep(350);
-                flicker();
-                sleep(flickerDelay); //200
-                flicker();
-                sleep(flickerDelay); //200
-                slides.resetRotator();
-                sleep(250);
-                slides.reset();
-                claw.openTop();
-                scoreState = ScoringState.Down;
-                break;
-        }
+    protected void score() {
+        //MOVE TO DOWN STATE
+        xDrive.drive(0, 0, 0);
+        sleep(350);
+        flicker();
+        sleep(flickerDelay); //200
+        flicker();
+        sleep(flickerDelay); //200
+        slides.resetRotator();
+        sleep(250);
+        slides.reset();
+        claw.openTop();
+        scoreState = ScoringState.Down;
     }
     public void flicker(){
         //flick the flicker on the claw

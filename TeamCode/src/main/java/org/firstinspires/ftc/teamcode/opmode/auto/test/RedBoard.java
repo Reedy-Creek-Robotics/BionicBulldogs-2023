@@ -29,9 +29,6 @@ public class RedBoard extends AutoBase{
                 builder.splineToLinearHeading(new Pose2d(54, -42, Math.toRadians(180)), Math.toRadians(180));
                 break;
         }
-        builder.addDisplacementMarker(()->{
-            scoreOnBackboard();
-        });
         return builder.build();
     }
 }

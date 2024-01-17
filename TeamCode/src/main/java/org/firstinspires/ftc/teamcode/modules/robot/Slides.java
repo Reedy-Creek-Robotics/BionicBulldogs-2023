@@ -74,11 +74,20 @@ public class Slides {
     }
     public void scoreRotator(){
         servo.setPosition(servoScorePos);
-
+    }
+    public void scoreRotator(float position){
+        servo.setPosition(position);
+    }
+    public void toggleRotator(){
+        if(servo.getPosition() == servoScorePos){
+            servo.setPosition(servoStartPos);
+        }else{
+            servo.setPosition(servoScorePos);
+        }
     }
     public void gotoPosition(){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setTargetPosition(-1450); //-800
+        motor.setTargetPosition(-975); //-800
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(slideSpeed);
     }
