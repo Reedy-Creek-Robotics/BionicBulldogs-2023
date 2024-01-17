@@ -1,21 +1,22 @@
 package org.firstinspires.ftc.teamcode.modules.robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
-
+@Config
 public class Slides {
+    public static int lastPosition = 0;
+    public static int pixelHeight = 20; //encoder ticks to go up one pixel
+    public static int slidePosToMoveServo = -1000;
+    public static double slideSpeed = 0.8f;
+    public static double servoStartPos = 0.975f; //0.47f;
+    public static double servoScorePos = 0.2f; //0.2f;
     DcMotor motor;
     Servo servo;
-    int lastPosition = 0;
-    int pixelHeight = 20; //encoder ticks to go up one pixel
-    int slidePosToMoveServo = -1000;
-    float slideSpeed = 0.8f;
-    float servoStartPos = 0.975f; //0.47f;
-    float servoScorePos = 0.4f; //0.2f;
 
     public Slides(SlideConfig cfg){
         servo = cfg.getRotator();
