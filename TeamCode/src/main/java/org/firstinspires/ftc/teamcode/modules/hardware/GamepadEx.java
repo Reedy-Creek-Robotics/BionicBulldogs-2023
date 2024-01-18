@@ -92,4 +92,6 @@ public class GamepadEx {
     public boolean touchpad(){
         return gamepad.touchpad && !prevGamepad.touchpad;
     }
+    public boolean share(){return gamepad.share && !prevGamepad.share;}
+    public boolean ps(){return gamepad.ps && !prevGamepad.ps;}
 }

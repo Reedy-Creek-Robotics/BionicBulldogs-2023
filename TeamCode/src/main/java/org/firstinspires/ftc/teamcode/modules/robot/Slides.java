@@ -14,7 +14,8 @@ public class Slides {
     public static int slidePosToMoveServo = -1000;
     public static double slideSpeed = 0.8f;
     public static double servoStartPos = 0.975f; //0.47f;
-    public static double servoScorePos = 0.2f; //0.2f;
+    public static double servoScorePosAuto = 0.2f; //0.2f;
+    public static double servoScorePosTelop = 0.4f;
     DcMotor motor;
     Servo servo;
 
@@ -63,7 +64,7 @@ public class Slides {
     }
     public void updateClawServo(){
         if(motor.getCurrentPosition() < slidePosToMoveServo){
-            servo.setPosition(servoScorePos);
+            servo.setPosition(servoScorePosTelop);
         }else if(motor.getCurrentPosition() < -200) {
             servo.setPosition(0.49);
         }else{
@@ -74,23 +75,27 @@ public class Slides {
         servo.setPosition(servoStartPos);
     }
     public void scoreRotator(){
-        servo.setPosition(servoScorePos);
+        servo.setPosition(servoScorePosTelop);
     }
+    public void scoreRotatorAuto(){servo.setPosition(servoScorePosAuto);}
     public void scoreRotator(float position){
         servo.setPosition(position);
     }
     public void toggleRotator(){
-        if(servo.getPosition() == servoScorePos){
+        if(servo.getPosition() == servoScorePosTelop){
             servo.setPosition(servoStartPos);
         }else{
-            servo.setPosition(servoScorePos);
+            servo.setPosition(servoScorePosTelop);
         }
     }
-    public void gotoPosition(){
+    public void gotoPosition(int pos){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setTargetPosition(-975); //-800
+        motor.setTargetPosition(pos); //-800
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(slideSpeed);
+    }
+    public void gotoPosition(){
+        gotoPosition(-975);
     }
     public void telem(Telemetry t){
         t.addData("(slides)power", motor.getPower());

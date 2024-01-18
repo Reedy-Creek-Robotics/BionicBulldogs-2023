@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 
-public class Claw extends BaseComponent {
+public class Claw {
     //top motor position for open
     static final float TOP_OPEN = 0.1f;
     //top motor position for close
@@ -77,5 +77,8 @@ public class Claw extends BaseComponent {
         }
     }
 
-    public void addTelemetry(Telemetry telemetry) {}
+    public void telem(Telemetry telemetry){
+        telemetry.addData("(claw)top position", top.getPosition());
+        telemetry.addData("(claw)side position", side.getPosition());
+    }
 }

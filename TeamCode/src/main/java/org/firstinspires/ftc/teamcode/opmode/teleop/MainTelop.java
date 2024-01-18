@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import android.app.ApplicationErrorReport;
 import android.util.Log;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.BatteryChecker;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.BatteryChecker;
 import org.firstinspires.ftc.teamcode.modules.robot.*;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.opmode.config.*;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @TeleOp
 public class MainTelop extends BaseTeleOp{
@@ -30,6 +32,9 @@ public class MainTelop extends BaseTeleOp{
         Score
     }
     ScoringState scoreState = ScoringState.Down;
+
+    int[] slidesPosition = {-1230, -1800, -2500};
+    int slidesPositionIndex;
     public void init(){
         super.init();
         claw = new Claw(new ClawConfig(hardwareMap));
@@ -43,6 +48,9 @@ public class MainTelop extends BaseTeleOp{
         xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
         telemetry.update();
+        if(SampleMecanumDrive.posEstimate != null){
+            xDrive.setPosEstimate(SampleMecanumDrive.posEstimate);
+        }
     }
     public void start(){
         super.start();
@@ -71,6 +79,9 @@ public class MainTelop extends BaseTeleOp{
         }
         //telemetry.addData("Intake", intake.getState());
 
+        if(gamepadEx1.share()){
+            xDrive.setPosEstimate(new Pose2d());
+        }
 
         //slides
         if(gamepad1.dpad_up){
@@ -81,7 +92,7 @@ public class MainTelop extends BaseTeleOp{
             slides.setPower(0);
         }
         if(gamepadEx1.dpadRight()){
-            slides.gotoPosition();
+            slides.gotoPosition(slidesPosition[slidesPositionIndex]);
         }
         if(gamepadEx1.dpadLeft()){
             slides.reset();
@@ -91,7 +102,6 @@ public class MainTelop extends BaseTeleOp{
             slides.toggleRotator();
         }
 
-
         //claw
         if(gamepadEx1.cross()){
             claw.toggleTop();
@@ -99,15 +109,21 @@ public class MainTelop extends BaseTeleOp{
 
         //Score
         if(gamepadEx1.touchpad()){
-            score();
-            /*
-            //close claw, move slides, rotate claw, flick, flick, rotate claw back, lower slides, open claw
-            claw.closeTop();
-            slides.gotoPosition();
-            //slides.scoreRotator();
-            //claw.score();
-            //claw.score();
-             */
+            toggleScorePosition();
+        }
+
+        if(gamepadEx1.ps()){
+            score(2);
+        }
+
+        if(gamepadEx1.square()){
+            score(1);
+        }
+        if(gamepadEx1.circle()){
+            slidesPositionIndex++;
+            if(slidesPositionIndex > 2){
+                slidesPositionIndex = 0;
+            }
         }
 
         //Hanging slides
@@ -118,11 +134,11 @@ public class MainTelop extends BaseTeleOp{
             hangingSlides.hang();
         }
 
-        //claw.scoreUpdate();
-        //slides.updateClawServo();
         telemetry.addData("battery voltage", voltageSensor.getVoltage());
+        telemetry.addData("slidesPositionIndex", slidesPositionIndex + 1);
+        claw.telem(telemetry);
         slides.telem(telemetry);
-        xDrive.telem(telemetry);
+        //xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
         telemetry.update();
     }
@@ -130,9 +146,11 @@ public class MainTelop extends BaseTeleOp{
     protected void updateIntake() {
         if(intake.getState() == Intake.IntakeState.Intake) {
             intake.stop();
+            claw.closeTop();
         }
         else {
             intake.intake(intakeSpeed);
+            claw.openTop();
         }
         /*
         switch(intake.getState()) {
@@ -154,32 +172,43 @@ public class MainTelop extends BaseTeleOp{
     protected void reverseIntake(){
         if(intake.getState() == Intake.IntakeState.Outtake) {
             intake.stop();
+            claw.closeTop();
         }
-        else {
+        else{
             intake.outtake(intakeSpeed);
         }
     }
-    protected void score() {
-        //MOVE TO DOWN STATE
-        xDrive.drive(0, 0, 0);
-        sleep(350);
-        flicker();
-        sleep(flickerDelay); //200
-        flicker();
-        sleep(flickerDelay); //200
-        slides.resetRotator();
-        sleep(250);
-        slides.reset();
-        claw.openTop();
-        scoreState = ScoringState.Down;
+    void toggleScorePosition(){
+        if(scoreState == ScoringState.Down){
+            xDrive.drive(0, 0, 0);
+            claw.closeTop();
+            slides.gotoPosition(slidesPosition[slidesPositionIndex]);
+            sleep(500);
+            slides.scoreRotator();
+            scoreState = ScoringState.Up;
+        }else{
+            slides.resetRotator();
+            sleep(250);
+            slides.reset();
+            claw.openTop();
+            scoreState = ScoringState.Down;
+        }
     }
-    public void flicker(){
+    protected void score(int count){
+        if(scoreState == ScoringState.Up) {
+            xDrive.drive(0, 0, 0);
+            for (int i = 0; i < count; i++) {
+                flicker();
+                if (i != count - 1) {
+                    sleep(flickerDelay);
+                }
+            }
+        }
+    }
+    public void flicker() {
         //flick the flicker on the claw
-            claw.push();
-            sleep(flickerDelay); //350
-            claw.resetFlicker();
+        claw.push();
+        sleep(flickerDelay); //350
+        claw.resetFlicker();
     }
-
-
-
 }

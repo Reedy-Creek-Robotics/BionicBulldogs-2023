@@ -130,6 +130,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         scoreOnBackboard();
         sleep(1000);
+        SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
     }
 
     public abstract Pose2d getStartPos();
@@ -143,7 +144,7 @@ public abstract class AutoBase extends LinearOpMode {
     public void scoreOnBackboard(){
         slides.gotoPosition();
         sleep(1500);
-        slides.scoreRotator(0.2f);
+        slides.scoreRotatorAuto();
         sleep(350);
         flicker(claw);
         sleep(200);

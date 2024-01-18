@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules.drive;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -95,6 +96,9 @@ public class XDrive {
 
         imu = new ImuEx(config.getImu());
         acceleration = new Acceleration();
+    }
+    public void setPosEstimate(Pose2d pos){
+        localizer.setPoseEstimate(pos);
     }
 
     public void start(){
