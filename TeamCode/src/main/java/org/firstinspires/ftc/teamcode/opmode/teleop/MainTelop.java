@@ -25,7 +25,7 @@ public class MainTelop extends BaseTeleOp{
 
     float driveSpeed = 1;
     float intakeSpeed = 0.8f;
-    static long flickerDelay = 150;
+    static long flickerDelay = 1000;
 
     public enum ScoringState{
         Up,
@@ -59,6 +59,7 @@ public class MainTelop extends BaseTeleOp{
         claw.initServos();
         slides.resetRotator();
         xDrive.start();
+        droneLauncher.reset();
     }
     public void loop(){
         copyGamepads();

@@ -25,13 +25,13 @@ public class RedBoard extends AutoBase{
                 .lineToConstantHeading(new Vector2d(12, -60));
         switch(elementPosition){
             case Left:
-                builder.splineToLinearHeading(new Pose2d(54, -30, Math.toRadians(180)), Math.toRadians(180));
+                builder.lineToLinearHeading(new Pose2d(53, -33, Math.toRadians(180)));
                 break;
             case Center:
-                builder.splineToLinearHeading(new Pose2d(54, -36, Math.toRadians(180)), Math.toRadians(180));
+                builder.lineToLinearHeading(new Pose2d(51, -36, Math.toRadians(180)));
                 break;
             case Right:
-                builder.splineToLinearHeading(new Pose2d(54, -42, Math.toRadians(180)), Math.toRadians(180));
+                builder.lineToLinearHeading(new Pose2d(52, -42, Math.toRadians(180)));
                 break;
         }
         return builder.build();

@@ -22,13 +22,13 @@ public class BlueBoard extends AutoBase{
                 .lineToConstantHeading(new Vector2d(12, 60));
         switch(elementPosition){
             case Right:
-                builder.splineToLinearHeading(new Pose2d(52, 30, Math.toRadians(180)), Math.toRadians(180));
+                builder.lineToLinearHeading(new Pose2d(52, 34, Math.toRadians(180)));
                 break;
             case Center:
-                builder.splineToLinearHeading(new Pose2d(52, 36, Math.toRadians(180)), Math.toRadians(180));
+                builder.lineToLinearHeading(new Pose2d(50, 42, Math.toRadians(180)));
                 break;
             case Left:
-                builder.splineToLinearHeading(new Pose2d(52, 42, Math.toRadians(180)), Math.toRadians(180));
+                builder.lineToLinearHeading(new Pose2d(52.5, 48, Math.toRadians(180)));
                 break;
         }
         return builder.build();

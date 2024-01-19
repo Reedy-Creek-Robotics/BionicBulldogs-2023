@@ -180,6 +180,11 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(500);
         slides.reset();
         claw.openTop();
+        drive.followTrajectorySequence(
+                drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .strafeLeft(getTeam() == RobotTeam.Red ? 36 : -36)
+                        .build()
+        );
     }
 
 }
