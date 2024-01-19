@@ -19,10 +19,17 @@ public class RecognitionProcesser implements VisionProcessor {
     static final Scalar RED = new Scalar(255, 0, 0);
     static final Scalar PURPLE = new Scalar(255, 0, 255);
     static final Scalar GREEN = new Scalar(0, 255, 0);
-    static final Scalar LOW_RED = new Scalar(140, 150, 20);
-    static final Scalar HIGH_RED = new Scalar(180, 255, 255);
+    static final Scalar LOW_RED1 = new Scalar(160, 150, 20);
+    static final Scalar HIGH_RED1 = new Scalar(180, 255, 255);
+    static final Scalar LOW_RED2 = new Scalar(0, 150, 20);
+    static final Scalar HIGH_RED2 = new Scalar(20, 255, 255);
     static final Scalar LOW_BLUE = new Scalar(90, 150, 20);
     static final Scalar HIGH_BLUE = new Scalar(125, 255, 255);
+
+    static final Scalar LOW_RED_RGB = new Scalar(0, 0, 128);
+    static final Scalar HIGH_RED_RGB = new Scalar(128, 128, 255);
+    static final Scalar LOW_BLUE_RGB = new Scalar(128, 0, 0);
+    static final Scalar HIGH_BLUE_RGB = new Scalar(255, 128, 128);
 
     /*
      * The core values which define the location and size of the sample regions
@@ -32,6 +39,14 @@ public class RecognitionProcesser implements VisionProcessor {
     public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(490,100);
     static int REGION_WIDTH = 120;
     static int REGION_HEIGHT = 100;
+
+    static int mat1RGB;
+    static int mat2RGB;
+    static int mat3RGB;
+
+    public static Scalar RGBReigon1 = new Scalar(0, 0, 0);
+    public static Scalar RGBReigon2 = new Scalar(0, 0, 0);
+    public static Scalar RGBReigon3 = new Scalar(0, 0, 0);
 
     /*
      * Points which actually define the sample region rectangles, derived from above values
@@ -101,6 +116,17 @@ public class RecognitionProcesser implements VisionProcessor {
         return nonZero3;
     }
 
+    public int getNonZero1RGB() {
+        return mat1RGB;
+    }
+
+    public int getNonZero2RGB() {
+        return mat2RGB;
+    }
+
+    public int getNonZero3RGB() {
+        return mat3RGB;
+    }
     public void setTeam(RobotTeam newTeam){
         team = newTeam;
     }
@@ -126,18 +152,56 @@ public class RecognitionProcesser implements VisionProcessor {
         Mat inRangeMat2 = new Mat();
 
         Mat inRangeMat3 = new Mat();
+
+        Mat inRangeMatRGB1 = new Mat();
+
+        Mat inRangeMatRGB2 = new Mat();
+
+        Mat inRangeMatRGB3 = new Mat();
+
+        Mat regionRGB1 = frame.submat(new Rect(region1_pointA, region1_pointB));
+        Mat regionRGB2 = frame.submat(new Rect(region2_pointA, region2_pointB));
+        Mat regionRGB3 = frame.submat(new Rect(region3_pointA, region3_pointB));
+
+        RGBReigon1.val = Core.mean(regionRGB1).val;
+        RGBReigon2.val = Core.mean(regionRGB2).val;
+        RGBReigon3.val = Core.mean(regionRGB3).val;
+
         if(team == RobotTeam.Blue) {
             Core.inRange(region1, LOW_BLUE, HIGH_BLUE, inRangeMat1);
             Core.inRange(region2, LOW_BLUE, HIGH_BLUE, inRangeMat2);
             Core.inRange(region3, LOW_BLUE, HIGH_BLUE, inRangeMat3);
+
+            Core.inRange(regionRGB1, LOW_BLUE_RGB, HIGH_BLUE_RGB, inRangeMatRGB1);
+            Core.inRange(regionRGB2, LOW_BLUE_RGB, HIGH_BLUE_RGB, inRangeMatRGB2);
+            Core.inRange(regionRGB3, LOW_BLUE_RGB, HIGH_BLUE_RGB, inRangeMatRGB3);
+            nonZero1 = 0;
+            nonZero2 = 0;
+            nonZero3 = 0;
         }else{
-            Core.inRange(region1, LOW_RED, HIGH_RED, inRangeMat1);
-            Core.inRange(region2, LOW_RED, HIGH_RED, inRangeMat2);
-            Core.inRange(region3, LOW_RED, HIGH_RED, inRangeMat3);
+            Core.inRange(region1, LOW_RED1, HIGH_RED1, inRangeMat1);
+            Core.inRange(region2, LOW_RED1, HIGH_RED1, inRangeMat2);
+            Core.inRange(region3, LOW_RED1, HIGH_RED1, inRangeMat3);
+
+            nonZero1 = (int) Core.countNonZero(inRangeMat1);
+            nonZero2 = (int) Core.countNonZero(inRangeMat2);
+            nonZero3 = (int) Core.countNonZero(inRangeMat3);
+
+            Core.inRange(region1, LOW_RED2, HIGH_RED2, inRangeMat1);
+            Core.inRange(region2, LOW_RED2, HIGH_RED2, inRangeMat2);
+            Core.inRange(region3, LOW_RED2, HIGH_RED2, inRangeMat3);
+
+            Core.inRange(regionRGB1, LOW_RED_RGB, HIGH_RED_RGB, inRangeMatRGB1);
+            Core.inRange(regionRGB2, LOW_RED_RGB, HIGH_RED_RGB, inRangeMatRGB2);
+            Core.inRange(regionRGB3, LOW_RED_RGB, HIGH_RED_RGB, inRangeMatRGB3);
         }
-        nonZero1 = (int) Core.countNonZero(inRangeMat1);
-        nonZero2 = (int) Core.countNonZero(inRangeMat2);
-        nonZero3 = (int) Core.countNonZero(inRangeMat3);
+        nonZero1 += (int) Core.countNonZero(inRangeMat1);
+        nonZero2 += (int) Core.countNonZero(inRangeMat2);
+        nonZero3 += (int) Core.countNonZero(inRangeMat3);
+
+        mat1RGB = (int) Core.countNonZero(inRangeMatRGB1);
+        mat2RGB = (int) Core.countNonZero(inRangeMatRGB2);
+        mat3RGB = (int) Core.countNonZero(inRangeMatRGB3);
 
         /*
          * Draw a rectangle showing sample region 1 on the screen.

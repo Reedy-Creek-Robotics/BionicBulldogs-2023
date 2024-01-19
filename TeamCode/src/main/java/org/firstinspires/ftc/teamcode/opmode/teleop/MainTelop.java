@@ -20,6 +20,7 @@ public class MainTelop extends BaseTeleOp{
     XDrive xDrive;
     Intake intake;
     HangingSlides hangingSlides;
+    DroneLauncher droneLauncher;
     VoltageSensor voltageSensor;
 
     float driveSpeed = 1;
@@ -41,6 +42,7 @@ public class MainTelop extends BaseTeleOp{
         slides = new Slides(new SlideConfig(hardwareMap));
         xDrive = new XDrive(new XDriveConfig(hardwareMap));
         intake = new Intake(new IntakeConfig(hardwareMap));
+        droneLauncher = new DroneLauncher(new DroneLauncherConfig(hardwareMap));
         hangingSlides = new HangingSlides(new HangingSlidesConfig(hardwareMap));
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
         telemetry.addData("battery voltage", voltageSensor.getVoltage());
@@ -76,6 +78,10 @@ public class MainTelop extends BaseTeleOp{
         if(gamepadEx1.leftBumper()){
             //Log.d("INTAKE", "Left Bumper Pressed");
             updateIntake();
+        }
+
+        if(gamepadEx1.options()){
+            droneLauncher.launch();
         }
         //telemetry.addData("Intake", intake.getState());
 
@@ -194,14 +200,12 @@ public class MainTelop extends BaseTeleOp{
             scoreState = ScoringState.Down;
         }
     }
-    protected void score(int count){
-        if(scoreState == ScoringState.Up) {
-            xDrive.drive(0, 0, 0);
-            for (int i = 0; i < count; i++) {
-                flicker();
-                if (i != count - 1) {
-                    sleep(flickerDelay);
-                }
+    protected void score(int count) {
+        xDrive.drive(0, 0, 0);
+        for (int i = 0; i < count; i++) {
+            flicker();
+            if (i != count - 1) {
+                sleep(flickerDelay);
             }
         }
     }

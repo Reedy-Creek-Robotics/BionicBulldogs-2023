@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
 import org.firstinspires.ftc.teamcode.modules.robot.RecognitionProcesser;
+import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
@@ -27,22 +28,25 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous
 public class BlueStack extends AutoBase {
+    public RobotTeam getTeam(){
+        return RobotTeam.Blue;
+    }
     public Pose2d getStartPos() {
         return new Pose2d(-36, 66, Math.toRadians(-90));
     }
     public TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition){
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(-36, 62, Math.toRadians(-90)))
-                .lineToConstantHeading(new Vector2d(30,62));
+                .lineToLinearHeading(new Pose2d(-36, 60, Math.toRadians(-90)))
+                .lineToConstantHeading(new Vector2d(30,60));
         switch(elementPosition){
             case Right:
-                builder.lineToLinearHeading(new Pose2d(54, 36, Math.toRadians(185)));
+                builder.lineToLinearHeading(new Pose2d(52, 34, Math.toRadians(185)));
                 break;
             case Center:
-                builder.lineToLinearHeading(new Pose2d(54, 42, Math.toRadians(185)));
+                builder.lineToLinearHeading(new Pose2d(52, 44, Math.toRadians(185)));
                 break;
             case Left:
-                builder.lineToLinearHeading(new Pose2d(54, 46, Math.toRadians(185)));
+                builder.lineToLinearHeading(new Pose2d(52, 54, Math.toRadians(185)));
                 break;
         }
         return builder.build();

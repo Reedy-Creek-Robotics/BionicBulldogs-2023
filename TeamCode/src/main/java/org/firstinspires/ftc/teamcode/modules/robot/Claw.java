@@ -8,11 +8,11 @@ import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 
 public class Claw {
     //top motor position for open
-    static final float TOP_OPEN = 0.1f;
+    static final float TOP_OPEN = 0.2f;
     //top motor position for close
-    static final float TOP_CLOSE = 0.325f;
+    static final float TOP_CLOSE = 0.31f;
     //flicker default position
-    static final float SIDE_CLOSE = 0;
+    static final float SIDE_CLOSE = 0.0f;
     //flicker position for pushing a pixel out
     static final float SIDE_OPEN = 0.25f;
 
@@ -48,7 +48,7 @@ public class Claw {
     }
 
     public void toggleTop(){
-        if(top.getPosition() == TOP_OPEN){
+        if(Math.abs(top.getPosition() - TOP_OPEN) < 0.11f){
             top.setPosition(TOP_CLOSE);
         }else{
             top.setPosition(TOP_OPEN);

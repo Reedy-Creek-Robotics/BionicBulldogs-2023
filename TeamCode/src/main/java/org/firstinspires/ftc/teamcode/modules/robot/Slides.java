@@ -15,7 +15,7 @@ public class Slides {
     public static double slideSpeed = 0.8f;
     public static double servoStartPos = 0.975f; //0.47f;
     public static double servoScorePosAuto = 0.2f; //0.2f;
-    public static double servoScorePosTelop = 0.4f;
+    public static double servoScorePosTelop = 0.3f;
     DcMotor motor;
     Servo servo;
 
@@ -82,7 +82,7 @@ public class Slides {
         servo.setPosition(position);
     }
     public void toggleRotator(){
-        if(servo.getPosition() == servoScorePosTelop){
+        if(Math.abs(servo.getPosition() - servoScorePosTelop) < 0.11f){
             servo.setPosition(servoStartPos);
         }else{
             servo.setPosition(servoScorePosTelop);
@@ -95,7 +95,7 @@ public class Slides {
         motor.setPower(slideSpeed);
     }
     public void gotoPosition(){
-        gotoPosition(-975);
+        gotoPosition(-900);
     }
     public void telem(Telemetry t){
         t.addData("(slides)power", motor.getPower());
