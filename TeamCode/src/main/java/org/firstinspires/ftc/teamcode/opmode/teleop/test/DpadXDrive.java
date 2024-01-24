@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.hardware.GamepadEx;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
-
+@Disabled
 @TeleOp
 public class DpadXDrive extends LinearOpMode {
     public void runOpMode() {

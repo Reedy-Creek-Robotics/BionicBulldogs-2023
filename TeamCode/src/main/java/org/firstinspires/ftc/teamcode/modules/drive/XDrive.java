@@ -122,10 +122,13 @@ public class XDrive {
         drive(f, r, rotate);
     }
 
-    public void drive(float forward, float strafe, float rotate){
+    public void driveAccel(float forward, float strafe, float rotate){
         Vec2 out = acceleration.getNext(new Vec2(forward, strafe));
         forward = out.x;
         strafe = out.y;
+        driveCH(forward, strafe, rotate);
+    }
+    public void drive(float forward, float strafe, float rotate){
         float flPwr = forward + strafe - rotate;
         float frPwr = forward - strafe + rotate;
         float blPwr = forward - strafe - rotate;

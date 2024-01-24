@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 
 @TeleOp
+@Disabled
 public class XDriveTest extends BaseTeleOp {
     XDrive drive;
     public void init() {

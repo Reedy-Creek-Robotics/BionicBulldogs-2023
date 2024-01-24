@@ -25,7 +25,7 @@ public class MainTelop extends BaseTeleOp{
 
     float driveSpeed = 1;
     float intakeSpeed = 0.8f;
-    static long flickerDelay = 1000;
+    static long flickerDelay = 350;
 
     public enum ScoringState{
         Up,
@@ -45,14 +45,16 @@ public class MainTelop extends BaseTeleOp{
         droneLauncher = new DroneLauncher(new DroneLauncherConfig(hardwareMap));
         hangingSlides = new HangingSlides(new HangingSlidesConfig(hardwareMap));
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
-        telemetry.addData("battery voltage", voltageSensor.getVoltage());
-        slides.telem(telemetry);
-        xDrive.telem(telemetry);
+        //telemetry.addData("battery voltage", voltageSensor.getVoltage());
+        //slides.telem(telemetry);
+        //xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
-        telemetry.update();
         if(SampleMecanumDrive.posEstimate != null){
             xDrive.setPosEstimate(SampleMecanumDrive.posEstimate);
+        }else{
+            telemetry.addLine("SampleMecaniumDrive::posEstimate is null, using deafult heading");
         }
+        telemetry.update();
     }
     public void start(){
         super.start();

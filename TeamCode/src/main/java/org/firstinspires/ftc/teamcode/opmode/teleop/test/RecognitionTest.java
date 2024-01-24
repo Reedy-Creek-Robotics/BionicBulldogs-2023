@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 
 @TeleOp
+@Disabled
 public class RecognitionTest extends BaseTeleOp {
 
     RecognitionProcesser recognitionProcesser;

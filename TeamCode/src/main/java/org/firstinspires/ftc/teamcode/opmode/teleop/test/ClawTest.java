@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
@@ -7,7 +8,7 @@ import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 
 import java.util.concurrent.Delayed;
-
+@Disabled
 @TeleOp
 public class ClawTest extends BaseTeleOp {
     Claw claw;

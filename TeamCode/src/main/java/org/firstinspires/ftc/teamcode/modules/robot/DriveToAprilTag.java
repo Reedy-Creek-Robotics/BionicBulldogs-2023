@@ -91,16 +91,16 @@ import java.util.concurrent.TimeUnit;
 public class DriveToAprilTag
 {
     // Adjust these numbers to suit your robot.
-    public static double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+    public static double DESIRED_DISTANCE = 6.0; //  this is how close the camera should get to the target (inches)
 
     public static float MIN_SPEED = 0.03f;  // minimum speed of the robot, if the robot goes below this speed then the robot stops tracking the april tag
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    public static double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    public static double STRAFE_GAIN =  0.01 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    public static double TURN_GAIN   =  0.03  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    public static double SPEED_GAIN  =  0.04  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    public static double STRAFE_GAIN =  0.02 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    public static double TURN_GAIN   =  0.06  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
     public static double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public static double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
@@ -112,12 +112,17 @@ public class DriveToAprilTag
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound = false;
+    boolean reversed;
 
-    public DriveToAprilTag(XDrive _drive, LinearOpMode op) {
+    public DriveToAprilTag(XDrive _drive, LinearOpMode op){
+        this(_drive, op, "Webcam 1", false);
+    }
+    public DriveToAprilTag(XDrive _drive, LinearOpMode op, String name, boolean _reversed) {
         drive = _drive;
         telemetry = op.telemetry;
         // Initialize the Apriltag Detection process
-        initAprilTag(op);
+        initAprilTag(op, name);
+        reversed = _reversed;
 
         if (USE_WEBCAM)
             setManualExposure(1, 255, op);  // Use low exposure time to reduce motion blur
@@ -157,11 +162,19 @@ public class DriveToAprilTag
         strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
         // Apply desired axes motions to the drivetrain.
+        if(reversed){
+            forward *= -1;
+            strafe *= -1;
+        }
         if(
                 (Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
                 targetFound
         ){
-            drive.drive((float) -forward, (float) strafe, (float) -rotate);
+            telemetry.addData("x", -forward);
+            telemetry.addData("y", -strafe);
+            telemetry.addData("r", -rotate);
+            telemetry.update();
+            drive.drive((float) -forward, (float) -strafe, 0.0f);
             return true;
         }else{
             drive.drive(0,0,0);
@@ -177,7 +190,7 @@ public class DriveToAprilTag
     /**
      * Initialize the AprilTag processor.
      */
-    private void initAprilTag(LinearOpMode op) {
+    private void initAprilTag(LinearOpMode op, String name) {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -191,15 +204,10 @@ public class DriveToAprilTag
         aprilTag.setDecimation(2);
 
         // Create the vision portal by using a builder.
-        CameraName camera = op.hardwareMap.get(WebcamName.class, "Webcam 1");
+        CameraName camera = op.hardwareMap.get(WebcamName.class, name);
         if (USE_WEBCAM) {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(camera)
-                    .addProcessor(aprilTag)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
                     .addProcessor(aprilTag)
                     .build();
         }

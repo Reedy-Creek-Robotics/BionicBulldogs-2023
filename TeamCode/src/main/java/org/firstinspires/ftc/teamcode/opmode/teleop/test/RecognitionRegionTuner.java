@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.Ui.FloatEx;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.modules.robot.Recognition;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 
 @TeleOp
+@Disabled
 public class RecognitionRegionTuner extends BaseTeleOp {
     Recognition recognition;
     UI ui;

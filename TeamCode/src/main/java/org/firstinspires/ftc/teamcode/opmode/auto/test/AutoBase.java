@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.auto.test;
 
-import android.sax.Element;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
+import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
 import org.firstinspires.ftc.teamcode.modules.robot.RecognitionProcesser;
@@ -26,20 +21,12 @@ import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 public abstract class AutoBase extends LinearOpMode {
     Slides slides;
     Claw claw;
     SampleMecanumDrive drive;
-    void delay(float time){
-        ElapsedTime t = new ElapsedTime();
-        t.reset();
-        while(t.seconds() >= time){
-
-        }
-    }
     public void runOpMode(){
         drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
@@ -53,14 +40,17 @@ public abstract class AutoBase extends LinearOpMode {
         RecognitionProcesser recognitionProcesser = new RecognitionProcesser();
         recognitionProcesser.setTeam(getTeam());
         CameraName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .setCamera(camera)
-                .addProcessor(recognitionProcesser)
-                .build();
+        //VisionPortal visionPortal = new VisionPortal.Builder()
+        //        .setCamera(camera)
+        //        .addProcessor(recognitionProcesser)
+        //        .build();
+
+        //visionPortal.close();
+        DriveToAprilTag driveToAprilTag = new DriveToAprilTag(xDrive, this,  "Webcam 2", false);
 
         while(opModeInInit()){
             telemetry.addData("initialized", recognitionProcesser.isInitialized());
-            if(recognitionProcesser.isInitialized()){
+        /*    if(recognitionProcesser.isInitialized()){
                 ElementPosition position = recognitionProcesser.getPosition();
                 telemetry.addData("Result", position);
                 telemetry.addData("region-one", recognitionProcesser.getNonZero1());
@@ -68,7 +58,7 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.addData("region-three", recognitionProcesser.getNonZero3());
                 telemetry.addData("region-one-RGB", String.format("%.2f, %.2f, %.2f",
                         RecognitionProcesser.RGBReigon1.val[0],
-                                RecognitionProcesser.RGBReigon1.val[1],
+                        RecognitionProcesser.RGBReigon1.val[1],
                         RecognitionProcesser.RGBReigon1.val[2]
                 ));
                 telemetry.addData("region-two-RGB", String.format("%.2f, %.2f, %.2f",
@@ -82,7 +72,8 @@ public abstract class AutoBase extends LinearOpMode {
                         RecognitionProcesser.RGBReigon3.val[2]
                 ));
             }
-            telemetry.update();
+            telemetry.update();*/
+            driveToAprilTag.telemetry();
         }
 
 /*
@@ -107,13 +98,16 @@ public abstract class AutoBase extends LinearOpMode {
 //                .lineToConstantHeading(new Vector2d(48, 36))
 //                .build();
 
+        if(!opModeIsActive()){
+            return;
+        }
         waitForStart();
-
-        slides.resetRotator();
+        //ElementPosition elementPosition = recognitionProcesser.getPosition();
+        ElementPosition elementPosition = ElementPosition.Center;
+        /*slides.resetRotator();
         claw.closeTop();
 
         TrajectorySequence scorePreloadPath;
-        ElementPosition elementPosition = recognitionProcesser.getPosition();
         double preloadY = getStartPos().getY();
         float offset = (elementPosition == ElementPosition.Center ? 33 : 36);
         preloadY = preloadY + (preloadY > 0 ? -offset : offset);
@@ -146,11 +140,30 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(500);
         intake.stop();
 
-        drive.followTrajectorySequence(path);
+        drive.followTrajectorySequence(path);*/
+        switch(elementPosition){
+            case Right:
+                while(driveToAprilTag.driveToTag(3) && opModeIsActive()) {
+                    driveToAprilTag.telemetry();
+                }
+                break;
+            case Center:
+                while(driveToAprilTag.driveToTag(2) && opModeIsActive()) {
+                    driveToAprilTag.telemetry();
+                }
+                break;
+            case Left:
+                while(driveToAprilTag.driveToTag(1) && opModeIsActive()) {
+                    driveToAprilTag.telemetry();
+                }
+                break;
+        }
 
-        scoreOnBackboard();
-        sleep(1000);
+        //scoreOnBackboard();
         SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
+        telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
+        telemetry.update();
+        sleep(1000);
     }
 
     public abstract Pose2d getStartPos();
@@ -180,11 +193,15 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(500);
         slides.reset();
         claw.openTop();
+        telemetry.addLine("parking");
+        telemetry.update();
         drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .strafeLeft(getTeam() == RobotTeam.Red ? 36 : -36)
                         .build()
         );
+        telemetry.addLine("parked");
+        telemetry.update();
     }
 
 }

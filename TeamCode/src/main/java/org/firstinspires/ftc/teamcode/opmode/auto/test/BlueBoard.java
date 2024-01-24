@@ -19,8 +19,9 @@ public class BlueBoard extends AutoBase{
     }
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12, 60));
-        switch(elementPosition){
+                .lineToConstantHeading(new Vector2d(12, 60))
+                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(180)));
+        /*switch(elementPosition){
             case Right:
                 builder.lineToLinearHeading(new Pose2d(52, 34, Math.toRadians(180)));
                 break;
@@ -30,7 +31,7 @@ public class BlueBoard extends AutoBase{
             case Left:
                 builder.lineToLinearHeading(new Pose2d(52.5, 48, Math.toRadians(180)));
                 break;
-        }
+        }*/
         return builder.build();
     }
 }

@@ -54,7 +54,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    public static Pose2d posEstimate;
+    public static Pose2d posEstimate = null;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
