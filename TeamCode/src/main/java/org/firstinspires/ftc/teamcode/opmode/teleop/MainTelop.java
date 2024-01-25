@@ -70,7 +70,7 @@ public class MainTelop extends BaseTeleOp{
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
         float rotate = -gamepad1.right_stick_x;
-        xDrive.driveCH(forward * driveSpeed, right * driveSpeed, rotate * driveSpeed);
+        xDrive.driveAccel(forward * driveSpeed, right * driveSpeed, rotate * driveSpeed);
 
         //intake
         if(gamepadEx1.rightBumper()){

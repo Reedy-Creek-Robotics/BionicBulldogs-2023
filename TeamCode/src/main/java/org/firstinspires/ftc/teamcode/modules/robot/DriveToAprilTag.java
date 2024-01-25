@@ -91,16 +91,16 @@ import java.util.concurrent.TimeUnit;
 public class DriveToAprilTag
 {
     // Adjust these numbers to suit your robot.
-    public static double DESIRED_DISTANCE = 6.0; //  this is how close the camera should get to the target (inches)
+    public static double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
 
-    public static float MIN_SPEED = 0.03f;  // minimum speed of the robot, if the robot goes below this speed then the robot stops tracking the april tag
+    public static double MIN_SPEED = 0.02f;  // minimum speed of the robot, if the robot goes below this speed then the robot stops tracking the april tag
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    public static double SPEED_GAIN  =  0.04  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    public static double STRAFE_GAIN =  0.02 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    public static double TURN_GAIN   =  0.06  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    public static double SPEED_GAIN  =  0.50;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    public static double STRAFE_GAIN =  0.25;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    public static double TURN_GAIN   =  0.0;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
     public static double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public static double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
@@ -131,7 +131,6 @@ public class DriveToAprilTag
         double forward = 0;
         double strafe = 0;
         double rotate = 0;
-        targetFound = false;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -149,6 +148,7 @@ public class DriveToAprilTag
         }
         if(desiredTag == null){
             drive.drive(0,0,0);
+            telemetry.addLine("Lost tag");
             return false;
         }
         // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
@@ -162,21 +162,20 @@ public class DriveToAprilTag
         strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
         // Apply desired axes motions to the drivetrain.
-        if(reversed){
-            forward *= -1;
-            strafe *= -1;
-        }
         if(
                 (Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
                 targetFound
         ){
-            telemetry.addData("x", -forward);
-            telemetry.addData("y", -strafe);
-            telemetry.addData("r", -rotate);
-            telemetry.update();
-            drive.drive((float) -forward, (float) -strafe, 0.0f);
+            telemetry.addData("2x", -forward);
+            telemetry.addData("2y", -strafe);
+            telemetry.addData("2r", -rotate);
+            telemetry.addData("1heading", desiredTag.ftcPose.range);
+            telemetry.addData("1yaw", desiredTag.ftcPose.bearing);
+            telemetry.addData("1range", desiredTag.ftcPose.yaw);
+            drive.drive((float)-forward, (float)-strafe, (float)rotate);
             return true;
         }else{
+            telemetry.addLine("Made it to tag");
             drive.drive(0,0,0);
             return false;
         }
@@ -186,6 +185,12 @@ public class DriveToAprilTag
             telemetry.addData("found tag", desiredTag.id);
         }
         telemetry.addData("was tag found", targetFound);
+    }
+    public void initTelem(){
+        int i = 0;
+        for(AprilTagDetection detection : aprilTag.getDetections()){
+            telemetry.addData("tag" + (i++), detection.id);
+        }
     }
     /**
      * Initialize the AprilTag processor.

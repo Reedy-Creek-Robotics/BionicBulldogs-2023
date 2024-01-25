@@ -40,17 +40,14 @@ public abstract class AutoBase extends LinearOpMode {
         RecognitionProcesser recognitionProcesser = new RecognitionProcesser();
         recognitionProcesser.setTeam(getTeam());
         CameraName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
-        //VisionPortal visionPortal = new VisionPortal.Builder()
-        //        .setCamera(camera)
-        //        .addProcessor(recognitionProcesser)
-        //        .build();
-
-        //visionPortal.close();
-        DriveToAprilTag driveToAprilTag = new DriveToAprilTag(xDrive, this,  "Webcam 2", false);
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .setCamera(camera)
+                .addProcessor(recognitionProcesser)
+                .build();
 
         while(opModeInInit()){
             telemetry.addData("initialized", recognitionProcesser.isInitialized());
-        /*    if(recognitionProcesser.isInitialized()){
+            if(recognitionProcesser.isInitialized()){
                 ElementPosition position = recognitionProcesser.getPosition();
                 telemetry.addData("Result", position);
                 telemetry.addData("region-one", recognitionProcesser.getNonZero1());
@@ -72,8 +69,7 @@ public abstract class AutoBase extends LinearOpMode {
                         RecognitionProcesser.RGBReigon3.val[2]
                 ));
             }
-            telemetry.update();*/
-            driveToAprilTag.telemetry();
+            telemetry.update();
         }
 
 /*
@@ -102,9 +98,8 @@ public abstract class AutoBase extends LinearOpMode {
             return;
         }
         waitForStart();
-        //ElementPosition elementPosition = recognitionProcesser.getPosition();
-        ElementPosition elementPosition = ElementPosition.Center;
-        /*slides.resetRotator();
+        ElementPosition elementPosition = recognitionProcesser.getPosition();
+        slides.resetRotator();
         claw.closeTop();
 
         TrajectorySequence scorePreloadPath;
@@ -140,26 +135,8 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(500);
         intake.stop();
 
-        drive.followTrajectorySequence(path);*/
-        switch(elementPosition){
-            case Right:
-                while(driveToAprilTag.driveToTag(3) && opModeIsActive()) {
-                    driveToAprilTag.telemetry();
-                }
-                break;
-            case Center:
-                while(driveToAprilTag.driveToTag(2) && opModeIsActive()) {
-                    driveToAprilTag.telemetry();
-                }
-                break;
-            case Left:
-                while(driveToAprilTag.driveToTag(1) && opModeIsActive()) {
-                    driveToAprilTag.telemetry();
-                }
-                break;
-        }
-
-        //scoreOnBackboard();
+        drive.followTrajectorySequence(path);
+        scoreOnBackboard();
         SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
         telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
         telemetry.update();

@@ -25,7 +25,7 @@ import java.util.List;
 
 @Config
 public class XDrive {
-    public static double maxPower = 0.8;
+    public static double maxPower = 0.9;
     public MotorGroup motors;
     DcMotor frontLeft;
     DcMotor frontRight;

@@ -23,8 +23,8 @@ public class RedBoard extends AutoBase{
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(12, -60))
-                .lineToLinearHeading(new Pose2d(24, -24, Math.toRadians(180)));
-        /*switch(elementPosition){
+                .lineToConstantHeading(new Vector2d(24, -24));
+        switch(elementPosition){
             case Left:
                 builder.lineToLinearHeading(new Pose2d(53, -33, Math.toRadians(180)));
                 break;
@@ -34,7 +34,7 @@ public class RedBoard extends AutoBase{
             case Right:
                 builder.lineToLinearHeading(new Pose2d(52, -42, Math.toRadians(180)));
                 break;
-        }*/
+        }
         return builder.build();
     }
 }
