@@ -14,14 +14,18 @@ public class BlueBoard extends AutoBase{
     public RobotTeam getTeam(){
         return RobotTeam.Blue;
     }
+
+    // starting position for blue board side
     public Pose2d getStartPos() {
-        return new Pose2d(12, 66, Math.toRadians(-90));
+        return new Pose2d(12, 64, Math.toRadians(-90));
     }
+
+    // navigate from dropping purple pixel to the board to drop yellow pixel
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12, 60))
-                .lineToConstantHeading(new Vector2d(36, 36));
-        switch(elementPosition){
+                .lineToConstantHeading(new Vector2d(12, 60)) // moving back to near start position
+                .lineToConstantHeading(new Vector2d(36, 36)); // moving towards board
+        switch(elementPosition){ // line up with proper april tag
             case Right:
                 builder.lineToLinearHeading(new Pose2d(52, 34, Math.toRadians(180)));
                 break;

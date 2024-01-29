@@ -102,34 +102,39 @@ public abstract class AutoBase extends LinearOpMode {
         slides.resetRotator();
         claw.closeTop();
 
-        TrajectorySequence scorePreloadPath;
+        TrajectorySequence purplePreloadPath;
+
+        //Y position for dropping off purple preload
         double preloadY = getStartPos().getY();
         float offset = (elementPosition == ElementPosition.Center ? 33 : 36);
         preloadY = preloadY + (preloadY > 0 ? -offset : offset);
+
+        //Define trajectory for dropping purple pixel
         switch (elementPosition){
             default:
             case Center:
-                scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
+                purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
                         .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading()))
                         .build();
                 break;
             case Left:
-                scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
+                purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
                         .lineToLinearHeading(new Pose2d(getStartPos().getX() + (getTeam() == RobotTeam.Blue ? 2 : 0), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
-                scorePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
+                purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
                         .lineToLinearHeading(new Pose2d(getStartPos().getX() + (getTeam() == RobotTeam.Red ? 2 : 0), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
                         .build();
                 break;
         }
 
-        TrajectorySequence path = getTrajectory(scorePreloadPath.end(), drive, elementPosition);
+        TrajectorySequence path = getTrajectory(purplePreloadPath.end(), drive, elementPosition);
 
-        drive.setPoseEstimate(scorePreloadPath.start());
+        drive.setPoseEstimate(purplePreloadPath.start());
 
-        drive.followTrajectorySequence(scorePreloadPath);
+        //Drop-off purple pixel
+        drive.followTrajectorySequence(purplePreloadPath);
 
         intake.outtake(0.3);
         sleep(500);
@@ -145,6 +150,9 @@ public abstract class AutoBase extends LinearOpMode {
 
     public abstract Pose2d getStartPos();
     public abstract RobotTeam getTeam();
+
+    // trajectory for navigating to board and get in proper position to drop the yellow pixel
+    // this is defined by sub-classes because its unique to each position
     public abstract TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition);
     public void flicker(Claw claw){
         //flick the flicker on the claw
