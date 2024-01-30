@@ -3,15 +3,18 @@ package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
+import org.firstinspires.ftc.teamcode.opmode.teleop.MainTelop;
 
 import java.util.concurrent.Delayed;
-@Disabled
 @TeleOp
 public class ClawTest extends BaseTeleOp {
     Claw claw;
+    Slides slides;
     long delayMs;
     static long INCREMENT = 25;
 
@@ -19,10 +22,12 @@ public class ClawTest extends BaseTeleOp {
         super.init();
         ClawConfig config = new ClawConfig(hardwareMap);
         claw = new Claw(config);
+        slides = new Slides(new SlideConfig(hardwareMap));
     }
     public void start(){
         super.start();
         claw.initServos();
+        slides.resetRotator();
     }
 
 
@@ -62,6 +67,10 @@ public class ClawTest extends BaseTeleOp {
             claw.push();
             sleep(delayMs);
             claw.resetFlicker();
+            sleep(delayMs);
+            claw.push();
+            sleep(delayMs);
+            claw.resetFlicker();
         }
 
         if( gamepadEx1.rightBumper()) {
@@ -72,6 +81,9 @@ public class ClawTest extends BaseTeleOp {
             claw.push();
             sleep(delayMs);
             claw.resetFlicker();
+        }
+        if(gamepadEx1.ps()){
+            slides.toggleRotator();
         }
     }
 }

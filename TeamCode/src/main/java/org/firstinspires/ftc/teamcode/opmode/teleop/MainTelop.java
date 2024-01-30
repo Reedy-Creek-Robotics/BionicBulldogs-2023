@@ -25,7 +25,7 @@ public class MainTelop extends BaseTeleOp{
 
     float driveSpeed = 1;
     float intakeSpeed = 0.8f;
-    static long flickerDelay = 350;
+    static long flickerDelay = 225;
 
     public enum ScoringState{
         Up,

@@ -22,17 +22,17 @@ public class RedStack extends AutoBase{
     }
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-36, -62))
-                .lineToConstantHeading(new Vector2d(30, -62));
+                .lineToConstantHeading(new Vector2d(-36, -60))
+                .lineToConstantHeading(new Vector2d(30, -60));
         switch(elementPosition){
             case Left:
-                builder.lineToLinearHeading(new Pose2d(49, -29.5, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(53, -30, Math.toRadians(180)));
                 break;
             case Center:
-                builder.lineToLinearHeading(new Pose2d(49, -36.5, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51, -36, Math.toRadians(180)));
                 break;
             case Right:
-                builder.lineToLinearHeading(new Pose2d(49, -39, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(52, -42, Math.toRadians(180)));
                 break;
         }
         return builder.build();

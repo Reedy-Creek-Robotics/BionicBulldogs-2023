@@ -17,23 +17,26 @@ public class BlueBoard extends AutoBase{
 
     // starting position for blue board side
     public Pose2d getStartPos() {
-        return new Pose2d(12, 64, Math.toRadians(-90));
+        return new Pose2d(12, 62.5, Math.toRadians(-90));
     }
 
     // navigate from dropping purple pixel to the board to drop yellow pixel
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
-        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12, 60)) // moving back to near start position
-                .lineToConstantHeading(new Vector2d(36, 36)); // moving towards board
+        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start);
+        if(elementPosition == ElementPosition.Left){ // moving back to near start position
+            builder.lineToLinearHeading(new Pose2d(12, 60, Math.toRadians(-90)));
+        }else{
+            builder.lineToConstantHeading(new Vector2d(12, 60));
+        }
         switch(elementPosition){ // line up with proper april tag
             case Right:
-                builder.lineToLinearHeading(new Pose2d(52, 34, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51.5, 29, Math.toRadians(180)));
                 break;
             case Center:
-                builder.lineToLinearHeading(new Pose2d(50, 42, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51.5, 35, Math.toRadians(180)));
                 break;
             case Left:
-                builder.lineToLinearHeading(new Pose2d(52.5, 48, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51.5, 41, Math.toRadians(180)));
                 break;
         }
         return builder.build();

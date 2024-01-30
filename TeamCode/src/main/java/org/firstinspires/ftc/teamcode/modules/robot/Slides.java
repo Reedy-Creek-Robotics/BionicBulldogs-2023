@@ -94,8 +94,13 @@ public class Slides {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(slideSpeed);
     }
-    public void gotoPosition(){
-        gotoPosition(-900);
+    public void gotoPositionBlock(int pos){
+        gotoPosition(pos);
+        while(motor.isBusy());
+    }
+
+    public void gotoPositionBlock(){
+        gotoPositionBlock(-758);
     }
     public void telem(Telemetry t){
         t.addData("(slides)power", motor.getPower());

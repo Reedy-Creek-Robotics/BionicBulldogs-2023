@@ -15,24 +15,27 @@ public class RedBoard extends AutoBase{
         return RobotTeam.Red;
     }
     public Pose2d getStartPos(){
-        return new Pose2d(12, -66, Math.toRadians(90));
+        return new Pose2d(12, -62.5, Math.toRadians(90));
     }
     public Vector2d getPreloadPos(){
         return new Vector2d(12, -36);
     }
     public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
-        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12, -60))
-                .lineToConstantHeading(new Vector2d(24, -24));
+        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start);
+        if(elementPosition == ElementPosition.Right){
+            builder.lineToLinearHeading(new Pose2d(12, -60, Math.toRadians(90)));
+        }else {
+            builder.lineToConstantHeading(new Vector2d(12, -60));
+        }
         switch(elementPosition){
             case Left:
-                builder.lineToLinearHeading(new Pose2d(53, -33, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51.5, -29, Math.toRadians(180)));
                 break;
             case Center:
-                builder.lineToLinearHeading(new Pose2d(51, -36, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51.5, -35, Math.toRadians(180)));
                 break;
             case Right:
-                builder.lineToLinearHeading(new Pose2d(52, -42, Math.toRadians(180)));
+                builder.lineToLinearHeading(new Pose2d(51.5, -41, Math.toRadians(180)));
                 break;
         }
         return builder.build();

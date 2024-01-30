@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto.test;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
@@ -106,7 +107,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         //Y position for dropping off purple preload
         double preloadY = getStartPos().getY();
-        float offset = (elementPosition == ElementPosition.Center ? 33 : 36);
+        float offset = (elementPosition == ElementPosition.Center ? 28.5f : 31.5f);
         preloadY = preloadY + (preloadY > 0 ? -offset : offset);
 
         //Define trajectory for dropping purple pixel
@@ -119,12 +120,12 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() + (getTeam() == RobotTeam.Blue ? 2 : 0), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (getTeam() == RobotTeam.Blue ? 1 : 0), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() + (getTeam() == RobotTeam.Red ? 2 : 0), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
                         .build();
                 break;
         }
@@ -161,14 +162,16 @@ public abstract class AutoBase extends LinearOpMode {
         claw.resetFlicker();
     }
     public void scoreOnBackboard(){
-        slides.gotoPosition();
-        sleep(1500);
-        slides.scoreRotatorAuto();
-        sleep(350);
+        sleep(250);
+        slides.gotoPositionBlock();
+        sleep(500);
+        slides.scoreRotator();
+        sleep(450);
         flicker(claw);
         sleep(200);
         flicker(claw);
         sleep(200);
+        slides.gotoPositionBlock(-858);
         drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .forward(5)
@@ -182,7 +185,8 @@ public abstract class AutoBase extends LinearOpMode {
         telemetry.update();
         drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .strafeLeft(getTeam() == RobotTeam.Red ? 36 : -36)
+                        .lineToConstantHeading(new Vector2d(drive.getPoseEstimate().getX(), getTeam() == RobotTeam.Red ? -60 : 60))
+                        .back(3)
                         .build()
         );
         telemetry.addLine("parked");
