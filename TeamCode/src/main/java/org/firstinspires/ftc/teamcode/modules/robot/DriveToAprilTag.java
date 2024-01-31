@@ -30,6 +30,8 @@
 package org.firstinspires.ftc.teamcode.modules.robot;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -41,11 +43,13 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -180,6 +184,36 @@ public class DriveToAprilTag
             return false;
         }
     }
+
+    public void roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive){
+        Vector2d targetPos;
+        // Step through the list of detected tags and look for a matching tag
+        targetFound = false;    // Set to true when an AprilTag target is detected
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // Look to see if we have size info on this tag.
+            if (detection.metadata != null) {
+                //  Check to see if we want to track towards this tag.
+                if ((id < 0) || (detection.id == id)) {
+                    // Yes, we want to use this tag.
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;  // don't look any further.
+                }
+            }
+        }
+        if(desiredTag == null){
+            drive.drive(0,0,0);
+            telemetry.addLine("Lost tag");
+            return;
+        }
+        targetPos = new Vector2d(-desiredTag.ftcPose.y + 4, desiredTag.ftcPose.x);
+        rrDrive.followTrajectorySequence(
+                rrDrive.trajectorySequenceBuilder(rrDrive.getPoseEstimate())
+                        .lineToConstantHeading(targetPos)
+                        .build()
+        );
+    }
     public void telemetry() {
         if(desiredTag != null) {
             telemetry.addData("found tag", desiredTag.id);
@@ -189,7 +223,8 @@ public class DriveToAprilTag
     public void initTelem(){
         int i = 0;
         for(AprilTagDetection detection : aprilTag.getDetections()){
-            telemetry.addData("tag" + (i++), detection.id);
+            telemetry.addData("tag" + (++i), detection.id);
+            telemetry.addData("tag" + (i) + " position", detection.ftcPose.y - 4 + ", " + detection.ftcPose.x);
         }
     }
     /**

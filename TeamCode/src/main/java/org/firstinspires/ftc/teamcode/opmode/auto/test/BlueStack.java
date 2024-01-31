@@ -32,23 +32,28 @@ public class BlueStack extends AutoBase {
         return RobotTeam.Blue;
     }
     public Pose2d getStartPos() {
-        return new Pose2d(-34.5, 66, Math.toRadians(-90));
+        return new Pose2d(-35, 62.5, Math.toRadians(-90));
     }
     public TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition){
-        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startPos)
-                .lineToLinearHeading(new Pose2d(-30, 60, Math.toRadians(-90)))
-                .lineToConstantHeading(new Vector2d(30,60));
+        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startPos);
+        if(elementPosition == ElementPosition.Left) {
+            builder.lineToLinearHeading(new Pose2d(-34.5, 57.5, Math.toRadians(-90)));
+            builder.turn(Math.toRadians(-90));
+        }else{
+            builder.lineToLinearHeading(new Pose2d(-34.5, 57.5, Math.toRadians(180)));
+        }
+        builder.lineToLinearHeading(new Pose2d(12,57.5, Math.toRadians(180)));
         switch(elementPosition){ // line up with proper april tag
-        case Right:
-            builder.lineToLinearHeading(new Pose2d(51.5, 29, Math.toRadians(180)));
-            break;
-        case Center:
-            builder.lineToLinearHeading(new Pose2d(51.5, 35, Math.toRadians(180)));
-            break;
-        case Left:
-            builder.lineToLinearHeading(new Pose2d(51.5, 41, Math.toRadians(180)));
-            break;
-    }
+            case Right:
+                builder.lineToLinearHeading(new Pose2d(51.5, 29, Math.toRadians(180)));
+                break;
+            case Center:
+                builder.lineToLinearHeading(new Pose2d(51.5, 35, Math.toRadians(180)));
+                break;
+            case Left:
+                builder.lineToLinearHeading(new Pose2d(51.5, 41, Math.toRadians(180)));
+                break;
+        }
         return builder.build();
     }
 }

@@ -183,12 +183,12 @@ public abstract class AutoBase extends LinearOpMode {
         claw.openTop();
         telemetry.addLine("parking");
         telemetry.update();
-        drive.followTrajectorySequence(
+        /*drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .lineToConstantHeading(new Vector2d(drive.getPoseEstimate().getX(), getTeam() == RobotTeam.Red ? -60 : 60))
                         .back(3)
                         .build()
-        );
+        );*/
         telemetry.addLine("parked");
         telemetry.update();
     }
