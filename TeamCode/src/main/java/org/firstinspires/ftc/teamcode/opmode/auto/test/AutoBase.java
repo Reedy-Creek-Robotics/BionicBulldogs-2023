@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
@@ -24,10 +25,13 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
+import java.nio.ReadOnlyBufferException;
+
 public abstract class AutoBase extends LinearOpMode {
     Slides slides;
     Claw claw;
     SampleMecanumDrive drive;
+    DriveToAprilTag driveToAprilTag;
     public void runOpMode(){
         drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
@@ -99,6 +103,8 @@ public abstract class AutoBase extends LinearOpMode {
             return;
         }
         waitForStart();
+        visionPortal.close();
+        driveToAprilTag = new DriveToAprilTag(xDrive, this, "Webcam 2", false);
         ElementPosition elementPosition = recognitionProcesser.getPosition();
         slides.resetRotator();
         claw.closeTop();
@@ -120,7 +126,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (getTeam() == RobotTeam.Blue ? 1 : 0), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (getTeam() == RobotTeam.Blue ? 1 : -2), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
@@ -142,6 +148,34 @@ public abstract class AutoBase extends LinearOpMode {
         intake.stop();
 
         drive.followTrajectorySequence(path);
+        driveToAprilTag.initTelem();
+        telemetry.update();
+        if(getTeam() == RobotTeam.Blue) {
+            switch (elementPosition) {
+                case Left:
+                    driveToAprilTag.roadRunnerDriveToTag(1, drive);
+                    break;
+                case Center:
+                    driveToAprilTag.roadRunnerDriveToTag(2, drive);
+                    break;
+                case Right:
+                    driveToAprilTag.roadRunnerDriveToTag(3, drive);
+                    break;
+            }
+        }else{
+            switch (elementPosition) {
+                case Left:
+                    driveToAprilTag.roadRunnerDriveToTag(4, drive);
+                    break;
+                case Center:
+                    driveToAprilTag.roadRunnerDriveToTag(5, drive);
+                    break;
+                case Right:
+                    driveToAprilTag.roadRunnerDriveToTag(6, drive);
+                    break;
+            }
+        }
+
         scoreOnBackboard();
         SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
         telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
@@ -183,12 +217,16 @@ public abstract class AutoBase extends LinearOpMode {
         claw.openTop();
         telemetry.addLine("parking");
         telemetry.update();
-        /*drive.followTrajectorySequence(
+        drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .lineToConstantHeading(new Vector2d(drive.getPoseEstimate().getX(), getTeam() == RobotTeam.Red ? -60 : 60))
+                        .lineToLinearHeading(new Pose2d(
+                                drive.getPoseEstimate().getX(),
+                                (getTeam() == RobotTeam.Red ? -1 : 1) * (getStartPos().getX() > 0 ? 60 : 12),
+                                getStartPos().getHeading()
+                        ))
                         .back(3)
                         .build()
-        );*/
+        );
         telemetry.addLine("parked");
         telemetry.update();
     }

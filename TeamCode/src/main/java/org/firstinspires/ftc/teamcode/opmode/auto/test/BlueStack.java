@@ -43,7 +43,8 @@ public class BlueStack extends AutoBase {
             builder.lineToLinearHeading(new Pose2d(-34.5, 57.5, Math.toRadians(180)));
         }
         builder.lineToLinearHeading(new Pose2d(12,57.5, Math.toRadians(180)));
-        switch(elementPosition){ // line up with proper april tag
+        builder.lineToConstantHeading(new Vector2d(30, 41));
+        /*switch(elementPosition){ // line up with proper april tag
             case Right:
                 builder.lineToLinearHeading(new Pose2d(51.5, 29, Math.toRadians(180)));
                 break;
@@ -53,7 +54,7 @@ public class BlueStack extends AutoBase {
             case Left:
                 builder.lineToLinearHeading(new Pose2d(51.5, 41, Math.toRadians(180)));
                 break;
-        }
+        }*/
         return builder.build();
     }
 }

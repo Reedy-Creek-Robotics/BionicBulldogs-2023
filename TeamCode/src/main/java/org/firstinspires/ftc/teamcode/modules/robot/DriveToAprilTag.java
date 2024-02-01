@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode.modules.robot;
 
+import android.util.Log;
+import android.util.Size;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -194,7 +197,7 @@ public class DriveToAprilTag
             // Look to see if we have size info on this tag.
             if (detection.metadata != null) {
                 //  Check to see if we want to track towards this tag.
-                if ((id < 0) || (detection.id == id)) {
+                if ((id < 0) || (id > 0 && id < 4 && detection.id == 1) || (id > 3 && id < 7 && detection.id == 6)) {
                     // Yes, we want to use this tag.
                     targetFound = true;
                     desiredTag = detection;
@@ -207,7 +210,17 @@ public class DriveToAprilTag
             telemetry.addLine("Lost tag");
             return;
         }
-        targetPos = new Vector2d(-desiredTag.ftcPose.y + 4, desiredTag.ftcPose.x);
+        if(id > 0 && id < 4){
+            targetPos = new Vector2d(
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() - ((id - 1) * 6)
+            );
+        }else{
+            targetPos = new Vector2d(
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + ((id - 6) * -6)
+            );
+        }
         rrDrive.followTrajectorySequence(
                 rrDrive.trajectorySequenceBuilder(rrDrive.getPoseEstimate())
                         .lineToConstantHeading(targetPos)
@@ -223,8 +236,10 @@ public class DriveToAprilTag
     public void initTelem(){
         int i = 0;
         for(AprilTagDetection detection : aprilTag.getDetections()){
-            telemetry.addData("tag" + (++i), detection.id);
-            telemetry.addData("tag" + (i) + " position", detection.ftcPose.y - 4 + ", " + detection.ftcPose.x);
+            Log.d("APRILTAG", "tag" + (++i) + detection.id);
+            Log.d("APRILTAG", "tag" + (i) + " position" +  detection.ftcPose.y + ", " + detection.ftcPose.x);
+            Log.d("APRILTAG", "tag" + (i) + " target position: " + (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
+
         }
     }
     /**
@@ -248,6 +263,7 @@ public class DriveToAprilTag
         if (USE_WEBCAM) {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(camera)
+                    .setCameraResolution(new Size(640, 480))
                     .addProcessor(aprilTag)
                     .build();
         }
