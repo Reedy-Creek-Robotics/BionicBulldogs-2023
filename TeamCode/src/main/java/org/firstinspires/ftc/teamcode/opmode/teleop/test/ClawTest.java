@@ -54,33 +54,21 @@ public class ClawTest extends BaseTeleOp {
             delayMs += INCREMENT;
         }
 
-        if( gamepadEx1.dpadDown()) {
+        if(gamepadEx1.dpadDown()) {
             delayMs -= INCREMENT;
-            if (delayMs <=0 ) {
+            if (delayMs <= 0) {
                 delayMs = 0;
             }
         }
         telemetry.addData("Push Delay (ms)", delayMs);
         telemetry.update();
 
-        if( gamepadEx1.circle()) {
-            claw.push();
-            sleep(delayMs);
-            claw.resetFlicker();
-            sleep(delayMs);
-            claw.push();
-            sleep(delayMs);
-            claw.resetFlicker();
+        if(gamepadEx1.circle()) {
+            claw.score(1, (float)delayMs / 1000.0f);
         }
 
-        if( gamepadEx1.rightBumper()) {
-            claw.push();
-            sleep(delayMs);
-            claw.resetFlicker();
-            sleep(delayMs);
-            claw.push();
-            sleep(delayMs);
-            claw.resetFlicker();
+        if(gamepadEx1.rightBumper()){
+            claw.score(2, (float)delayMs / 1000.0f);
         }
         if(gamepadEx1.ps()){
             slides.toggleRotator();

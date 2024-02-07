@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -32,6 +33,6 @@ public class DriveToAprilTagTest extends LinearOpMode {
             aprilTag.telemetry();
             telemetry.update();
         }*/
-        aprilTag.roadRunnerDriveToTag(1, drive);
+        aprilTag.roadRunnerDriveToTag(1, drive, new Vector2d(0, 0));
     }
 }

@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.opmode.config.DroneLauncherConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.HangingSlidesConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 @TeleOp
-@Disabled
 public class HangingTest extends BaseTeleOp {
     HangingSlides slides;
     public void init(){

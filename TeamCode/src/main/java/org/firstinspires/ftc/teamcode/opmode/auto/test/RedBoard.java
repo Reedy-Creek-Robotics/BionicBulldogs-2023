@@ -27,7 +27,8 @@ public class RedBoard extends AutoBase{
         }else {
             builder.lineToConstantHeading(new Vector2d(12, -60));
         }
-        switch(elementPosition){
+        builder.lineToLinearHeading(new Pose2d(30, -41, Math.toRadians(180)));
+        /*switch(elementPosition){
             case Left:
                 builder.lineToLinearHeading(new Pose2d(51.5, -29, Math.toRadians(180)));
                 break;
@@ -37,7 +38,7 @@ public class RedBoard extends AutoBase{
             case Right:
                 builder.lineToLinearHeading(new Pose2d(51.5, -41, Math.toRadians(180)));
                 break;
-        }
+        }*/
         return builder.build();
     }
 }

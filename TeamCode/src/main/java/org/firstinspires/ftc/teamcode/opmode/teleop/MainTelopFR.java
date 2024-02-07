@@ -1,22 +1,25 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import android.app.ApplicationErrorReport;
-import android.util.Log;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.BatteryChecker;
 
-import org.firstinspires.ftc.teamcode.modules.robot.*;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
-import org.firstinspires.ftc.teamcode.opmode.config.*;
+import org.firstinspires.ftc.teamcode.modules.robot.Claw;
+import org.firstinspires.ftc.teamcode.modules.robot.DroneLauncher;
+import org.firstinspires.ftc.teamcode.modules.robot.HangingSlides;
+import org.firstinspires.ftc.teamcode.modules.robot.Intake;
+import org.firstinspires.ftc.teamcode.modules.robot.Slides;
+import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.DroneLauncherConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.HangingSlidesConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
+import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @TeleOp
-@Disabled
-public class MainTelop extends BaseTeleOp{
+public class MainTelopFR extends BaseTeleOp{
     Claw claw;
     Slides slides;
     XDrive xDrive;
@@ -27,7 +30,6 @@ public class MainTelop extends BaseTeleOp{
 
     float driveSpeed = 1;
     float intakeSpeed = 0.8f;
-    static long flickerDelay = 225;
 
     public enum ScoringState{
         Up,
@@ -36,7 +38,7 @@ public class MainTelop extends BaseTeleOp{
     }
     ScoringState scoreState = ScoringState.Down;
 
-    int[] slidesPosition = {-1230, -1800, -2500};
+    int[] slidesPosition = {-1230, -1515, -1800, -2150, -2500};
     int slidesPositionIndex;
     public void init(){
         super.init();
@@ -72,7 +74,7 @@ public class MainTelop extends BaseTeleOp{
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
         float rotate = -gamepad1.right_stick_x;
-        xDrive.driveAccel(forward * driveSpeed, right * driveSpeed, rotate * driveSpeed);
+        xDrive.driveAccelFR(forward * driveSpeed, right * driveSpeed, rotate * driveSpeed);
 
         //intake
         if(gamepadEx1.rightBumper()){
@@ -124,15 +126,15 @@ public class MainTelop extends BaseTeleOp{
         }
 
         if(gamepadEx1.ps()){
-            score(2);
+            claw.score(2);
         }
 
         if(gamepadEx1.square()){
-            score(1);
+            claw.score(1);
         }
         if(gamepadEx1.circle()){
             slidesPositionIndex++;
-            if(slidesPositionIndex > 2){
+            if(slidesPositionIndex > slidesPosition.length){
                 slidesPositionIndex = 0;
             }
         }
@@ -204,20 +206,5 @@ public class MainTelop extends BaseTeleOp{
             claw.openTop();
             scoreState = ScoringState.Down;
         }
-    }
-    protected void score(int count) {
-        xDrive.drive(0, 0, 0);
-        for (int i = 0; i < count; i++) {
-            flicker();
-            if (i != count - 1) {
-                sleep(flickerDelay);
-            }
-        }
-    }
-    public void flicker() {
-        //flick the flicker on the claw
-        claw.push();
-        sleep(flickerDelay); //350
-        claw.resetFlicker();
     }
 }

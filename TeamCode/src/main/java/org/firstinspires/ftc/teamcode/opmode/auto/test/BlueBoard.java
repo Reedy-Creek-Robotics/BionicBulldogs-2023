@@ -28,7 +28,8 @@ public class BlueBoard extends AutoBase{
         }else{
             builder.lineToConstantHeading(new Vector2d(12, 60));
         }
-        switch(elementPosition){ // line up with proper april tag
+        builder.lineToLinearHeading(new Pose2d(30, 41, Math.toRadians(180)));
+        /*switch(elementPosition){ // line up with proper april tag
             case Right:
                 builder.lineToLinearHeading(new Pose2d(51.5, 29, Math.toRadians(180)));
                 break;
@@ -38,7 +39,7 @@ public class BlueBoard extends AutoBase{
             case Left:
                 builder.lineToLinearHeading(new Pose2d(51.5, 41, Math.toRadians(180)));
                 break;
-        }
+        }*/
         return builder.build();
     }
 }

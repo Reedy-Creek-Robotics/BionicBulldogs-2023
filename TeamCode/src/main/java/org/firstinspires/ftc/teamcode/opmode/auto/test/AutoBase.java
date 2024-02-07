@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
@@ -126,7 +125,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (getTeam() == RobotTeam.Blue ? 1 : -2), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (getTeam() == RobotTeam.Blue ? 1 : -2.25), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
@@ -150,28 +149,34 @@ public abstract class AutoBase extends LinearOpMode {
         drive.followTrajectorySequence(path);
         driveToAprilTag.initTelem();
         telemetry.update();
+        Vector2d offset2;
+        if(getStartPos().getX() > 0){
+            offset2 = new Vector2d(0, 2);
+        }else{
+            offset2 = new Vector2d(-0.5, 1.5);
+        }
         if(getTeam() == RobotTeam.Blue) {
             switch (elementPosition) {
                 case Left:
-                    driveToAprilTag.roadRunnerDriveToTag(1, drive);
+                    driveToAprilTag.roadRunnerDriveToTag(1, drive, offset2);
                     break;
                 case Center:
-                    driveToAprilTag.roadRunnerDriveToTag(2, drive);
+                    driveToAprilTag.roadRunnerDriveToTag(2, drive, offset2);
                     break;
                 case Right:
-                    driveToAprilTag.roadRunnerDriveToTag(3, drive);
+                    driveToAprilTag.roadRunnerDriveToTag(3, drive, offset2);
                     break;
             }
         }else{
             switch (elementPosition) {
                 case Left:
-                    driveToAprilTag.roadRunnerDriveToTag(4, drive);
+                    driveToAprilTag.roadRunnerDriveToTag(4, drive, offset2);
                     break;
                 case Center:
-                    driveToAprilTag.roadRunnerDriveToTag(5, drive);
+                    driveToAprilTag.roadRunnerDriveToTag(5, drive, offset2);
                     break;
                 case Right:
-                    driveToAprilTag.roadRunnerDriveToTag(6, drive);
+                    driveToAprilTag.roadRunnerDriveToTag(6, drive, offset2);
                     break;
             }
         }
@@ -205,7 +210,7 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(200);
         flicker(claw);
         sleep(200);
-        slides.gotoPositionBlock(-858);
+        slides.gotoPositionBlock(-900);
         drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .forward(5)
@@ -221,7 +226,7 @@ public abstract class AutoBase extends LinearOpMode {
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .lineToLinearHeading(new Pose2d(
                                 drive.getPoseEstimate().getX(),
-                                (getTeam() == RobotTeam.Red ? -1 : 1) * (getStartPos().getX() > 0 ? 60 : 12),
+                                (getTeam() == RobotTeam.Red ? -1 : 1) * (getStartPos().getX() > 0 ? 60 : 12) * (getTeam() == RobotTeam.Red && getStartPos().getX() < 0 ? 0.5 : 1),
                                 getStartPos().getHeading()
                         ))
                         .back(3)

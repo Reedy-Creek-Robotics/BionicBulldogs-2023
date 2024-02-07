@@ -25,7 +25,7 @@ import java.util.List;
 
 @Config
 public class XDrive {
-    public static double maxPower = 0.9;
+    public static double maxPower = 1.0;
     public MotorGroup motors;
     DcMotor frontLeft;
     DcMotor frontRight;
@@ -123,6 +123,12 @@ public class XDrive {
     }
 
     public void driveAccel(float forward, float strafe, float rotate){
+        Vec2 out = acceleration.getNext(new Vec2(forward, strafe));
+        forward = out.x;
+        strafe = out.y;
+        drive(forward, strafe, rotate, 0);
+    }
+    public void driveAccelFR(float forward, float strafe, float rotate){
         Vec2 out = acceleration.getNext(new Vec2(forward, strafe));
         forward = out.x;
         strafe = out.y;

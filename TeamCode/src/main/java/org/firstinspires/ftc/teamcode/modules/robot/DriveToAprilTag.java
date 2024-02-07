@@ -188,7 +188,7 @@ public class DriveToAprilTag
         }
     }
 
-    public void roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive){
+    public void roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
         Vector2d targetPos;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
@@ -212,13 +212,13 @@ public class DriveToAprilTag
         }
         if(id > 0 && id < 4){
             targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() - ((id - 1) * 6)
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() - ((id - 1) * 6) + offset.getY()
             );
         }else{
             targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + ((id - 6) * -6)
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + ((id - 6) * -6) - offset.getY()
             );
         }
         rrDrive.followTrajectorySequence(
