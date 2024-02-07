@@ -45,14 +45,16 @@ import java.util.Map;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(22, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(3.5, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.01;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
+
+    public static Pose2d posEstimate = null;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -85,10 +87,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
+        //imu = hardwareMap.get(IMU.class, "imu");
+        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+        //        DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+        //imu.initialize(parameters);
 
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
@@ -115,16 +117,16 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: reverse any motors using DcMotor.setDirection()
 
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -289,20 +291,24 @@ public class SampleMecanumDrive extends MecanumDrive {
         for(DcMotorEx motor : motors){
             t.put(names[motors.indexOf(motor)],
                     String.format(
-                    "Pow: %5.2, Vel: %5.2f, Pos: %6d ",
+                    "Pow: %5.2f, Vel: %5.2f, Pos: %6d ",
                     motor.getPower(), motor.getVelocity(), motor.getCurrentPosition())
             );
         }
     }
+
     public void telemetry(Telemetry t){
-        String[] names = {"fl", "bl", "br", "fr"};
+        String[] names = {"_fl", "_bl", "_br", "_fr"};
         List<Double> wheelPositions = getWheelPositions();
         for(DcMotorEx motor : motors){
-            t.addData(names[motors.indexOf(motor)] + " encoder",
+            /*t.addData(names[motors.indexOf(motor)] + " encoder",
                     motor.getCurrentPosition()
             );
             t.addData(names[motors.indexOf(motor)] + " position",
-                    wheelPositions.get(motors.indexOf(motor))
+                        wheelPositions.get(motors.indexOf(motor))
+            );*/
+            t.addData(names[motors.indexOf(motor)] + " velocity",
+                    motor.getVelocity()
             );
         }
     }
@@ -316,12 +322,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        return 0;
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+        return 0.0;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

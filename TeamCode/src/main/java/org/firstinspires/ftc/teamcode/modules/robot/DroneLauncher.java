@@ -11,7 +11,7 @@ public class DroneLauncher {
         servo = cfg.getServo();
     }
     public void reset(){
-        servo.setPosition(0);
+        servo.setPosition(0.0f);
     }
     public void launch(){
         servo.setPosition(launchPosition);

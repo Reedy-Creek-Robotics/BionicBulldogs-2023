@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules.hardware;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -108,12 +110,20 @@ public class MotorGroup {
         }
     }
     public void runToPositionBlock(int _pos, float power) {
+        Log.d("RunToPosition", "power: " + power);
+        Log.d("RunToPosition", "position: " + _pos);
         pos = _pos;
         runToPos = true;
+        int i = 0;
         for (DcMotor motor : motors) {
             motor.setTargetPosition(pos);
+            Log.d("RunToPosition", "set motor target position: " + i++ + ", " + motor.getTargetPosition());
         }
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        i = 0;
+        for(DcMotor motor : motors){
+            Log.d("RunToPosition", "set motor mode: " + i++ + ", " + motor.getMode());
+        }
         setPower(power);
         while(runToPos) {
             boolean moving = false;
@@ -124,6 +134,16 @@ public class MotorGroup {
                 setPower(0);
                 runToPos = false;
             }
+            i = 0;
+            for(DcMotor motor : motors){
+                Log.d("RunToPosition", "motor position: " + i++ + ", " + motor.getCurrentPosition());
+            }
+        }
+        setPower(0);
+        Log.d("RunToPosition", "reached position");
+        i = 0;
+        for(DcMotor motor : motors){
+            Log.d("RunToPosition", "motor power: " + i++ + ", " + motor.getPower());
         }
     }
 }

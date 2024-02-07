@@ -29,7 +29,12 @@
 
 package org.firstinspires.ftc.teamcode.modules.robot;
 
+import android.util.Log;
+import android.util.Size;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -41,11 +46,13 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -93,14 +100,14 @@ public class DriveToAprilTag
     // Adjust these numbers to suit your robot.
     public static double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
 
-    public static float MIN_SPEED = 0.03f;  // minimum speed of the robot, if the robot goes below this speed then the robot stops tracking the april tag
+    public static double MIN_SPEED = 0.02f;  // minimum speed of the robot, if the robot goes below this speed then the robot stops tracking the april tag
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    public static double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    public static double STRAFE_GAIN =  0.01 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    public static double TURN_GAIN   =  0.03  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    public static double SPEED_GAIN  =  0.50;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    public static double STRAFE_GAIN =  0.25;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    public static double TURN_GAIN   =  0.0;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
     public static double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public static double MAX_AUTO_STRAFE= 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
@@ -112,12 +119,17 @@ public class DriveToAprilTag
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound = false;
+    boolean reversed;
 
-    public DriveToAprilTag(XDrive _drive, LinearOpMode op) {
+    public DriveToAprilTag(XDrive _drive, LinearOpMode op){
+        this(_drive, op, "Webcam 1", false);
+    }
+    public DriveToAprilTag(XDrive _drive, LinearOpMode op, String name, boolean _reversed) {
         drive = _drive;
         telemetry = op.telemetry;
         // Initialize the Apriltag Detection process
-        initAprilTag(op);
+        initAprilTag(op, name);
+        reversed = _reversed;
 
         if (USE_WEBCAM)
             setManualExposure(1, 255, op);  // Use low exposure time to reduce motion blur
@@ -126,7 +138,6 @@ public class DriveToAprilTag
         double forward = 0;
         double strafe = 0;
         double rotate = 0;
-        targetFound = false;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -144,6 +155,7 @@ public class DriveToAprilTag
         }
         if(desiredTag == null){
             drive.drive(0,0,0);
+            telemetry.addLine("Lost tag");
             return false;
         }
         // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
@@ -161,12 +173,59 @@ public class DriveToAprilTag
                 (Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
                 targetFound
         ){
-            drive.drive((float) -forward, (float) strafe, (float) -rotate);
+            telemetry.addData("2x", -forward);
+            telemetry.addData("2y", -strafe);
+            telemetry.addData("2r", -rotate);
+            telemetry.addData("1heading", desiredTag.ftcPose.range);
+            telemetry.addData("1yaw", desiredTag.ftcPose.bearing);
+            telemetry.addData("1range", desiredTag.ftcPose.yaw);
+            drive.drive((float)-forward, (float)-strafe, (float)rotate);
             return true;
         }else{
+            telemetry.addLine("Made it to tag");
             drive.drive(0,0,0);
             return false;
         }
+    }
+
+    public void roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
+        Vector2d targetPos;
+        // Step through the list of detected tags and look for a matching tag
+        targetFound = false;    // Set to true when an AprilTag target is detected
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // Look to see if we have size info on this tag.
+            if (detection.metadata != null) {
+                //  Check to see if we want to track towards this tag.
+                if ((id < 0) || (id > 0 && id < 4 && detection.id == 1) || (id > 3 && id < 7 && detection.id == 6)) {
+                    // Yes, we want to use this tag.
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;  // don't look any further.
+                }
+            }
+        }
+        if(desiredTag == null){
+            drive.drive(0,0,0);
+            telemetry.addLine("Lost tag");
+            return;
+        }
+        if(id > 0 && id < 4){
+            targetPos = new Vector2d(
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() - ((id - 1) * 6) + offset.getY()
+            );
+        }else{
+            targetPos = new Vector2d(
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + ((id - 6) * -6) - offset.getY()
+            );
+        }
+        rrDrive.followTrajectorySequence(
+                rrDrive.trajectorySequenceBuilder(rrDrive.getPoseEstimate())
+                        .lineToConstantHeading(targetPos)
+                        .build()
+        );
     }
     public void telemetry() {
         if(desiredTag != null) {
@@ -174,10 +233,19 @@ public class DriveToAprilTag
         }
         telemetry.addData("was tag found", targetFound);
     }
+    public void initTelem(){
+        int i = 0;
+        for(AprilTagDetection detection : aprilTag.getDetections()){
+            Log.d("APRILTAG", "tag" + (++i) + detection.id);
+            Log.d("APRILTAG", "tag" + (i) + " position" +  detection.ftcPose.y + ", " + detection.ftcPose.x);
+            Log.d("APRILTAG", "tag" + (i) + " target position: " + (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
+
+        }
+    }
     /**
      * Initialize the AprilTag processor.
      */
-    private void initAprilTag(LinearOpMode op) {
+    private void initAprilTag(LinearOpMode op, String name) {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -191,15 +259,11 @@ public class DriveToAprilTag
         aprilTag.setDecimation(2);
 
         // Create the vision portal by using a builder.
-        CameraName camera = op.hardwareMap.get(WebcamName.class, "Webcam 1");
+        CameraName camera = op.hardwareMap.get(WebcamName.class, name);
         if (USE_WEBCAM) {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(camera)
-                    .addProcessor(aprilTag)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
+                    .setCameraResolution(new Size(640, 480))
                     .addProcessor(aprilTag)
                     .build();
         }

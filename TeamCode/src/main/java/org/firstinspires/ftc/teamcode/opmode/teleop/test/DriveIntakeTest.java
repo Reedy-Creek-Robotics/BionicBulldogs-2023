@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
-
+@Disabled
 @TeleOp
 public class DriveIntakeTest extends BaseTeleOp {
     XDrive drive;

@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.modules.robot.DroneLauncher;
 import org.firstinspires.ftc.teamcode.modules.robot.HangingSlides;
 import org.firstinspires.ftc.teamcode.opmode.config.DroneLauncherConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.HangingSlidesConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
-
+@TeleOp
 public class HangingTest extends BaseTeleOp {
     HangingSlides slides;
     public void init(){
@@ -20,5 +23,7 @@ public class HangingTest extends BaseTeleOp {
             slides.hang();
         }
         copyGamepads();
+        slides.telem(telemetry);
+        telemetry.update();
     }
 }

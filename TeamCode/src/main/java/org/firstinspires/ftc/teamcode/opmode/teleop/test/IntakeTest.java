@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 
 @TeleOp
+@Disabled
 public class IntakeTest extends BaseTeleOp {
     Intake intake;
     float intakePwr = 0.8f;
@@ -21,6 +23,13 @@ public class IntakeTest extends BaseTeleOp {
 
     public void loop(){
         copyGamepads();
+
+        if(gamepadEx1.dpadUp()){
+            intakePwr += 0.1;
+        }
+        if(gamepadEx1.dpadDown()){
+            intakePwr -= 0.1;
+        }
 
         //intake start
         if (gamepadEx1.leftBumper()) {
@@ -39,5 +48,8 @@ public class IntakeTest extends BaseTeleOp {
                 intake.stop();
             }
         }
+
+        telemetry.addData("intake power", intakePwr);
+        telemetry.update();
     }
 }

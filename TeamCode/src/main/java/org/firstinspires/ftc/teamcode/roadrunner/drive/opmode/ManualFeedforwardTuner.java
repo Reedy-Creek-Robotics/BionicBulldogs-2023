@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -75,6 +76,8 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         NanoClock clock = NanoClock.system();
 
         telemetry.addLine("Ready!");
+        telemetry.addData("targetVelocity", 0);
+        telemetry.addData("measuredVelocity", 0);
         telemetry.update();
         telemetry.clearAll();
 
@@ -122,6 +125,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     telemetry.addData("targetVelocity", motionState.getV());
                     telemetry.addData("measuredVelocity", currentVelo);
                     telemetry.addData("error", motionState.getV() - currentVelo);
+                    drive.telemetry(telemetry);
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.b) {

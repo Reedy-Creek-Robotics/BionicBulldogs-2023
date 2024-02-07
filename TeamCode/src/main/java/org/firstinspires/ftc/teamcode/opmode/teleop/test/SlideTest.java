@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
 @TeleOp
+@Disabled
 public class SlideTest extends BaseTeleOp {
     Slides slides;
     public void init(){
