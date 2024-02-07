@@ -16,7 +16,7 @@ public class Claw {
     static final float SIDE_CLOSE = 0.0f;
     //flicker position for pushing a pixel out
     static final float SIDE_OPEN = 0.35f;
-    static float flickerDelay = 0.250f;
+    static float flickerDelay = 0.3f;
 
     Servo top;
     Servo side;

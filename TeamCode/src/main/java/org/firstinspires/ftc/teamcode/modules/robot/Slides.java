@@ -13,7 +13,7 @@ public class Slides {
     public static int pixelHeight = 20; //encoder ticks to go up one pixel
     public static int slidePosToMoveServo = -1000;
     public static double slideSpeed = 1.0f;
-    public static double servoStartPos = 0.975f; //0.47f;
+    public static double servoStartPos = 0.92f; //0.47f;
     public static double servoScorePosAuto = 0.2f; //0.2f;
     public static double servoScorePosTelop = 0.32f;
     DcMotor motor;
