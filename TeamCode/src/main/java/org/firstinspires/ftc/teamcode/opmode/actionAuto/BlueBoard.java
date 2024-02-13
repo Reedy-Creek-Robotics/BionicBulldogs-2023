@@ -1,27 +1,35 @@
-package org.firstinspires.ftc.teamcode.opmode.auto.test;
+package org.firstinspires.ftc.teamcode.opmode.actionAuto;
+
+import android.drm.DrmStore;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Base;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTag;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Park;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-public class BlueBoard extends AutoBase{
-    public RobotTeam getTeam(){
-        return RobotTeam.Blue;
-    }
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Autonomous
+public class BlueBoard extends AutoBase{
     // starting position for blue board side
     public Pose2d getStartPos() {
         return new Pose2d(12, 62.5, Math.toRadians(-90));
     }
 
-    // navigate from dropping purple pixel to the board to drop yellow pixel
-    public TrajectorySequence getTrajectory(Pose2d start, SampleMecanumDrive drive, ElementPosition elementPosition){
+    public List<Action_Base> getActions(Pose2d start, ElementPosition elementPosition){
+        List<Action_Base> list = new ArrayList<Action_Base>();
+
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start);
         if(elementPosition == ElementPosition.Left){ // moving back to near start position
             builder.lineToLinearHeading(new Pose2d(12, 60, Math.toRadians(-90)));
@@ -29,17 +37,11 @@ public class BlueBoard extends AutoBase{
             builder.lineToConstantHeading(new Vector2d(12, 60));
         }
         builder.lineToLinearHeading(new Pose2d(30, 41, Math.toRadians(180)));
-        /*switch(elementPosition){ // line up with proper april tag
-            case Right:
-                builder.lineToLinearHeading(new Pose2d(51.5, 29, Math.toRadians(180)));
-                break;
-            case Center:
-                builder.lineToLinearHeading(new Pose2d(51.5, 35, Math.toRadians(180)));
-                break;
-            case Left:
-                builder.lineToLinearHeading(new Pose2d(51.5, 41, Math.toRadians(180)));
-                break;
-        }*/
-        return builder.build();
+
+        list.add(new Action_Trajectory(builder.build()));                   //to backbord
+        list.add(new Action_DriveToAprilTag(elementPosition.getValue()));   //line up with backboard
+        list.add(new Action_ScoreOnBackboard());                            //score on backboard
+        list.add(new Action_Park(getStartPos()));                           //park
+        return list;
     }
 }

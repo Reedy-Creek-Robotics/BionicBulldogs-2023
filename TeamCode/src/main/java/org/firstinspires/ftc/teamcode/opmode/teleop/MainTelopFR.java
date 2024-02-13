@@ -54,7 +54,7 @@ public class MainTelopFR extends BaseTeleOp{
         //xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
         if(SampleMecanumDrive.posEstimate != null){
-            xDrive.setPosEstimate(SampleMecanumDrive.posEstimate);
+            //xDrive.setPosEstimate(SampleMecanumDrive.posEstimate);
         }else{
             telemetry.addLine("SampleMecaniumDrive::posEstimate is null, using deafult heading");
         }
@@ -108,7 +108,7 @@ public class MainTelopFR extends BaseTeleOp{
             slides.gotoPosition(slidesPosition[slidesPositionIndex]);
         }
         if(gamepadEx1.dpadLeft()){
-            slides.reset();
+            slides.resetEncoder();
         }
 
         if(gamepadEx1.triangle()) {

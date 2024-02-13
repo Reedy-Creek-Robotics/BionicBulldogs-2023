@@ -236,9 +236,9 @@ public class DriveToAprilTag
     public void initTelem(){
         int i = 0;
         for(AprilTagDetection detection : aprilTag.getDetections()){
-            Log.d("APRILTAG", "tag" + (++i) + detection.id);
-            Log.d("APRILTAG", "tag" + (i) + " position" +  detection.ftcPose.y + ", " + detection.ftcPose.x);
-            Log.d("APRILTAG", "tag" + (i) + " target position: " + (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
+            telemetry.addData("tag", (++i) + detection.id);
+            telemetry.addData("tag" + (i) + " position",  detection.ftcPose.y + ", " + detection.ftcPose.x);
+            telemetry.addData("tag" + (i) + " target position: ", (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
 
         }
     }
