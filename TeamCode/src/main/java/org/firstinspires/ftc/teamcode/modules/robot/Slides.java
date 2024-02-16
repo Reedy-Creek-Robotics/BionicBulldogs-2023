@@ -13,7 +13,7 @@ public class Slides {
     public static int slidePosToMoveServo = -1000;
     public static double slideSpeedUp = 1.0f;
     public static double slideSpeedDown = 0.8f;
-    public static double servoStartPos = 0.95f; //0.47f;
+    public static double servoStartPos = 1.0f; //0.47f;
     public static double servoScorePosAuto = 0.2f; //0.2f;
     public static double servoScorePosTelop = 0.32f;
     DcMotor motor;

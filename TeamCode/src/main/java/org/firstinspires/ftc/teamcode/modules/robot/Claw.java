@@ -11,7 +11,7 @@ public class Claw {
     //top motor position for open
     static final float TOP_OPEN = 0.2f;
     //top motor position for close
-    static final float TOP_CLOSE = 0.33f;
+    static final float TOP_CLOSE = 0.3f;
     //flicker default position
     static final float SIDE_CLOSE = 0.0f;
     //flicker position for pushing a pixel out

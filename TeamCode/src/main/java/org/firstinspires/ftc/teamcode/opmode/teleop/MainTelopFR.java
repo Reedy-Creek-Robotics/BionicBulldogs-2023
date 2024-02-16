@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
@@ -19,6 +21,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @TeleOp
+@Config
 public class MainTelopFR extends BaseTeleOp{
     Claw claw;
     Slides slides;
@@ -27,15 +30,21 @@ public class MainTelopFR extends BaseTeleOp{
     HangingSlides hangingSlides;
     DroneLauncher droneLauncher;
     VoltageSensor voltageSensor;
+    ColorSensor colorSensor;
+    static public double targetRed = 45;
+    static public double targetGreen = 95;
+    static public double targetBlue = 210;
+    int pixelCount = 0;
 
     float driveSpeed = 1;
-    float intakeSpeed = 0.8f;
+    static public double intakeSpeed = 0.8f;
 
     public enum ScoringState{
         Up,
         Down,
         Score
     }
+    boolean pixelCountIncremented = false;
     ScoringState scoreState = ScoringState.Down;
 
     int[] slidesPosition = {-1230, -1515, -1800, -2150, -2500};
@@ -49,6 +58,7 @@ public class MainTelopFR extends BaseTeleOp{
         droneLauncher = new DroneLauncher(new DroneLauncherConfig(hardwareMap));
         hangingSlides = new HangingSlides(new HangingSlidesConfig(hardwareMap));
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
+        colorSensor = hardwareMap.colorSensor.iterator().next();
         //telemetry.addData("battery voltage", voltageSensor.getVoltage());
         //slides.telem(telemetry);
         //xDrive.telem(telemetry);
@@ -69,8 +79,26 @@ public class MainTelopFR extends BaseTeleOp{
     }
     public void loop(){
         copyGamepads();
+        if(colorSensor.red() > targetRed && colorSensor.green() > targetGreen && colorSensor.blue() > targetBlue){
+            gamepad1.setLedColor(1, 1, 1, 100);
+            gamepad1.rumble(1, 1, 100);
+            if(!pixelCountIncremented){
+                pixelCountIncremented = true;
+                pixelCount++;
+            }
+        }else if(pixelCountIncremented){
+            pixelCountIncremented = false;
+            /*if(pixelCount >= 2){
+                intake.stop();
+                claw.closeTop();
+            }*/
+        }
+        telemetry.addData("ColorRed  ",colorSensor.red());
+        telemetry.addData("ColorGreen",colorSensor.green());
+        telemetry.addData("ColorBlue ",colorSensor.blue());
+        telemetry.addData("pixelCount", pixelCount);
 
-        //drive
+            //drive
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
         float rotate = -gamepad1.right_stick_x;
@@ -88,7 +116,8 @@ public class MainTelopFR extends BaseTeleOp{
         }
 
         if(gamepadEx1.options()){
-            droneLauncher.launch();
+            //droneLauncher.launch();
+            pixelCount = 0;
         }
         //telemetry.addData("Intake", intake.getState());
 
@@ -134,7 +163,7 @@ public class MainTelopFR extends BaseTeleOp{
         }
         if(gamepadEx1.circle()){
             slidesPositionIndex++;
-            if(slidesPositionIndex > slidesPosition.length){
+            if(slidesPositionIndex >= slidesPosition.length){
                 slidesPositionIndex = 0;
             }
         }
@@ -157,6 +186,7 @@ public class MainTelopFR extends BaseTeleOp{
     }
 
     protected void updateIntake() {
+        pixelCount = 0;
         if(intake.getState() == Intake.IntakeState.Intake) {
             intake.stop();
             claw.closeTop();
@@ -183,6 +213,7 @@ public class MainTelopFR extends BaseTeleOp{
 
     }
     protected void reverseIntake(){
+        pixelCount = 0;
         if(intake.getState() == Intake.IntakeState.Outtake) {
             intake.stop();
             claw.closeTop();

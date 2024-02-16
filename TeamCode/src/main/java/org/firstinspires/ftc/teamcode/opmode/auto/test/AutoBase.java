@@ -35,11 +35,11 @@ public abstract class AutoBase extends LinearOpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
         Intake intake = new Intake(new IntakeConfig(hardwareMap));
-        slides = new Slides(new SlideConfig(hardwareMap));
+        //slides = new Slides(new SlideConfig(hardwareMap));
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
-        claw = new Claw(new ClawConfig(hardwareMap));
+        //claw = new Claw(new ClawConfig(hardwareMap));
 
         RecognitionProcesser recognitionProcesser = new RecognitionProcesser();
         recognitionProcesser.setTeam(getTeam());
@@ -151,9 +151,9 @@ public abstract class AutoBase extends LinearOpMode {
         telemetry.update();
         Vector2d offset2;
         if(getStartPos().getX() > 0){
-            offset2 = new Vector2d(-1.5, 2);
+            offset2 = new Vector2d(-6, 2);
         }else{
-            offset2 = new Vector2d(-0.5, 1.5);
+            offset2 = new Vector2d(-6, 1.5);
         }
         if(getTeam() == RobotTeam.Blue) {
             switch (elementPosition) {
@@ -201,7 +201,7 @@ public abstract class AutoBase extends LinearOpMode {
         claw.resetFlicker();
     }
     public void scoreOnBackboard(){
-        sleep(250);
+        /*sleep(250);
         slides.gotoPositionBlock();
         sleep(500);
         slides.scoreRotator();
@@ -210,18 +210,18 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(200);
         flicker(claw);
         sleep(200);
-        slides.gotoPositionBlock(-900);
+        slides.gotoPositionBlock(-900);*/
         drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .forward(5)
                         .build()
         );
-        slides.resetRotator();
+        /*slides.resetRotator();
         sleep(500);
         slides.reset();
         claw.openTop();
         telemetry.addLine("parking");
-        telemetry.update();
+        telemetry.update();*/
         drive.followTrajectorySequence(
                 drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .lineToLinearHeading(new Pose2d(
