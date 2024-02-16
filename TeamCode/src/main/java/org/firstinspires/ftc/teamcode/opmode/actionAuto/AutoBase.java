@@ -102,6 +102,39 @@ public abstract class AutoBase extends LinearOpMode {
         slides.resetRotator();
         claw.closeTop();
 
+        TrajectorySequence purplePreloadPath = getPreloadPath(elementPosition);
+        List<Action_Base> actions = getActions(purplePreloadPath.end(), elementPosition);
+
+        drive.setPoseEstimate(purplePreloadPath.start());
+
+        //Drop-off purple pixel
+        drive.followTrajectorySequence(purplePreloadPath);
+
+        intake.outtake(0.3);
+        sleep(500);
+        intake.stop();
+
+        for(Action_Base action : actions){
+            action.run();
+        }
+
+        SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
+        telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
+        telemetry.update();
+        sleep(1000);
+    }
+
+    public abstract Pose2d getStartPos();
+
+    public TrajectorySequence getPreloadPath(ElementPosition elementPosition){
+        RobotTeam team;
+
+        if(getStartPos().getY() > 0){
+            team = RobotTeam.Blue;
+        }else{
+            team = RobotTeam.Red;
+        }
+
         TrajectorySequence purplePreloadPath;
 
         //Y position for dropping off purple preload
@@ -128,32 +161,9 @@ public abstract class AutoBase extends LinearOpMode {
                         .build();
                 break;
         }
-
-        List<Action_Base> actions = getActions(purplePreloadPath.end(), elementPosition);
-
-        drive.setPoseEstimate(purplePreloadPath.start());
-
-        //Drop-off purple pixel
-        drive.followTrajectorySequence(purplePreloadPath);
-
-        intake.outtake(0.3);
-        sleep(500);
-        intake.stop();
-
-        for(Action_Base action : actions){
-            action.run();
-        }
-
-        SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
-        telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
-        telemetry.update();
-        sleep(1000);
+        return purplePreloadPath;
     }
 
-    public abstract Pose2d getStartPos();
-
-    // trajectory for navigating to board and get in proper position to drop the yellow pixel
-    // this is defined by sub-classes because its unique to each position
     public abstract List<Action_Base> getActions(Pose2d startPos, ElementPosition elementPosition);
 
 }

@@ -13,11 +13,12 @@ public class Slides {
     public static int slidePosToMoveServo = -1000;
     public static double slideSpeedUp = 1.0f;
     public static double slideSpeedDown = 0.8f;
-    public static double servoStartPos = 1.0f; //0.47f;
+    public static double servoStartPos = 0.98f; //0.47f;
     public static double servoScorePosAuto = 0.2f; //0.2f;
-    public static double servoScorePosTelop = 0.32f;
+    public static double servoScorePosTelop = 0.45f;
     DcMotor motor;
     Servo servo;
+    boolean prevServoPos = false;
 
     public Slides(SlideConfig cfg){
         servo = cfg.getRotator();
@@ -63,11 +64,7 @@ public class Slides {
         motor.setPower(power * slideSpeedUp);
     }
     public void updateClawServo(){
-        if(motor.getCurrentPosition() < slidePosToMoveServo){
-            servo.setPosition(servoScorePosTelop);
-        }else if(motor.getCurrentPosition() < -200) {
-            servo.setPosition(0.49);
-        }else{
+        if(motor.getCurrentPosition() > -100){
             servo.setPosition(servoStartPos);
         }
     }

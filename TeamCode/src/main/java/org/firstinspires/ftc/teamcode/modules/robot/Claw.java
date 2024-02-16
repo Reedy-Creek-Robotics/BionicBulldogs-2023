@@ -50,7 +50,7 @@ public class Claw {
     }
 
     public void toggleTop(){
-        if(Math.abs(top.getPosition() - TOP_OPEN) < 0.11f){
+        if(Math.abs(top.getPosition() - TOP_OPEN) < 0.05f){
             top.setPosition(TOP_CLOSE);
         }else{
             top.setPosition(TOP_OPEN);

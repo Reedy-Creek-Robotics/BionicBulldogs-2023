@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
@@ -35,7 +36,8 @@ public class MainTelopFR extends BaseTeleOp{
     static public double targetGreen = 95;
     static public double targetBlue = 210;
     int pixelCount = 0;
-
+    ElapsedTime clawET;
+    boolean closeClaw = false;
     float driveSpeed = 1;
     static public double intakeSpeed = 0.8f;
 
@@ -47,7 +49,7 @@ public class MainTelopFR extends BaseTeleOp{
     boolean pixelCountIncremented = false;
     ScoringState scoreState = ScoringState.Down;
 
-    int[] slidesPosition = {-1230, -1515, -1800, -2150, -2500};
+    int[] slidesPosition = {-1200, -1515, -1800, -2150, -2500};
     int slidesPositionIndex;
     public void init(){
         super.init();
@@ -69,6 +71,7 @@ public class MainTelopFR extends BaseTeleOp{
             telemetry.addLine("SampleMecaniumDrive::posEstimate is null, using deafult heading");
         }
         telemetry.update();
+        clawET = new ElapsedTime();
     }
     public void start(){
         super.start();
@@ -88,10 +91,11 @@ public class MainTelopFR extends BaseTeleOp{
             }
         }else if(pixelCountIncremented){
             pixelCountIncremented = false;
-            /*if(pixelCount >= 2){
+            if(pixelCount >= 2){
+                closeClaw = true;
+                clawET.reset();
                 intake.stop();
-                claw.closeTop();
-            }*/
+            }
         }
         telemetry.addData("ColorRed  ",colorSensor.red());
         telemetry.addData("ColorGreen",colorSensor.green());
@@ -176,6 +180,14 @@ public class MainTelopFR extends BaseTeleOp{
             hangingSlides.hang();
         }
 
+        if(closeClaw){
+            if(clawET.seconds() >= 0.2){
+                claw.closeTop();
+                slides.resetRotator();
+                closeClaw = false;
+            }
+        }
+
         telemetry.addData("battery voltage", voltageSensor.getVoltage());
         telemetry.addData("slidesPositionIndex", slidesPositionIndex + 1);
         claw.telem(telemetry);
@@ -186,7 +198,6 @@ public class MainTelopFR extends BaseTeleOp{
     }
 
     protected void updateIntake() {
-        pixelCount = 0;
         if(intake.getState() == Intake.IntakeState.Intake) {
             intake.stop();
             claw.closeTop();
@@ -213,7 +224,6 @@ public class MainTelopFR extends BaseTeleOp{
 
     }
     protected void reverseIntake(){
-        pixelCount = 0;
         if(intake.getState() == Intake.IntakeState.Outtake) {
             intake.stop();
             claw.closeTop();
@@ -236,6 +246,7 @@ public class MainTelopFR extends BaseTeleOp{
             slides.reset();
             claw.openTop();
             scoreState = ScoringState.Down;
+            pixelCount = 0;
         }
     }
 }

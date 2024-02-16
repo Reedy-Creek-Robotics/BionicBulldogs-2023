@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ResetPos;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
+import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.ArrayList;
@@ -22,6 +24,25 @@ public class BlueBoardCycle extends AutoBase{
     // starting position for blue board side
     public Pose2d getStartPos() {
         return new Pose2d(12, 62.5, Math.toRadians(-90));
+    }
+
+    @Override
+    public TrajectorySequence getPreloadPath(ElementPosition elementPosition){
+        switch (elementPosition){
+            default:
+            case Center:
+                return drive.trajectorySequenceBuilder(getStartPos())
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), 36, getStartPos().getHeading()))
+                        .build();
+            case Left:
+                return drive.trajectorySequenceBuilder(getStartPos())
+                        .lineToLinearHeading(new Pose2d(36, 36, getStartPos().getHeading() + Math.toRadians(90)))
+                        .build();
+            case Right:
+                return drive.trajectorySequenceBuilder(getStartPos())
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), 36, getStartPos().getHeading() - Math.toRadians(90)))
+                        .build();
+        }
     }
 
     public List<Action_Base> getActions(Pose2d start, ElementPosition elementPosition){
