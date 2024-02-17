@@ -188,7 +188,7 @@ public class DriveToAprilTag
         }
     }
 
-    public void roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
+    public boolean roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
         Vector2d targetPos;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
@@ -197,7 +197,7 @@ public class DriveToAprilTag
             // Look to see if we have size info on this tag.
             if (detection.metadata != null) {
                 //  Check to see if we want to track towards this tag.
-                if ((id < 0) || (id > 0 && id < 4 && detection.id == 1) || (id > 3 && id < 7 && detection.id == 6)) {
+                if (id == detection.id) {
                     // Yes, we want to use this tag.
                     targetFound = true;
                     desiredTag = detection;
@@ -208,24 +208,19 @@ public class DriveToAprilTag
         if(desiredTag == null){
             drive.drive(0,0,0);
             telemetry.addLine("Lost tag");
-            return;
+            return false;
         }
-        if(id > 0 && id < 4){
-            targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() - ((id - 1) * 6) + offset.getY()
-            );
-        }else{
-            targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + ((id - 6) * -6) - offset.getY()
-            );
-        }
+        targetPos = new Vector2d(
+                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + offset.getX(),
+                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + offset.getY()
+        );
+
         rrDrive.followTrajectorySequence(
                 rrDrive.trajectorySequenceBuilder(rrDrive.getPoseEstimate())
                         .lineToConstantHeading(targetPos)
                         .build()
         );
+        return true;
     }
     public void telemetry() {
         if(desiredTag != null) {

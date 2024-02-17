@@ -12,9 +12,12 @@ import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ResetPos;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
+import org.firstinspires.ftc.teamcode.modules.robot.Robot;
 import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,46 +52,42 @@ public class BlueBoardCycle extends AutoBase{
         List<Action_Base> list = new ArrayList<Action_Base>();
 
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start);
-        if(elementPosition == ElementPosition.Left){ // moving back to near start position
-            builder.lineToLinearHeading(new Pose2d(12, 60, Math.toRadians(-90)));
+        if(elementPosition == ElementPosition.Center){
+            builder.turn(-90);
         }else{
-            builder.lineToConstantHeading(new Vector2d(12, 60));
+            builder.lineToConstantHeading(new Vector2d(30, 41));
         }
-        builder.lineToLinearHeading(new Pose2d(30, 41, Math.toRadians(180)));
+        //builder.lineToLinearHeading(new Pose2d(30, 41, Math.toRadians(180)));
 
         TrajectorySequenceBuilder toStack = drive.trajectorySequenceBuilder(new Pose2d(48, 36, Math.toRadians(180)))
-                .lineToConstantHeading(new Vector2d(24, 12))
-                .lineToConstantHeading(new Vector2d(-62, 18));
+                .lineToConstantHeading(new Vector2d(24, 12),
+                        drive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToConstantHeading(new Vector2d(-53, 12),
+                        drive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                );
 
         TrajectorySequenceBuilder toBoard = drive.trajectorySequenceBuilder(new Pose2d(-60, 12, Math.toRadians(180)))
                 .lineToConstantHeading(new Vector2d(24, 12))
-                .lineToConstantHeading(new Vector2d(30, 41));
+                .addDisplacementMarker(()->{
+                        Robot.intake.stop();
+                        Robot.claw.closeTop();
+                })
+                .lineToConstantHeading(new Vector2d(36, 36));
 
-        Pose2d pos;
-        switch (elementPosition){
-            case Right:
-                pos = new Pose2d(54, 42, Math.toRadians(180));
-                break;
-            case Center:
-                pos = new Pose2d(50.5, 36, Math.toRadians(180));
-                break;
-            case Left:
-                pos = new Pose2d(54, 30, Math.toRadians(180));
-                break;
-            default:
-                pos = new Pose2d();
-                break;
-        }
-
-        list.add(new Action_Trajectory(builder.build()));                   //to backboard
-        list.add(new Action_DriveToAprilTag(elementPosition.getValue(), new Vector2d(-1, 2)));   //line up with backboard
-        list.add(new Action_ResetPos(pos));
+        if(elementPosition != ElementPosition.Left) {
+            list.add(new Action_Trajectory(builder.build()));
+        }//to backboard
+        int offset = (elementPosition.getValue() - 1) * -6;
+        list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset)));   //line up with backboard
         list.add(new Action_ScoreOnBackboard());                            //score on backboard
         list.add(new Action_Trajectory(toStack.build()));                   //to stack
         list.add(new Action_GrabFromStack());                               //grab from stack
-        //list.add(new Action_Trajectory(toBoard.build()));                   //to backboard
-        //list.add(new Action_DriveToAprilTag(elementPosition.getValue()));   //line up with backboard
-        //list.add(new Action_ScoreOnBackboard());                            //score on backboard
+        list.add(new Action_Trajectory(toBoard.build()));                   //to backboard
+        list.add(new Action_DriveToAprilTag(2, new Vector2d(-1.5, 0)));
+        list.add(new Action_ScoreOnBackboard(-1000, false));             //score on backboard
         //list.add(new Action_Park(getStartPos()));                           //park
         return list;
     }

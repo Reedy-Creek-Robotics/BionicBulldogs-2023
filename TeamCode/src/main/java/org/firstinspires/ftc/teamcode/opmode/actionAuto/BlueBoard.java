@@ -31,14 +31,28 @@ public class BlueBoard extends AutoBase{
         List<Action_Base> list = new ArrayList<Action_Base>();
 
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(start);
-        if(elementPosition == ElementPosition.Left){ // moving back to near start position
+        if(elementPosition == ElementPosition.Left) {
             builder.lineToLinearHeading(new Pose2d(12, 60, Math.toRadians(-90)));
-        }else{
+        }else {
             builder.lineToConstantHeading(new Vector2d(12, 60));
         }
         builder.lineToLinearHeading(new Pose2d(30, 41, Math.toRadians(180)));
+        TrajectorySequence path = builder.build();
 
-        list.add(new Action_Trajectory(builder.build()));                   //to backbord
+        /*TrajectorySequenceBuilder aprilTagDefultPath = drive.trajectorySequenceBuilder(path.end());
+        switch (elementPosition){
+            default:
+            case Left:
+                builder.lineToConstantHeading(new Vector2d(50.5, 42.5));
+                break;
+            case Center:
+                builder.lineToConstantHeading(new Vector2d(50.5, 34));
+                break;
+            case Right:
+                builder.lineToConstantHeading(new Vector2d(50.5, 26.5));
+                break;
+        }*/
+        list.add(new Action_Trajectory(path));
         list.add(new Action_DriveToAprilTag(elementPosition.getValue()));   //line up with backboard
         list.add(new Action_ScoreOnBackboard());                            //score on backboard
         list.add(new Action_Park(getStartPos()));                           //park

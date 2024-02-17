@@ -7,10 +7,20 @@ import org.firstinspires.ftc.teamcode.modules.robot.Robot;
 
 public class Action_ScoreOnBackboard extends Action_Base{
     ElapsedTime elapsedTime;
+    int slideHeight;
+    boolean secondUp;
+    public Action_ScoreOnBackboard(int _slideHeight, boolean _secondUp){
+        slideHeight = _slideHeight;
+        secondUp = _secondUp;
+    }
+    public Action_ScoreOnBackboard(){
+        slideHeight = -800;
+        secondUp = true;
+    }
     public void run(){
         elapsedTime = new ElapsedTime();
         delay(250);
-        Robot.slides.gotoPositionBlock();
+        Robot.slides.gotoPositionBlock(slideHeight);
         delay(500);
         Robot.slides.scoreRotator();
         delay(450);
@@ -18,12 +28,14 @@ public class Action_ScoreOnBackboard extends Action_Base{
         delay(200);
         flicker();
         delay(200);
-        Robot.slides.gotoPositionBlock(-900);
-        Robot.drive.followTrajectorySequence(
-                Robot.drive.trajectorySequenceBuilder(Robot.drive.getPoseEstimate())
-                        .forward(5)
-                        .build()
-        );
+        if(secondUp) {
+            Robot.slides.gotoPositionBlock(slideHeight - 200);
+            Robot.drive.followTrajectorySequence(
+                    Robot.drive.trajectorySequenceBuilder(Robot.drive.getPoseEstimate())
+                            .forward(5)
+                            .build()
+            );
+        }
         Robot.slides.resetRotator();
         delay(500);
         Robot.slides.reset();

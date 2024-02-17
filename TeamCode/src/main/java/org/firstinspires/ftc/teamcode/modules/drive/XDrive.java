@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules.drive;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -51,6 +53,14 @@ public class XDrive {
                         ((DcMotorEx)backLeft).getCurrent(CurrentUnit.MILLIAMPS) +
                         ((DcMotorEx)backRight).getCurrent(CurrentUnit.MILLIAMPS)
         );
+
+        double totalCurrent = ((DcMotorEx)frontLeft).getCurrent(CurrentUnit.MILLIAMPS) +
+                ((DcMotorEx)frontRight).getCurrent(CurrentUnit.MILLIAMPS) +
+                ((DcMotorEx)backLeft).getCurrent(CurrentUnit.MILLIAMPS) +
+                ((DcMotorEx)backRight).getCurrent(CurrentUnit.MILLIAMPS);
+        if( totalCurrent > 0 ) {
+            Log.d("BIONIC", "Total Current = " + totalCurrent);
+        }
 
         t.addData("(drive)velocity fl", ((DcMotorEx)frontLeft).getVelocity());
         t.addData("(drive)velocity fr", ((DcMotorEx)frontRight).getVelocity());
