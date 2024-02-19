@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -115,21 +116,20 @@ public class DriveToAprilTag
     XDrive drive;
     Telemetry telemetry;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound = false;
     boolean reversed;
 
-    public DriveToAprilTag(XDrive _drive, LinearOpMode op){
-        this(_drive, op, "Webcam 1", false);
-    }
-    public DriveToAprilTag(XDrive _drive, LinearOpMode op, String name, boolean _reversed) {
+    WebcamName camera;
+    VisionPortal visionPortal;
+    LinearOpMode opmode;
+    public DriveToAprilTag(XDrive _drive, LinearOpMode op, String name, VisionPortal.Builder visionPortal) {
         drive = _drive;
         telemetry = op.telemetry;
+        opmode = op;
         // Initialize the Apriltag Detection process
-        initAprilTag(op, name);
-        reversed = _reversed;
+        initAprilTag(op, name, visionPortal);
 
         if (USE_WEBCAM)
             setManualExposure(1, 255, op);  // Use low exposure time to reduce motion blur
@@ -240,7 +240,7 @@ public class DriveToAprilTag
     /**
      * Initialize the AprilTag processor.
      */
-    private void initAprilTag(LinearOpMode op, String name) {
+    private void initAprilTag(LinearOpMode op, String name, VisionPortal.Builder builder) {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -254,14 +254,15 @@ public class DriveToAprilTag
         aprilTag.setDecimation(2);
 
         // Create the vision portal by using a builder.
-        CameraName camera = op.hardwareMap.get(WebcamName.class, name);
-        if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(camera)
-                    .setCameraResolution(new Size(640, 480))
-                    .addProcessor(aprilTag)
-                    .build();
-        }
+        camera = op.hardwareMap.get(WebcamName.class, name);
+        builder
+                //.setCamera(camera)
+                //.setCameraResolution(new Size(640, 480))
+                .addProcessor(aprilTag);
+    }
+    public void setCamera(VisionPortal portal){
+        portal.setActiveCamera(camera);
+        setManualExposure(1, 255, opmode);  // Use low exposure time to reduce motion blur
     }
 
     void delay(float ms){

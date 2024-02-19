@@ -59,10 +59,12 @@ public abstract class AutoBase extends LinearOpMode {
         RecognitionProcesser recognitionProcesser = new RecognitionProcesser();
         recognitionProcesser.setTeam(team);
         CameraName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
-        VisionPortal visionPortal = new VisionPortal.Builder()
+        VisionPortal.Builder visionPortalBuilder = new VisionPortal.Builder()
                 .setCamera(camera)
-                .addProcessor(recognitionProcesser)
-                .build();
+                .addProcessor(recognitionProcesser);
+        driveToAprilTag = new DriveToAprilTag(xDrive, this, "Webcam 2", visionPortalBuilder);
+
+        VisionPortal visionPortal = visionPortalBuilder.build();
 
         while(opModeInInit()){
             telemetry.addData("initialized", recognitionProcesser.isInitialized());
@@ -95,8 +97,7 @@ public abstract class AutoBase extends LinearOpMode {
             return;
         }
         waitForStart();
-        visionPortal.close();
-        driveToAprilTag = new DriveToAprilTag(xDrive, this, "Webcam 2", false);
+        driveToAprilTag.setCamera(visionPortal);
         Robot.driveToAprilTag = driveToAprilTag;
         ElementPosition elementPosition = recognitionProcesser.getPosition();
         slides.resetRotator();
