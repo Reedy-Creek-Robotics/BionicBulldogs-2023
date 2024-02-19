@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 
-public class Intake extends BaseComponent {
+public class Intake {
     public enum IntakeState{
         Intake,
         Outtake,
@@ -18,8 +18,12 @@ public class Intake extends BaseComponent {
     static public double targetRed = 45;
     static public double targetGreen = 95;
     static public double targetBlue = 210;
+    static public double stackGrabberStartPos = 1;
+    static public double stackGrabberGrabPos = 0.3;
+
     DcMotor motor;
     CRServo servo;
+    Servo servo1;
     ColorSensor colorSensor;
     IntakeState state;
     public Intake(IntakeConfig config){
@@ -28,9 +32,11 @@ public class Intake extends BaseComponent {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         servo = config.getServo();
+        servo1 = config.getStackGrabber();
         state = IntakeState.Stop;
         colorSensor = config.hw.colorSensor.iterator().next();
     }
+
 
     public void intake(double power) {
         motor.setPower(-power);
@@ -56,8 +62,10 @@ public class Intake extends BaseComponent {
         return state;
     }
 
-    @Override
-    public void addTelemetry(Telemetry telemetry) {
+    public void resetStackGrabber(){servo1.setPosition(stackGrabberStartPos);}
 
+    public void grabStack() {servo1.setPosition(stackGrabberGrabPos);}
+    public void stackGrabberMid(){
+        servo1.setPosition(0.5f);
     }
 }

@@ -52,8 +52,9 @@ public class BlueBoard extends AutoBase{
                 builder.lineToConstantHeading(new Vector2d(50.5, 26.5));
                 break;
         }*/
+        int offset = (elementPosition.getValue() - 1) * -6;
         list.add(new Action_Trajectory(path));
-        list.add(new Action_DriveToAprilTag(elementPosition.getValue()));   //line up with backboard
+        list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset)));   //line up with backboard
         list.add(new Action_ScoreOnBackboard());                            //score on backboard
         list.add(new Action_Park(getStartPos()));                           //park
         return list;

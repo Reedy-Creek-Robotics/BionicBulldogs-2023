@@ -79,6 +79,7 @@ public class MainTelopFR extends BaseTeleOp{
         slides.resetRotator();
         xDrive.start();
         droneLauncher.reset();
+        //intake.initServos();
     }
     public void loop(){
         copyGamepads();
@@ -180,6 +181,13 @@ public class MainTelopFR extends BaseTeleOp{
             hangingSlides.hang();
         }
 
+        if(gamepadEx2.cross()) {
+            intake.grabStack();
+        }
+        if(gamepadEx2.circle()){
+            intake.resetStackGrabber();
+        }
+
         if(closeClaw){
             if(clawET.seconds() >= 0.2){
                 claw.closeTop();
@@ -195,6 +203,7 @@ public class MainTelopFR extends BaseTeleOp{
         //xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
         telemetry.update();
+        slides.updateSlidePower();
     }
 
     protected void updateIntake() {

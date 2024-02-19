@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Base;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTag;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Func;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_GrabFromStack;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Park;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ResetPos;
@@ -57,37 +58,54 @@ public class BlueBoardCycle extends AutoBase{
         }else{
             builder.lineToConstantHeading(new Vector2d(30, 41));
         }
-        //builder.lineToLinearHeading(new Pose2d(30, 41, Math.toRadians(180)));
 
         TrajectorySequenceBuilder toStack = drive.trajectorySequenceBuilder(new Pose2d(48, 36, Math.toRadians(180)))
                 .lineToConstantHeading(new Vector2d(24, 12),
-                        drive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        drive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
-                .lineToConstantHeading(new Vector2d(-53, 12),
-                        drive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .addDisplacementMarker(()->Robot.intake.stackGrabberMid())
+                .lineToConstantHeading(new Vector2d(-40, 12),
+                        drive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
-                );
+                )
+                .lineToConstantHeading(new Vector2d(-58.5, 9));
 
         TrajectorySequenceBuilder toBoard = drive.trajectorySequenceBuilder(new Pose2d(-60, 12, Math.toRadians(180)))
-                .lineToConstantHeading(new Vector2d(24, 12))
+                .lineToConstantHeading(new Vector2d(24, 12),
+                        drive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
                 .addDisplacementMarker(()->{
                         Robot.intake.stop();
                         Robot.claw.closeTop();
                 })
-                .lineToConstantHeading(new Vector2d(36, 36));
+                .lineToConstantHeading(new Vector2d(36, 36),
+                        drive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                );
 
         if(elementPosition != ElementPosition.Left) {
             list.add(new Action_Trajectory(builder.build()));
         }//to backboard
         int offset = (elementPosition.getValue() - 1) * -6;
+        list.add(new Action_Base() {
+            public void run() {
+                slides.gotoPosition(-850);
+            }
+        });
         list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset)));   //line up with backboard
-        list.add(new Action_ScoreOnBackboard());                            //score on backboard
+        list.add(new Action_ScoreOnBackboard(-850, true, false));                            //score on backboard
         list.add(new Action_Trajectory(toStack.build()));                   //to stack
         list.add(new Action_GrabFromStack());                               //grab from stack
-        list.add(new Action_Trajectory(toBoard.build()));                   //to backboard
+        list.add(new Action_Trajectory(toBoard.build()));
+        list.add(new Action_Base() {
+            public void run() {
+                slides.gotoPosition(-1000);
+            }
+        });//to backboard
         list.add(new Action_DriveToAprilTag(2, new Vector2d(-1.5, 0)));
-        list.add(new Action_ScoreOnBackboard(-1000, false));             //score on backboard
+        list.add(new Action_ScoreOnBackboard(-1000, false, false));             //score on backboard
         //list.add(new Action_Park(getStartPos()));                           //park
         return list;
     }

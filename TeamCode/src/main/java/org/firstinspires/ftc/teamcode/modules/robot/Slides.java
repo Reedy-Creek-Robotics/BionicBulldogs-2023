@@ -98,6 +98,11 @@ public class Slides {
         gotoPosition(pos);
         while(motor.isBusy());
     }
+    public void updateSlidePower(){
+        if(motor.getCurrentPosition() < 25){
+            setPower(0);
+        }
+    }
 
     public void gotoPositionBlock(){
         gotoPositionBlock(-758);

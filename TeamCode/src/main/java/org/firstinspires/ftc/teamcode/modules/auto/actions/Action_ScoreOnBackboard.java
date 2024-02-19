@@ -9,19 +9,24 @@ public class Action_ScoreOnBackboard extends Action_Base{
     ElapsedTime elapsedTime;
     int slideHeight;
     boolean secondUp;
-    public Action_ScoreOnBackboard(int _slideHeight, boolean _secondUp){
+    boolean slidesUp;
+    public Action_ScoreOnBackboard(int _slideHeight, boolean _secondUp, boolean _slidesUp){
         slideHeight = _slideHeight;
         secondUp = _secondUp;
+        slidesUp = _slidesUp;
     }
     public Action_ScoreOnBackboard(){
         slideHeight = -800;
         secondUp = true;
+        slidesUp = true;
     }
     public void run(){
         elapsedTime = new ElapsedTime();
-        delay(250);
-        Robot.slides.gotoPositionBlock(slideHeight);
-        delay(500);
+        if(slidesUp) {
+            delay(250);
+            Robot.slides.gotoPositionBlock(slideHeight);
+            delay(500);
+        }
         Robot.slides.scoreRotator();
         delay(450);
         flicker();

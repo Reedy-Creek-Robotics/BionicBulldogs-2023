@@ -171,7 +171,7 @@ public class DriveToAprilTag
         // Apply desired axes motions to the drivetrain.
         if(
                 (Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
-                targetFound
+                        targetFound
         ){
             telemetry.addData("2x", -forward);
             telemetry.addData("2y", -strafe);
@@ -211,8 +211,8 @@ public class DriveToAprilTag
             return false;
         }
         targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + offset.getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + offset.getY()
+                desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + offset.getX(),
+                -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + offset.getY()
         );
 
         rrDrive.followTrajectorySequence(
