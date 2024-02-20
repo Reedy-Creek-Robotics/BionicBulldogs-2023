@@ -121,8 +121,7 @@ public class MainTelopFR extends BaseTeleOp{
         }
 
         if(gamepadEx1.options()){
-            //droneLauncher.launch();
-            pixelCount = 0;
+            droneLauncher.launch();
         }
         //telemetry.addData("Intake", intake.getState());
 

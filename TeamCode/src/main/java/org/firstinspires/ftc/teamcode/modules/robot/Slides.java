@@ -99,7 +99,7 @@ public class Slides {
         while(motor.isBusy());
     }
     public void updateSlidePower(){
-        if(motor.getCurrentPosition() < 25){
+        if(motor.getCurrentPosition() > -25){
             setPower(0);
         }
     }

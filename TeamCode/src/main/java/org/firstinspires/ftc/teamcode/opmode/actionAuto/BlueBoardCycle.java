@@ -89,21 +89,17 @@ public class BlueBoardCycle extends AutoBase{
             list.add(new Action_Trajectory(builder.build()));
         }//to backboard
         int offset = (elementPosition.getValue() - 1) * -6;
-        list.add(new Action_Base() {
-            public void run() {
-                slides.gotoPosition(-850);
-            }
-        });
+        list.add(new Action_Func(()-> {
+            slides.gotoPosition(-850);
+        }));
         list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset)));   //line up with backboard
         list.add(new Action_ScoreOnBackboard(-850, true, false));                            //score on backboard
         list.add(new Action_Trajectory(toStack.build()));                   //to stack
         list.add(new Action_GrabFromStack());                               //grab from stack
         list.add(new Action_Trajectory(toBoard.build()));
-        list.add(new Action_Base() {
-            public void run() {
-                slides.gotoPosition(-1000);
-            }
-        });//to backboard
+        list.add(new Action_Func(()-> {
+            slides.gotoPosition(-1000);
+        }));//to backboard
         list.add(new Action_DriveToAprilTag(2, new Vector2d(-1.5, 0)));
         list.add(new Action_ScoreOnBackboard(-1000, false, false));             //score on backboard
         //list.add(new Action_Park(getStartPos()));                           //park

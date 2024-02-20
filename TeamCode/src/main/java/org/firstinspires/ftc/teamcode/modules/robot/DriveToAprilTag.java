@@ -220,6 +220,17 @@ public class DriveToAprilTag
                         .lineToConstantHeading(targetPos)
                         .build()
         );
+
+        Vector2d actualPosition = rrDrive.getPoseEstimate().vec();
+        Vector2d error = new Vector2d(targetPos.getX() - actualPosition.getX(), targetPos.getY() - actualPosition.getY());
+        Log.d("AprilTag",
+                "Drive To Tag: Expected pos: " +
+                        targetPos.getX() + ", " + targetPos.getY() +
+                        " | actual position: " +
+                        actualPosition.getX() + ", " + actualPosition.getY() +
+                        " | error: " +
+                        error.getX() + ", " + error.getY()
+                        );
         return true;
     }
     public void telemetry() {
