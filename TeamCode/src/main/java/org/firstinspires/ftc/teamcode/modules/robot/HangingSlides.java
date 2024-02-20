@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.config.HangingSlidesConfig;
 
 public class HangingSlides {
-    static final int upPosition = 4450;
+    static final int upPosition = 4300;
     static final int hangPosition = 1000;
     static final float motorPower = 1.0f;
     DcMotor motor;

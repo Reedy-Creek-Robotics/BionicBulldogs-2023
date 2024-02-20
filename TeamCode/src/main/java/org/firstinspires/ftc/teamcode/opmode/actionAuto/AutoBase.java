@@ -1,19 +1,20 @@
-package org.firstinspires.ftc.teamcode.opmode.auto.test;
+package org.firstinspires.ftc.teamcode.opmode.actionAuto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Base;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.DriveToAprilTag;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.Intake;
 import org.firstinspires.ftc.teamcode.modules.robot.RecognitionProcesser;
+import org.firstinspires.ftc.teamcode.modules.robot.Robot;
 import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.nio.ReadOnlyBufferException;
+import java.util.List;
 
 public abstract class AutoBase extends LinearOpMode {
     Slides slides;
@@ -35,14 +37,27 @@ public abstract class AutoBase extends LinearOpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.resetEncoders();
         Intake intake = new Intake(new IntakeConfig(hardwareMap));
-        //slides = new Slides(new SlideConfig(hardwareMap));
+        slides = new Slides(new SlideConfig(hardwareMap));
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         XDrive xDrive = new XDrive();
         xDrive.init(new XDriveConfig(hardwareMap));
-        //claw = new Claw(new ClawConfig(hardwareMap));
+        claw = new Claw(new ClawConfig(hardwareMap));
+
+        Robot.drive = drive;
+        Robot.claw = claw;
+        Robot.slides = slides;
+        Robot.intake = intake;
+
+        RobotTeam team;
+
+        if(getStartPos().getY() > 0){
+            team = RobotTeam.Blue;
+        }else{
+            team = RobotTeam.Red;
+        }
 
         RecognitionProcesser recognitionProcesser = new RecognitionProcesser();
-        recognitionProcesser.setTeam(getTeam());
+        recognitionProcesser.setTeam(team);
         CameraName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .setCamera(camera)
@@ -76,37 +91,49 @@ public abstract class AutoBase extends LinearOpMode {
             telemetry.update();
         }
 
-/*
-        Recognition recognition = new Recognition(this);
-        while (!recognition.getInitialized()){
-            telemetry.addData("recognition", "NOT INITIALIZED");
-            telemetry.update();
-        }
-        telemetry.addData("recognition", "INITIALIZED");
-        telemetry.update();
-
-        Recognition.SkystoneDeterminationPipeline.ElementPosition position = recognition.getBarcode();
-        telemetry.addData("position", position);
-        telemetry.update();
-*/
-//        TrajectorySequence path = drive.trajectorySequenceBuilder(new Pose2d(-36, 66, Math.toRadians(-90)))
-//                .splineTo(new Vector2d(-36, 30), Math.toRadians(-90))
-//                .waitSeconds(1)
-//                .lineToConstantHeading(new Vector2d(-36, 48))
-//                .splineTo(new Vector2d(-24, 60), Math.toRadians(-0))
-//                .splineTo(new Vector2d(12, 60), Math.toRadians(-0))
-//                .lineToConstantHeading(new Vector2d(48, 36))
-//                .build();
-
         if(!opModeIsActive()){
             return;
         }
         waitForStart();
         visionPortal.close();
         driveToAprilTag = new DriveToAprilTag(xDrive, this, "Webcam 2", false);
+        Robot.driveToAprilTag = driveToAprilTag;
         ElementPosition elementPosition = recognitionProcesser.getPosition();
         slides.resetRotator();
         claw.closeTop();
+
+        TrajectorySequence purplePreloadPath = getPreloadPath(elementPosition);
+        List<Action_Base> actions = getActions(purplePreloadPath.end(), elementPosition);
+
+        drive.setPoseEstimate(purplePreloadPath.start());
+
+        //Drop-off purple pixel
+        drive.followTrajectorySequence(purplePreloadPath);
+
+        intake.outtake(0.3);
+        sleep(500);
+        intake.stop();
+
+        for(Action_Base action : actions){
+            action.run();
+        }
+
+        SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
+        telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
+        telemetry.update();
+        sleep(1000);
+    }
+
+    public abstract Pose2d getStartPos();
+
+    public TrajectorySequence getPreloadPath(ElementPosition elementPosition){
+        RobotTeam team;
+
+        if(getStartPos().getY() > 0){
+            team = RobotTeam.Blue;
+        }else{
+            team = RobotTeam.Red;
+        }
 
         TrajectorySequence purplePreloadPath;
 
@@ -125,7 +152,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (getTeam() == RobotTeam.Blue ? 1 : -2.25), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 1 : -2.25), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
@@ -134,106 +161,9 @@ public abstract class AutoBase extends LinearOpMode {
                         .build();
                 break;
         }
-
-        TrajectorySequence path = getTrajectory(purplePreloadPath.end(), drive, elementPosition);
-
-        drive.setPoseEstimate(purplePreloadPath.start());
-
-        //Drop-off purple pixel
-        drive.followTrajectorySequence(purplePreloadPath);
-
-        intake.outtake(0.3);
-        sleep(500);
-        intake.stop();
-
-        drive.followTrajectorySequence(path);
-        driveToAprilTag.initTelem();
-        telemetry.update();
-        Vector2d offset2;
-        if(getStartPos().getX() > 0){
-            offset2 = new Vector2d(-6, 2);
-        }else{
-            offset2 = new Vector2d(-6, 1.5);
-        }
-        if(getTeam() == RobotTeam.Blue) {
-            switch (elementPosition) {
-                case Left:
-                    driveToAprilTag.roadRunnerDriveToTag(1, drive, offset2);
-                    break;
-                case Center:
-                    driveToAprilTag.roadRunnerDriveToTag(2, drive, offset2);
-                    break;
-                case Right:
-                    driveToAprilTag.roadRunnerDriveToTag(3, drive, offset2);
-                    break;
-            }
-        }else{
-            switch (elementPosition) {
-                case Left:
-                    driveToAprilTag.roadRunnerDriveToTag(4, drive, offset2);
-                    break;
-                case Center:
-                    driveToAprilTag.roadRunnerDriveToTag(5, drive, offset2);
-                    break;
-                case Right:
-                    driveToAprilTag.roadRunnerDriveToTag(6, drive, offset2);
-                    break;
-            }
-        }
-
-        scoreOnBackboard();
-        SampleMecanumDrive.posEstimate = drive.getPoseEstimate();
-        telemetry.addData("end pos estimate", SampleMecanumDrive.posEstimate);
-        telemetry.update();
-        sleep(1000);
+        return purplePreloadPath;
     }
 
-    public abstract Pose2d getStartPos();
-    public abstract RobotTeam getTeam();
-
-    // trajectory for navigating to board and get in proper position to drop the yellow pixel
-    // this is defined by sub-classes because its unique to each position
-    public abstract TrajectorySequence getTrajectory(Pose2d startPos, SampleMecanumDrive drive, ElementPosition elementPosition);
-    public void flicker(Claw claw){
-        //flick the flicker on the claw
-        claw.push();
-        sleep(350);
-        claw.resetFlicker();
-    }
-    public void scoreOnBackboard(){
-        /*sleep(250);
-        slides.gotoPositionBlock();
-        sleep(500);
-        slides.scoreRotator();
-        sleep(450);
-        flicker(claw);
-        sleep(200);
-        flicker(claw);
-        sleep(200);
-        slides.gotoPositionBlock(-900);*/
-        drive.followTrajectorySequence(
-                drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .forward(5)
-                        .build()
-        );
-        /*slides.resetRotator();
-        sleep(500);
-        slides.reset();
-        claw.openTop();
-        telemetry.addLine("parking");
-        telemetry.update();*/
-        drive.followTrajectorySequence(
-                drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(
-                                drive.getPoseEstimate().getX(),
-                                (getTeam() == RobotTeam.Red ? -1 : 1) * (getStartPos().getX() > 0 ? 60 : 12) * (getTeam() == RobotTeam.Red && getStartPos().getX() < 0 ? 0.5 : 1),
-                                getStartPos().getHeading()
-                        ))
-                        .back(3)
-                        .build()
-        );
-        telemetry.addLine("parked");
-        telemetry.update();
-    }
+    public abstract List<Action_Base> getActions(Pose2d startPos, ElementPosition elementPosition);
 
 }

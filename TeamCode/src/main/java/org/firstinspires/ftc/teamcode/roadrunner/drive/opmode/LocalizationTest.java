@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.checkerframework.checker.units.qual.C;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
@@ -44,9 +45,9 @@ public class LocalizationTest extends LinearOpMode {
         while (!isStopRequested()) {
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y / 2.0f,
-                            -gamepad1.left_stick_x / 2.0f,
-                            -gamepad1.right_stick_x / 2.0f
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
 
                     )
             );
@@ -58,6 +59,8 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("imuHeading", drive.imu.getHeading(AngleUnit.DEGREES));
+            telemetry.addData("imuHeadingVel", drive.imu.getImu().getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
             telemetry.update();
         }
     }

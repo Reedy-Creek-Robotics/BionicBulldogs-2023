@@ -5,19 +5,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.modules.hardware.MotorGroup;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 @Config
 public class Slides {
     public static int lastPosition = 0;
     public static int pixelHeight = 20; //encoder ticks to go up one pixel
     public static int slidePosToMoveServo = -1000;
-    public static double slideSpeed = 1.0f;
-    public static double servoStartPos = 0.92f; //0.47f;
+    public static double slideSpeedUp = 1.0f;
+    public static double slideSpeedDown = 0.8f;
+    public static double servoStartPos = 0.98f; //0.47f;
     public static double servoScorePosAuto = 0.2f; //0.2f;
-    public static double servoScorePosTelop = 0.32f;
+    public static double servoScorePosTelop = 0.45f;
     DcMotor motor;
     Servo servo;
+    boolean prevServoPos = false;
 
     public Slides(SlideConfig cfg){
         servo = cfg.getRotator();
@@ -29,7 +30,7 @@ public class Slides {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setTargetPosition(motor.getCurrentPosition() + pixelHeight);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(slideSpeed);
+        motor.setPower(slideSpeedUp);
         lastPosition++;
     }
     public void down1Pixel(){
@@ -37,20 +38,20 @@ public class Slides {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setTargetPosition(motor.getCurrentPosition() - pixelHeight);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(slideSpeed);
+        motor.setPower(slideSpeedUp);
         lastPosition--;
     }
     public void goToLastPosition(){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setTargetPosition(pixelHeight * lastPosition);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(slideSpeed);
+        motor.setPower(slideSpeedUp);
     }
     public void reset(){
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setTargetPosition(0);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(slideSpeed);
+        motor.setPower(slideSpeedDown);
     }
     public void resetLastPosition(){
         lastPosition = 0;
@@ -60,16 +61,15 @@ public class Slides {
             return;
         }
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setPower(power * slideSpeed);
+        motor.setPower(power * slideSpeedUp);
     }
     public void updateClawServo(){
-        if(motor.getCurrentPosition() < slidePosToMoveServo){
-            servo.setPosition(servoScorePosTelop);
-        }else if(motor.getCurrentPosition() < -200) {
-            servo.setPosition(0.49);
-        }else{
+        if(motor.getCurrentPosition() > -100){
             servo.setPosition(servoStartPos);
         }
+    }
+    public void resetEncoder(){
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public void resetRotator(){
         servo.setPosition(servoStartPos);
@@ -92,11 +92,16 @@ public class Slides {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setTargetPosition(pos); //-800
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(slideSpeed);
+        motor.setPower(slideSpeedUp);
     }
     public void gotoPositionBlock(int pos){
         gotoPosition(pos);
         while(motor.isBusy());
+    }
+    public void updateSlidePower(){
+        if(motor.getCurrentPosition() > -25){
+            setPower(0);
+        }
     }
 
     public void gotoPositionBlock(){

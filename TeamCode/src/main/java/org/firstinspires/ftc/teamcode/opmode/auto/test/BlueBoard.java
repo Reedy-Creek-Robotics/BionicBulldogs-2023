@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.opmode.auto.test;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-@Autonomous
 public class BlueBoard extends AutoBase{
     public RobotTeam getTeam(){
         return RobotTeam.Blue;

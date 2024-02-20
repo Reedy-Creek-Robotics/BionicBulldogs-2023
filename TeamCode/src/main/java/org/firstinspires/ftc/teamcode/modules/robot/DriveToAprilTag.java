@@ -171,7 +171,7 @@ public class DriveToAprilTag
         // Apply desired axes motions to the drivetrain.
         if(
                 (Math.abs(forward) > MIN_SPEED || Math.abs(strafe) > MIN_SPEED || Math.abs(rotate) > MIN_SPEED) &&
-                targetFound
+                        targetFound
         ){
             telemetry.addData("2x", -forward);
             telemetry.addData("2y", -strafe);
@@ -188,7 +188,7 @@ public class DriveToAprilTag
         }
     }
 
-    public void roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
+    public boolean roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
         Vector2d targetPos;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
@@ -197,7 +197,7 @@ public class DriveToAprilTag
             // Look to see if we have size info on this tag.
             if (detection.metadata != null) {
                 //  Check to see if we want to track towards this tag.
-                if ((id < 0) || (id > 0 && id < 4 && detection.id == 1) || (id > 3 && id < 7 && detection.id == 6)) {
+                if (id == detection.id) {
                     // Yes, we want to use this tag.
                     targetFound = true;
                     desiredTag = detection;
@@ -208,24 +208,30 @@ public class DriveToAprilTag
         if(desiredTag == null){
             drive.drive(0,0,0);
             telemetry.addLine("Lost tag");
-            return;
+            return false;
         }
-        if(id > 0 && id < 4){
-            targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() - ((id - 1) * 6) + offset.getY()
-            );
-        }else{
-            targetPos = new Vector2d(
-                    desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + 0.5f + offset.getX(),
-                    -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + ((id - 6) * -6) - offset.getY()
-            );
-        }
+        targetPos = new Vector2d(
+                desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + offset.getX(),
+                -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + offset.getY()
+        );
+
         rrDrive.followTrajectorySequence(
                 rrDrive.trajectorySequenceBuilder(rrDrive.getPoseEstimate())
                         .lineToConstantHeading(targetPos)
                         .build()
         );
+
+        Vector2d actualPosition = rrDrive.getPoseEstimate().vec();
+        Vector2d error = new Vector2d(targetPos.getX() - actualPosition.getX(), targetPos.getY() - actualPosition.getY());
+        Log.d("AprilTag",
+                "Drive To Tag: Expected pos: " +
+                        targetPos.getX() + ", " + targetPos.getY() +
+                        " | actual position: " +
+                        actualPosition.getX() + ", " + actualPosition.getY() +
+                        " | error: " +
+                        error.getX() + ", " + error.getY()
+                        );
+        return true;
     }
     public void telemetry() {
         if(desiredTag != null) {
@@ -236,9 +242,9 @@ public class DriveToAprilTag
     public void initTelem(){
         int i = 0;
         for(AprilTagDetection detection : aprilTag.getDetections()){
-            Log.d("APRILTAG", "tag" + (++i) + detection.id);
-            Log.d("APRILTAG", "tag" + (i) + " position" +  detection.ftcPose.y + ", " + detection.ftcPose.x);
-            Log.d("APRILTAG", "tag" + (i) + " target position: " + (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
+            telemetry.addData("tag", (++i) + detection.id);
+            telemetry.addData("tag" + (i) + " position",  detection.ftcPose.y + ", " + detection.ftcPose.x);
+            telemetry.addData("tag" + (i) + " target position: ", (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
 
         }
     }
