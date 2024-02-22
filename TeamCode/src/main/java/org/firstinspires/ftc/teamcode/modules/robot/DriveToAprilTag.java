@@ -51,6 +51,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -187,33 +188,58 @@ public class DriveToAprilTag
             return false;
         }
     }
-
     public boolean roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset){
+        return roadRunnerDriveToTag(id, rrDrive, offset, new Vector2d());
+    }
+    public boolean roadRunnerDriveToTag(int id, SampleMecanumDrive rrDrive, Vector2d offset, Vector2d multipliers){
         Vector2d targetPos;
         // Step through the list of detected tags and look for a matching tag
         targetFound = false;    // Set to true when an AprilTag target is detected
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-        for (AprilTagDetection detection : currentDetections) {
-            // Look to see if we have size info on this tag.
-            if (detection.metadata != null) {
-                //  Check to see if we want to track towards this tag.
-                if (id == detection.id) {
-                    // Yes, we want to use this tag.
-                    targetFound = true;
-                    desiredTag = detection;
-                    break;  // don't look any further.
+        List<Vector2d> aprilTagPositions = new ArrayList<>();
+        for(int i = 0; i < 3; i++) {
+            AprilTagDetection tag = null;
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                // Look to see if we have size info on this tag.
+                if (detection.metadata != null) {
+                    //  Check to see if we want to track towards this tag.
+                    if (id == detection.id) {
+                        // Yes, we want to use this tag.
+                        targetFound = true;
+                        tag = detection;
+                        break;  // don't look any further.
+                    }
                 }
             }
+            if (tag != null) {
+                Vector2d pos = new Vector2d(tag.ftcPose.y, -tag.ftcPose.x);
+                aprilTagPositions.add(pos);
+            }
         }
-        if(desiredTag == null){
-            drive.drive(0,0,0);
-            telemetry.addLine("Lost tag");
+
+        if(aprilTagPositions.size() == 0){
             return false;
         }
+
+        double avgX = 0.0;
+        double avgY = 0.0;
+        for(Vector2d pos : aprilTagPositions){
+            avgX += pos.getX();
+            avgY += pos.getY();
+        }
+        avgX /= (double)aprilTagPositions.size();
+        avgY /= (double)aprilTagPositions.size();
+        avgX *= multipliers.getX();
+        avgY *= multipliers.getY();
+
         targetPos = new Vector2d(
-                desiredTag.ftcPose.y + rrDrive.getPoseEstimate().getX() + offset.getX(),
-                -desiredTag.ftcPose.x + rrDrive.getPoseEstimate().getY() + offset.getY()
+                avgX + rrDrive.getPoseEstimate().getX() + offset.getX(),
+                 offset.getY()
         );
+        Vector2d startPos = rrDrive.getPoseEstimate().vec();
+        Log.d("AprilTag" , "Drive To Tag: Estimate pos" + startPos);
+        Log.d("AprilTag" , "Tag X" + avgX + ", " + avgY);
+
 
         rrDrive.followTrajectorySequence(
                 rrDrive.trajectorySequenceBuilder(rrDrive.getPoseEstimate())
@@ -242,8 +268,8 @@ public class DriveToAprilTag
     public void initTelem(){
         int i = 0;
         for(AprilTagDetection detection : aprilTag.getDetections()){
-            telemetry.addData("tag", (++i) + detection.id);
-            telemetry.addData("tag" + (i) + " position",  detection.ftcPose.y + ", " + detection.ftcPose.x);
+            telemetry.addData("tag" + (++i), detection.id);
+            telemetry.addData("tag" + (i) + " position",  detection.ftcPose.y + ", " + -detection.ftcPose.x);
             telemetry.addData("tag" + (i) + " target position: ", (detection.ftcPose.y + 4) + ", " + detection.ftcPose.x);
 
         }
