@@ -37,8 +37,8 @@ public class RedStack extends AutoBase {
         builder.lineToLinearHeading(new Pose2d(15,-57.5, Math.toRadians(180)));
         builder.lineToConstantHeading(new Vector2d(30, -41));
 
-        int offset = (elementPosition.getValue() - 3) * -6;
-        list.add(new Action_Trajectory(builder.build()));                           //to backbord
+        int offset = (elementPosition.getValue() - 3) * -6 - 42;
+        list.add(new Action_Trajectory(builder.build()));                           //to backboard
         list.add(new Action_DriveToAprilTag(6, new Vector2d(-1, offset)));  //line up with backboard
         list.add(new Action_ScoreOnBackboard());                                    //score on backboard
         list.add(new Action_Park(getStartPos()));                                   //park

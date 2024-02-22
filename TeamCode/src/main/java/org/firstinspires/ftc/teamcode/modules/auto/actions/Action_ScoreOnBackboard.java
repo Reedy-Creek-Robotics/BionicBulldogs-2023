@@ -16,7 +16,7 @@ public class Action_ScoreOnBackboard extends Action_Base{
         slidesUp = _slidesUp;
     }
     public Action_ScoreOnBackboard(){
-        slideHeight = -1000;
+        slideHeight = -850;
         secondUp = true;
         slidesUp = true;
     }
@@ -28,7 +28,7 @@ public class Action_ScoreOnBackboard extends Action_Base{
             delay(500);
         }
         Robot.slides.scoreRotator();
-        delay(450);
+        delay(600);
         flicker();
         delay(200);
         flicker();

@@ -101,6 +101,7 @@ public abstract class AutoBase extends LinearOpMode {
         ElementPosition elementPosition = recognitionProcesser.getPosition();
         slides.resetRotator();
         claw.closeTop();
+        claw.flicker();
 
         TrajectorySequence purplePreloadPath = getPreloadPath(elementPosition);
         List<Action_Base> actions = getActions(purplePreloadPath.end(), elementPosition);
@@ -152,7 +153,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 1 : -2.25), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 1 : -1.75), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:

@@ -36,7 +36,7 @@ public class RedBoard extends AutoBase {
         }
         builder.lineToLinearHeading(new Pose2d(30, -41, Math.toRadians(180)));
 
-        int offset = (elementPosition.getValue() - 3) * -6;
+        int offset = (elementPosition.getValue() - 3) * -6 - 42;
         list.add(new Action_Trajectory(builder.build()));                           //to backbord
         list.add(new Action_DriveToAprilTag(6, new Vector2d(-1, offset)));  //line up with backboard
         list.add(new Action_ScoreOnBackboard());                                    //score on backboard

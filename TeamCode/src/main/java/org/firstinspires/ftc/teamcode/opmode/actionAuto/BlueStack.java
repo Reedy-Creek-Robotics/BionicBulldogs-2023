@@ -36,9 +36,9 @@ public class BlueStack extends AutoBase {
         builder.lineToLinearHeading(new Pose2d(12,57.5, Math.toRadians(180)));
         builder.lineToConstantHeading(new Vector2d(30, 41));
 
-        int offset = (elementPosition.getValue() - 1) * -6;
-        list.add(new Action_Trajectory(builder.build()));                   //to backbord
-        list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset)));   //line up with backboard
+        float offset = (elementPosition.getValue() - 1) * -6 + 42;
+        list.add(new Action_Trajectory(builder.build()));
+        list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset), new Vector2d(1, 0)));   //line up with backboard
         list.add(new Action_ScoreOnBackboard());                            //score on backboard
         list.add(new Action_Park(getStartPos()));                           //park
         return list;
