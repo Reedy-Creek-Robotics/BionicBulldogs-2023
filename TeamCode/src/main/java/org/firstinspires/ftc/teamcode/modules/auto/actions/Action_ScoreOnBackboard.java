@@ -16,7 +16,7 @@ public class Action_ScoreOnBackboard extends Action_Base{
         slidesUp = _slidesUp;
     }
     public Action_ScoreOnBackboard(){
-        slideHeight = -850;
+        slideHeight = -875;
         secondUp = true;
         slidesUp = true;
     }

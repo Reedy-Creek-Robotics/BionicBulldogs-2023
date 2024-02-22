@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.actionAuto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Base;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTag;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous
+@Disabled
 public class BlueBoardCycle extends AutoBase{
     // starting position for blue board side
     public Pose2d getStartPos() {

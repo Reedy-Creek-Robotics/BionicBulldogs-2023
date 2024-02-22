@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.actionAuto;
 
-import android.drm.DrmStore;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,17 +9,16 @@ import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTa
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Park;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.ParkLocation;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
-import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous
-public class BlueBoard extends AutoBase{
+@Autonomous(group = "CornerPark")
+public class BlueBoardCornerPark extends AutoBase{
     // starting position for blue board side
     public Pose2d getStartPos() {
         return new Pose2d(12, 62.5, Math.toRadians(-90));
@@ -57,7 +54,7 @@ public class BlueBoard extends AutoBase{
         list.add(new Action_Trajectory(path));
         list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset), new Vector2d(1, 0)));   //line up with backboard
         list.add(new Action_ScoreOnBackboard());                            //score on backboard
-        list.add(new Action_Park(getStartPos()));                           //park
+        list.add(new Action_Park(ParkLocation.Corner));                           //park
         return list;
     }
 }

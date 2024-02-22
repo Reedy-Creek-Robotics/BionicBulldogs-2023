@@ -153,12 +153,12 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 1 : -1.75), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? -0.5 : 0.5), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
                         .build();
                 break;
             case Right:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 0.5 : -0.5), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
                         .build();
                 break;
         }

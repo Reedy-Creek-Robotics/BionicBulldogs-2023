@@ -9,18 +9,16 @@ import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTa
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Park;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.ParkLocation;
 import org.firstinspires.ftc.teamcode.modules.robot.ElementPosition;
 import org.firstinspires.ftc.teamcode.modules.robot.Robot;
-import org.firstinspires.ftc.teamcode.modules.robot.RobotTeam;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous
-public class RedStack extends AutoBase {
+@Autonomous(group = "CornerPark")
+public class RedStackCornerPark extends AutoBase {
     public Pose2d getStartPos(){
         return new Pose2d(-35, -62.5, Math.toRadians(90));
     }
@@ -41,7 +39,7 @@ public class RedStack extends AutoBase {
         list.add(new Action_Trajectory(builder.build()));                           //to backboard
         list.add(new Action_DriveToAprilTag(6, new Vector2d(-1, offset)));  //line up with backboard
         list.add(new Action_ScoreOnBackboard());                                    //score on backboard
-        list.add(new Action_Park(getStartPos()));                                   //park
+        list.add(new Action_Park(ParkLocation.Corner));                                   //park
         return list;
     }
 }

@@ -100,7 +100,7 @@ public class Slides {
     }
     public void updateSlidePower(){
         if(motor.getCurrentPosition() > -25){
-            setPower(0);
+            motor.setPower(0);
         }
     }
 
