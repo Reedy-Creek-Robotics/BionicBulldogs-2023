@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Base;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTag;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Func;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Park;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
@@ -52,8 +53,9 @@ public class BlueBoardCornerPark extends AutoBase{
         }*/
         float offset = (elementPosition.getValue() - 1) * -6 + 42;
         list.add(new Action_Trajectory(path));
+        list.add(new Action_Func(()->slides.gotoPosition(-875)));
         list.add(new Action_DriveToAprilTag(1, new Vector2d(-1, offset), new Vector2d(1, 0)));   //line up with backboard
-        list.add(new Action_ScoreOnBackboard());                            //score on backboard
+        list.add(new Action_ScoreOnBackboard(-875, true, false));                            //score on backboard
         list.add(new Action_Park(ParkLocation.Corner));                           //park
         return list;
     }
