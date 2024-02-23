@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Base;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_DriveToAprilTag;
+import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Func;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Park;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_ScoreOnBackboard;
 import org.firstinspires.ftc.teamcode.modules.auto.actions.Action_Trajectory;
@@ -35,8 +36,9 @@ public class RedBoardCornerPark extends AutoBase {
 
         int offset = (elementPosition.getValue() - 3) * -6 - 42;
         list.add(new Action_Trajectory(builder.build()));                           //to backbord
+        list.add(new Action_Func(()->slides.gotoPosition(-875)));
         list.add(new Action_DriveToAprilTag(6, new Vector2d(-1, offset)));  //line up with backboard
-        list.add(new Action_ScoreOnBackboard());                                    //score on backboard
+        list.add(new Action_ScoreOnBackboard(-875, true, false));                            //score on backboard
         list.add(new Action_Park(ParkLocation.Corner));                                   //park
         return list;
     }
