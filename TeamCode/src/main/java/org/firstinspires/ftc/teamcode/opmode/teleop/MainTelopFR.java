@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
-@TeleOp
+@TeleOp(name = "\1MainTelopFR")
 @Config
 public class MainTelopFR extends BaseTeleOp{
     Claw claw;

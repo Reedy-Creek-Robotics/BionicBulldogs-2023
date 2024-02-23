@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.modules.robot.Slides;
 import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
-@TeleOp
+@TeleOp(group = "test")
 public class ScoreTest extends BaseTeleOp {
     Slides slides;
     Claw claw;

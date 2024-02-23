@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.opmode.teleop.MainTelop;
 
 import java.util.concurrent.Delayed;
-@TeleOp
+@TeleOp(group = "test")
 public class ClawTest extends BaseTeleOp {
     Claw claw;
     Slides slides;

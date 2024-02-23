@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 
 import java.util.List;
 
-@Autonomous
+@Autonomous(group = "test")
 public class TrajectoryTest extends LinearOpMode {
     public void runOpMode(){
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
