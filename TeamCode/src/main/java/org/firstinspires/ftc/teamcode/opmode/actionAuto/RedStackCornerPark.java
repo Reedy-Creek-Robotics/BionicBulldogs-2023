@@ -28,6 +28,8 @@ public class RedStackCornerPark extends AutoBase {
         TrajectorySequenceBuilder builder = Robot.drive.trajectorySequenceBuilder(start);
         if(elementPosition == ElementPosition.Right) {
             builder.lineToLinearHeading(new Pose2d(-34.5, -57.5, Math.toRadians(90)));
+            builder.lineToLinearHeading(new Pose2d(-34.5, -57.5, Math.toRadians(90)));
+            builder.turn(Math.toRadians(90));
             builder.turn(Math.toRadians(90));
         }else{
             builder.lineToLinearHeading(new Pose2d(-34.5, -57.5, Math.toRadians(180)));

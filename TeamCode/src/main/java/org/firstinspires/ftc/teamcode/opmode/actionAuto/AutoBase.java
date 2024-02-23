@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.opmode.actionAuto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.profile.AccelerationConstraint;
+import com.acmerobotics.roadrunner.profile.VelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
@@ -21,6 +25,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.ClawConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -143,22 +148,25 @@ public abstract class AutoBase extends LinearOpMode {
         float offset = (elementPosition == ElementPosition.Center ? 28.5f : 31.5f);
         preloadY = preloadY + (preloadY > 0 ? -offset : offset);
 
+        TrajectoryVelocityConstraint vel = SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+        TrajectoryAccelerationConstraint accel = SampleMecanumDrive.getAccelerationConstraint(20);
+
         //Define trajectory for dropping purple pixel
         switch (elementPosition){
             default:
             case Center:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading()))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX(), preloadY, getStartPos().getHeading()), vel, accel)
                         .build();
                 break;
             case Left:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? -0.5 : 0.5), preloadY, getStartPos().getHeading() + Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? -0.5 : 0), preloadY, getStartPos().getHeading() + Math.toRadians(90)), vel, accel)
                         .build();
                 break;
             case Right:
                 purplePreloadPath = drive.trajectorySequenceBuilder(getStartPos())
-                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 0.5 : -0.5), preloadY, getStartPos().getHeading() - Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(getStartPos().getX() - (team == RobotTeam.Blue ? 0.5 : -0.5), preloadY, getStartPos().getHeading() - Math.toRadians(90)), vel, accel)
                         .build();
                 break;
         }
