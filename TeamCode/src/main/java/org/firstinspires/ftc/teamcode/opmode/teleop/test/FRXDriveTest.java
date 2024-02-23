@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
-@TeleOp
+@TeleOp(group = "test")
 
 @Config
 public class FRXDriveTest extends LinearOpMode {

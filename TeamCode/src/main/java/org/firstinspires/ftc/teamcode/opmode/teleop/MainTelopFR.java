@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
-@TeleOp
+@TeleOp(name = "\1MainTelopFR")
 @Config
 public class MainTelopFR extends BaseTeleOp{
     Claw claw;
@@ -82,6 +82,7 @@ public class MainTelopFR extends BaseTeleOp{
         //intake.initServos();
     }
     public void loop(){
+        slides.updateSlidePower();
         copyGamepads();
         if(colorSensor.red() > targetRed && colorSensor.green() > targetGreen && colorSensor.blue() > targetBlue){
             gamepad1.setLedColor(1, 1, 1, 100);
@@ -145,7 +146,7 @@ public class MainTelopFR extends BaseTeleOp{
         }
 
         if(gamepadEx1.triangle()) {
-            slides.toggleRotator();
+            slidesPositionIndex = 0;
         }
 
         //claw
@@ -202,7 +203,6 @@ public class MainTelopFR extends BaseTeleOp{
         //xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
         telemetry.update();
-        slides.updateSlidePower();
     }
 
     protected void updateIntake() {

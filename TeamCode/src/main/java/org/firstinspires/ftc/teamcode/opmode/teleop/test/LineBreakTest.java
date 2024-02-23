@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.LED;
 
 @Config
-@TeleOp
+@TeleOp(group = "test")
 public class LineBreakTest extends OpMode {
     ColorSensor colorSensor;
     LED led;
