@@ -3,7 +3,8 @@ project("ftcrobotcontroller")
 add_library(
              ftcrobotcontroller
              SHARED
-./ftcrobotcontroller.cpp
+./src/JFunc.cpp
+./src/Lua.cpp
 ./include/lua/lapi.c
 ./include/lua/lauxlib.c
 ./include/lua/lbaselib.c
@@ -38,13 +39,12 @@ add_library(
 ./include/lua/lutf8lib.c
 ./include/lua/lvm.c
 ./include/lua/lzio.c
-
         )
+target_include_directories(ftcrobotcontroller PRIVATE src include)
 
 find_library(
               log-lib
               log )
-
 target_link_libraries(
                        ftcrobotcontroller
 

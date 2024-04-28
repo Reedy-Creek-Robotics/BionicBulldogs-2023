@@ -3,13 +3,13 @@ project("ftcrobotcontroller")
 add_library(
              ftcrobotcontroller
              SHARED
-
+@$
         )
+target_include_directories(ftcrobotcontroller PRIVATE src include)
 
 find_library(
               log-lib
               log )
-
 target_link_libraries(
                        ftcrobotcontroller
 
