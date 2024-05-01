@@ -23,7 +23,6 @@ public class Intake {
 
     DcMotor motor;
     CRServo servo;
-    Servo servo1;
     ColorSensor colorSensor;
     IntakeState state;
     public Intake(IntakeConfig config){
@@ -32,7 +31,6 @@ public class Intake {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         servo = config.getServo();
-        servo1 = config.getStackGrabber();
         state = IntakeState.Stop;
         colorSensor = config.hw.colorSensor.iterator().next();
     }
@@ -60,12 +58,5 @@ public class Intake {
     }
     public IntakeState getState(){
         return state;
-    }
-
-    public void resetStackGrabber(){servo1.setPosition(stackGrabberStartPos);}
-
-    public void grabStack() {servo1.setPosition(stackGrabberGrabPos);}
-    public void stackGrabberMid(){
-        servo1.setPosition(0.5f);
     }
 }

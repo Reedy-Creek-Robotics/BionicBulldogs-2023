@@ -13,14 +13,12 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 public class Action_GrabFromStack extends Action_Base{
     ElapsedTime elapsedTime;
     public void run(){
-        Robot.intake.grabStack();
         elapsedTime = new ElapsedTime();
         delay(1.0f);
         Robot.drive.followTrajectorySequence(Robot.drive.trajectorySequenceBuilder(Robot.drive.getPoseEstimate())
                 .lineToConstantHeading(new Vector2d(Robot.drive.getPoseEstimate().getX() + 5, Robot.drive.getPoseEstimate().getY()))
                 .build()
         );
-        Robot.intake.resetStackGrabber();
         Robot.intake.intake(0.8);
         Robot.drive.followTrajectorySequence(Robot.drive.trajectorySequenceBuilder(Robot.drive.getPoseEstimate())
                 .lineToConstantHeading(new Vector2d(Robot.drive.getPoseEstimate().getX() - 2, Robot.drive.getPoseEstimate().getY() + 3),

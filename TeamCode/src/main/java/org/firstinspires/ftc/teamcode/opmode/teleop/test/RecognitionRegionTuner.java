@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop.test;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.modules.Ui.FloatEx;
-import org.firstinspires.ftc.teamcode.modules.Ui.IntEx;
+import org.firstinspires.ftc.teamcode.modules.Ui.IntPtr;
 import org.firstinspires.ftc.teamcode.modules.Ui.UI;
 import org.firstinspires.ftc.teamcode.modules.robot.Recognition;
 import org.firstinspires.ftc.teamcode.opmode.teleop.BaseTeleOp;
@@ -17,28 +16,28 @@ public class RecognitionRegionTuner extends BaseTeleOp {
 
     //java doesnt have int* (int pointer) so i have classes for them
 
-    IntEx box1x;
-    IntEx box1y;
-    IntEx box2x;
-    IntEx box2y;
-    IntEx box3x;
-    IntEx box3y;
+    IntPtr box1x;
+    IntPtr box1y;
+    IntPtr box2x;
+    IntPtr box2y;
+    IntPtr box3x;
+    IntPtr box3y;
 
     public void init(){
         super.init();
         //recognition = new Recognition(this);
         ui = new UI(telemetry, gamepad1);
-        box1x = new IntEx();
+        box1x = new IntPtr();
         box1x.value = (int)Recognition.SkystoneDeterminationPipeline.REGION1_TOPLEFT_ANCHOR_POINT.x;
-        box1y = new IntEx();
+        box1y = new IntPtr();
         box1y.value = (int)Recognition.SkystoneDeterminationPipeline.REGION1_TOPLEFT_ANCHOR_POINT.y;
-        box2x = new IntEx();
+        box2x = new IntPtr();
         box2x.value = (int)Recognition.SkystoneDeterminationPipeline.REGION2_TOPLEFT_ANCHOR_POINT.x;
-        box2y = new IntEx();
+        box2y = new IntPtr();
         box2y.value = (int)Recognition.SkystoneDeterminationPipeline.REGION2_TOPLEFT_ANCHOR_POINT.y;
-        box3x = new IntEx();
+        box3x = new IntPtr();
         box3x.value = (int)Recognition.SkystoneDeterminationPipeline.REGION3_TOPLEFT_ANCHOR_POINT.x;
-        box3y = new IntEx();
+        box3y = new IntPtr();
         box3y.value = (int)Recognition.SkystoneDeterminationPipeline.REGION3_TOPLEFT_ANCHOR_POINT.y;
     }
 

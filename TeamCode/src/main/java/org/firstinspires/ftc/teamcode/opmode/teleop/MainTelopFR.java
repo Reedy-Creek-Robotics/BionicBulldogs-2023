@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,6 +9,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.modules.drive.XDrive;
 import org.firstinspires.ftc.teamcode.modules.robot.Claw;
 import org.firstinspires.ftc.teamcode.modules.robot.DroneLauncher;
@@ -20,10 +24,12 @@ import org.firstinspires.ftc.teamcode.opmode.config.IntakeConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.SlideConfig;
 import org.firstinspires.ftc.teamcode.opmode.config.XDriveConfig;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 @TeleOp(name = "\1MainTelopFR")
 @Config
-public class MainTelopFR extends BaseTeleOp{
+public class MainTelopFR extends BaseTeleOp
+{
     Claw claw;
     Slides slides;
     XDrive xDrive;
@@ -41,17 +47,21 @@ public class MainTelopFR extends BaseTeleOp{
     float driveSpeed = 1;
     static public double intakeSpeed = 0.8f;
 
-    public enum ScoringState{
+    public enum ScoringState
+    {
         Up,
         Down,
         Score
     }
+
     boolean pixelCountIncremented = false;
     ScoringState scoreState = ScoringState.Down;
 
     int[] slidesPosition = {-1200, -1515, -1800, -2150, -2500};
     int slidesPositionIndex;
-    public void init(){
+
+    public void init()
+    {
         super.init();
         claw = new Claw(new ClawConfig(hardwareMap));
         slides = new Slides(new SlideConfig(hardwareMap));
@@ -65,131 +75,166 @@ public class MainTelopFR extends BaseTeleOp{
         //slides.telem(telemetry);
         //xDrive.telem(telemetry);
         //xDrive.debugTelemetry(telemetry);
-        if(SampleMecanumDrive.posEstimate != null){
+        if (SampleMecanumDrive.posEstimate != null)
+        {
             //xDrive.setPosEstimate(SampleMecanumDrive.posEstimate);
-        }else{
+        }
+        else
+        {
             telemetry.addLine("SampleMecaniumDrive::posEstimate is null, using deafult heading");
         }
         telemetry.update();
         clawET = new ElapsedTime();
     }
-    public void start(){
+
+    public void start()
+    {
         super.start();
         claw.initServos();
         slides.resetRotator();
         xDrive.start();
         droneLauncher.reset();
-        //intake.initServos();
     }
-    public void loop(){
+
+    public void loop()
+    {
+        
         slides.updateSlidePower();
         copyGamepads();
-        if(colorSensor.red() > targetRed && colorSensor.green() > targetGreen && colorSensor.blue() > targetBlue){
+        if (colorSensor.red() > targetRed && colorSensor.green() > targetGreen && colorSensor.blue() > targetBlue)
+        {
             gamepad1.setLedColor(1, 1, 1, 100);
             gamepad1.rumble(1, 1, 100);
-            if(!pixelCountIncremented){
+            if (!pixelCountIncremented)
+            {
                 pixelCountIncremented = true;
                 pixelCount++;
             }
-        }else if(pixelCountIncremented){
+        }
+        else if (pixelCountIncremented)
+        {
             pixelCountIncremented = false;
-            if(pixelCount >= 2){
+            if (pixelCount >= 2)
+            {
                 closeClaw = true;
                 clawET.reset();
                 intake.stop();
             }
         }
-        telemetry.addData("ColorRed  ",colorSensor.red());
-        telemetry.addData("ColorGreen",colorSensor.green());
-        telemetry.addData("ColorBlue ",colorSensor.blue());
+        telemetry.addData("ColorRed  ", colorSensor.red());
+        telemetry.addData("ColorGreen", colorSensor.green());
+        telemetry.addData("ColorBlue ", colorSensor.blue());
         telemetry.addData("pixelCount", pixelCount);
 
-            //drive
+        //drive
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
         float rotate = -gamepad1.right_stick_x;
-        xDrive.driveAccelFR(forward * driveSpeed, right * driveSpeed, rotate * driveSpeed);
+        xDrive.driveAccel(forward * driveSpeed, right * driveSpeed, rotate * driveSpeed);
 
         //intake
-        if(gamepadEx1.rightBumper()){
+        if (gamepadEx1.rightBumper())
+        {
             //Log.d("INTAKE", "Right Bumper Pressed");
             reverseIntake();
         }
 
-        if(gamepadEx1.leftBumper()){
+        if (gamepadEx1.leftBumper())
+        {
             //Log.d("INTAKE", "Left Bumper Pressed");
             updateIntake();
         }
 
-        if(gamepadEx1.options()){
+        if (gamepadEx1.options())
+        {
             droneLauncher.launch();
         }
+
         //telemetry.addData("Intake", intake.getState());
 
-        if(gamepadEx1.share()){
+        if (gamepadEx1.share())
+        {
             xDrive.setPosEstimate(new Pose2d());
         }
 
         //slides
-        if(gamepad1.dpad_up){
+        if (gamepad1.dpad_up)
+        {
             slides.setPower(-1);
-        }else if(gamepad1.dpad_down){
+        }
+        else if (gamepad1.dpad_down)
+        {
             slides.setPower(1);
-        }else{
+        }
+        else
+        {
             slides.setPower(0);
         }
-        if(gamepadEx1.dpadRight()){
+        if (gamepadEx1.dpadRight())
+        {
             slides.gotoPosition(slidesPosition[slidesPositionIndex]);
         }
-        if(gamepadEx1.dpadLeft()){
+        if (gamepadEx1.dpadLeft())
+        {
             slides.resetEncoder();
         }
 
-        if(gamepadEx1.triangle()) {
+        if (gamepadEx1.triangle())
+        {
             slidesPositionIndex = 0;
         }
 
         //claw
-        if(gamepadEx1.cross()){
+        if (gamepadEx1.cross())
+        {
             claw.toggleTop();
         }
 
         //Score
-        if(gamepadEx1.touchpad()){
+        if (gamepadEx1.touchpad())
+        {
             toggleScorePosition();
         }
 
-        if(gamepadEx1.ps()){
+        if (gamepadEx1.ps())
+        {
             claw.score(2);
         }
 
-        if(gamepadEx1.square()){
+        if (gamepadEx1.square())
+        {
             claw.score(1);
         }
-        if(gamepadEx1.circle()){
+        if (gamepadEx1.circle())
+        {
             slidesPositionIndex++;
-            if(slidesPositionIndex >= slidesPosition.length){
+            if (slidesPositionIndex >= slidesPosition.length)
+            {
                 slidesPositionIndex = 0;
             }
         }
 
         //Hanging slides
-        if(gamepadEx1.leftTriggerb()){
+        if (gamepadEx1.leftTriggerb())
+        {
             hangingSlides.up();
         }
-        if(gamepadEx1.rightTriggerb()){
+        if (gamepadEx1.rightTriggerb())
+        {
             hangingSlides.hang();
         }
 
-        if(gamepadEx2.cross()) {
-            intake.grabStack();
+        if (gamepadEx2.cross())
+        {
         }
-        if(gamepadEx2.circle()){
-            intake.resetStackGrabber();
+        if (gamepadEx2.circle())
+        {
         }
 
-        if(closeClaw){
-            if(clawET.seconds() >= 0.2){
+        if (closeClaw)
+        {
+            if (clawET.seconds() >= 0.2)
+            {
                 claw.closeTop();
                 slides.resetRotator();
                 closeClaw = false;
@@ -205,12 +250,15 @@ public class MainTelopFR extends BaseTeleOp{
         telemetry.update();
     }
 
-    protected void updateIntake() {
-        if(intake.getState() == Intake.IntakeState.Intake) {
+    protected void updateIntake()
+    {
+        if (intake.getState() == Intake.IntakeState.Intake)
+        {
             intake.stop();
             claw.closeTop();
         }
-        else {
+        else
+        {
             intake.intake(intakeSpeed);
             claw.openTop();
         }
@@ -231,24 +279,33 @@ public class MainTelopFR extends BaseTeleOp{
          */
 
     }
-    protected void reverseIntake(){
-        if(intake.getState() == Intake.IntakeState.Outtake) {
+
+    protected void reverseIntake()
+    {
+        if (intake.getState() == Intake.IntakeState.Outtake)
+        {
             intake.stop();
             claw.closeTop();
         }
-        else{
+        else
+        {
             intake.outtake(intakeSpeed);
         }
     }
-    void toggleScorePosition(){
-        if(scoreState == ScoringState.Down){
+
+    void toggleScorePosition()
+    {
+        if (scoreState == ScoringState.Down)
+        {
             xDrive.drive(0, 0, 0);
             claw.closeTop();
             slides.gotoPosition(slidesPosition[slidesPositionIndex]);
             sleep(500);
             slides.scoreRotator();
             scoreState = ScoringState.Up;
-        }else{
+        }
+        else
+        {
             slides.resetRotator();
             sleep(250);
             slides.reset();

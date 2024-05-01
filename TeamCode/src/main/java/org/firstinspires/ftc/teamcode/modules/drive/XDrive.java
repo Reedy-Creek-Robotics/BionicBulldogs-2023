@@ -49,9 +49,9 @@ public class XDrive {
 
         t.addData("total (current)",
                 ((DcMotorEx)frontLeft).getCurrent(CurrentUnit.MILLIAMPS) +
-                        ((DcMotorEx)frontRight).getCurrent(CurrentUnit.MILLIAMPS) +
-                        ((DcMotorEx)backLeft).getCurrent(CurrentUnit.MILLIAMPS) +
-                        ((DcMotorEx)backRight).getCurrent(CurrentUnit.MILLIAMPS)
+                ((DcMotorEx)frontRight).getCurrent(CurrentUnit.MILLIAMPS) +
+                ((DcMotorEx)backLeft).getCurrent(CurrentUnit.MILLIAMPS) +
+                ((DcMotorEx)backRight).getCurrent(CurrentUnit.MILLIAMPS)
         );
 
         double totalCurrent = ((DcMotorEx)frontLeft).getCurrent(CurrentUnit.MILLIAMPS) +

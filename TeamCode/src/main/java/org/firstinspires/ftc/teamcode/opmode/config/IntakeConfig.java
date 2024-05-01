@@ -16,5 +16,4 @@ public class IntakeConfig {
     public CRServo getServo() {
         return hw.crservo.get("intakeServo");
     }
-    public Servo getStackGrabber(){return hw.servo.get("stackGrabber");}
 }

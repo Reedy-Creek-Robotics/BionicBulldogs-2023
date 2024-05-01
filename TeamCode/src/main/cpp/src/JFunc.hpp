@@ -8,10 +8,12 @@ struct FuncStat
 	static void setVals(JNIEnv* _env, jobject& _obj);
 };
 
-template <typename T, typename... Types> class JFunc
+template <typename T, typename... Args> class JFunc
 {
   public:
-	JFunc();
+	JFunc()
+	{
+	}
 	JFunc(const char* name, const char* sig)
 	{
 		init(name, sig);
@@ -20,11 +22,15 @@ template <typename T, typename... Types> class JFunc
 	{
 		method = FuncStat::env->GetMethodID(FuncStat::clazz, name, sig);
 	}
-	void callV(Types... args)
+	void callV(Args... args)
 	{
 		FuncStat::env->CallVoidMethod(FuncStat::obj, method, args...);
 	}
-	T call(Types... args)
+	bool callB(Args... args)
+	{
+		return FuncStat::env->CallBooleanMethod(FuncStat::obj, method, args...);
+	}
+	T call(Args... args)
 	{
 		return (T)FuncStat::env->CallObjectMethod(FuncStat::obj, method, args...);
 	}

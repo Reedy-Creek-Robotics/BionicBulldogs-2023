@@ -66,7 +66,6 @@ public class BlueBoardCycle extends AutoBase{
                         drive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
-                .addDisplacementMarker(()->Robot.intake.stackGrabberMid())
                 .lineToConstantHeading(new Vector2d(-40, 12),
                         drive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         drive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
