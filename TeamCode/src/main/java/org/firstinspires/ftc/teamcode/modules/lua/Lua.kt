@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
 import java.util.concurrent.TimeUnit
 
 class Lua
@@ -22,6 +24,9 @@ class Lua
 	private var servo: Servo? = null;
 	private var servo2: Servo? = null;
 
+	private var trajectory: TrajectorySequence? = null;
+	private var lrr: LuaRoadRunner? = null;
+
 	constructor(a: LinearOpMode)
 	{
 		opmode = a;
@@ -35,6 +40,20 @@ class Lua
 	external fun init(): Array<String>;
 	external fun start(name: String);
 	external fun stop();
+
+	fun RRInit(name: String)
+	{
+		lrr = LuaRoadRunner(opmode);
+		Log.d("Lua", "did this work");
+		lrr?.buildPath(name);
+		trajectory = lrr?.getTrajectory();
+	}
+
+	fun startRR(name: String)
+	{
+		start(name);
+		lrr?.drive?.followTrajectorySequence(trajectory);
+	}
 
 	fun getDataDir(): String
 	{

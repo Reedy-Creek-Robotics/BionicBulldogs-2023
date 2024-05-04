@@ -17,7 +17,7 @@ class FileUpload : LinearOpMode
 	override fun runOpMode()
 	{
 		waitForStart();
-		val file = File(Environment.getExternalStorageDirectory(), "lua/" + FileUploadPrams::path.get());
+		val file = File(Environment.getExternalStorageDirectory(), FileUploadPrams::path.get());
 		val s = file.outputStream();
 		s.write(FileUploadPrams::data.get().toByteArray());
 		s.close();

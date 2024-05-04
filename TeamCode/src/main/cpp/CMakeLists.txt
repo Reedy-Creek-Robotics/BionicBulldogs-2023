@@ -40,6 +40,9 @@ add_library(
 ./include/lua/lutf8lib.c
 ./include/lua/lvm.c
 ./include/lua/lzio.c
+./src/RoadRunner/Marker.cpp
+./src/RoadRunner/NodeGrid.cpp
+./src/RoadRunner/Save.cpp
         )
 target_include_directories(ftcrobotcontroller PRIVATE src include)
 

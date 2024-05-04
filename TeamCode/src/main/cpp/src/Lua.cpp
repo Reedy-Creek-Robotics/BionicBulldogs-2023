@@ -8,17 +8,44 @@ lua_State* l;
 JFunc<void, jstring> printF;
 void print(const char* str)
 {
-	jstring j = FuncStat::env->NewStringUTF(str);
+	jstring j = printF.env->NewStringUTF(str);
 	printF.callV(j);
-	FuncStat::env->ReleaseStringUTFChars(j, FuncStat::env->GetStringUTFChars(j, NULL));
+	printF.env->ReleaseStringUTFChars(j, printF.env->GetStringUTFChars(j, NULL));
 }
 
 std::unordered_map<std::string, int> opmodes;
+int dispMarkerInd = 0;
+
+std::string getPathName(const std::string& name)
+{
+	int i = 0;
+	for (auto& [k, v] : opmodes)
+	{
+		if (name == k)
+		{
+			i = v;
+			break;
+		}
+	}
+	lua_getglobal(l, "opmodes");
+	lua_rawgeti(l, -1, i);
+	print(std::to_string(lua_type(l, -1)).c_str());
+	lua_getfield(l, -1, "path");
+	if (lua_type(l, -1) == LUA_TSTRING)
+	{
+		std::string str = lua_tostring(l, -1);
+		lua_pop(l, 3);
+		return str;
+	}
+	lua_pop(l, 3);
+	return "";
+}
 
 extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_init(JNIEnv* env,
 																								   jobject thiz)
 {
-	FuncStat::setVals(env, thiz);
+	jobject ref = env->NewGlobalRef(thiz);
+	FuncStat::setVals(env, ref);
 
 	printF.init("print", "(Ljava/lang/String;)V");
 
@@ -28,6 +55,8 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	const char* dataDirC = env->GetStringUTFChars(dataDirJ, NULL);
 	std::string dataDir = dataDirC;
 	env->ReleaseStringUTFChars(dataDirJ, dataDirC);
+
+	FuncStat::storageDir = dataDir;
 
 	l = luaL_newstate();
 
@@ -112,9 +141,27 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	{
 		print("opmode start function must be a function");
 	}
+	lua_settop(l, 0);
+	lua_getglobal(l, "opmodes");
+	lua_rawgeti(l, -1, ind);
+	lua_getfield(l, -1, "markers");
+	dispMarkerInd = 0;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_stop(JNIEnv* env, jobject thiz)
 {
 	lua_close(l);
+}
+void callNextDispMarker()
+{
+	dispMarkerInd++;
+	lua_rawgeti(l, 3, dispMarkerInd);
+	if (lua_type(l, -1) == LUA_TFUNCTION)
+	{
+		if (lua_pcall(l, 0, 0, 0))
+		{
+			print((std::string("lua error: ") + lua_tostring(l, -1)).c_str());
+      lua_pop(l, 1);
+		}
+	}
 }

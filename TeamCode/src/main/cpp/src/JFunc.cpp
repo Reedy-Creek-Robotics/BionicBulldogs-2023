@@ -4,6 +4,7 @@
 JNIEnv* FuncStat::env = nullptr;
 jobject FuncStat::obj = {};
 jclass FuncStat::clazz = {};
+std::string FuncStat::storageDir = "";
 
 void FuncStat::setVals(JNIEnv* _env, jobject& _obj)
 {
