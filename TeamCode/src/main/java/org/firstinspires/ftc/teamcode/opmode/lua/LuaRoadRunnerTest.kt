@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.opmode.lua
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.modules.lua.Lua
+
 @Autonomous
-class LuaRoadRunnerTest : LinearOpMode()
+class LuaRoadRunnerTest : LuaAutoBase()
 {
-	override fun runOpMode()
+	override fun getOpmodeName(): String
 	{
-		val lua = Lua(this);
-		lua.init();
-		lua.RRInit("main");
-		waitForStart();
-		lua.startRR("main");
+		return "main";
 	}
 }

@@ -72,10 +72,10 @@ class HardwareTest : OpMode {
                     motor = motorList[index.value];
                 }
                 ui.label("name" , motor?.connectionInfo);
-                ui.label("port" , motor?.portNumber);
-                ui.label("currentPosition", motor?.currentPosition);
-                ui.label("velocity", motor?.velocity);
-                ui.label("current", motor?.getCurrent(CurrentUnit.MILLIAMPS));
+                ui.label("port" , motor?.portNumber.toString());
+                ui.label("currentPosition", motor?.currentPosition.toString());
+                ui.label("velocity", motor?.velocity.toString());
+                ui.label("current", motor?.getCurrent(CurrentUnit.MILLIAMPS).toString());
                 if(ui.floatInput("power", motorPower, 0.1f)) {
                     motor?.power = motorPower.value.toDouble();
                 }
@@ -106,7 +106,7 @@ class HardwareTest : OpMode {
                     servo = servoList[index.value];
                 }
                 ui.label("name" , servo?.connectionInfo);
-                ui.label("port" , servo?.portNumber);
+                ui.label("port" , servo?.portNumber.toString());
                 if(ui.floatInput("position", servoPosition, 0.05f)) {
                     servo?.position = motorPower.value.toDouble();
                 }

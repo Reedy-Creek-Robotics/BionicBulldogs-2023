@@ -5,12 +5,12 @@
             "layer": 0,
             "pos": {
                 "x": -36.0,
-                "y": -66.0
+                "y": 66.0
             },
             "rot": 0.0
         },
         {
-            "heading": 90.0,
+            "heading": 0.0,
             "layer": 0,
             "other": [
                 {
@@ -19,21 +19,12 @@
             ],
             "pos": {
                 "x": -36.0,
-                "y": -36.0
+                "y": -66.0
             },
-            "rot": 90.0
+            "rot": 0.0
         },
         {
-            "heading": 90.0,
-            "layer": 0,
-            "pos": {
-                "x": 48.0,
-                "y": -36.0
-            },
-            "rot": 90.0
-        },
-        {
-            "heading": 90.0,
+            "heading": 0.0,
             "layer": 0,
             "other": [
                 {
@@ -41,10 +32,19 @@
                 }
             ],
             "pos": {
-                "x": 6.0,
-                "y": -24.0
+                "x": 48.0,
+                "y": 66.0
             },
-            "rot": 90.0
+            "rot": 0.0
+        },
+        {
+            "heading": 0.0,
+            "layer": 0,
+            "pos": {
+                "x": 48.0,
+                "y": -66.0
+            },
+            "rot": 0.0
         }
     ],
     "segs": [
@@ -56,18 +56,18 @@
             "startNode": 0
         },
         {
-            "endNode": 3,
-            "heading": 0,
+            "endNode": 2,
+            "heading": 1,
             "layer": 0,
             "path": 1,
             "startNode": 1
         },
         {
-            "endNode": 2,
-            "heading": 0,
+            "endNode": 3,
+            "heading": 1,
             "layer": 0,
             "path": 1,
-            "startNode": 3
+            "startNode": 2
         }
     ]
 }

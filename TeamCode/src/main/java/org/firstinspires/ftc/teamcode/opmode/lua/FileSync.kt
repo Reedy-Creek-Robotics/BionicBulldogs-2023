@@ -4,6 +4,7 @@ import android.os.Environment
 import android.util.Log
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import java.io.BufferedReader
 import java.io.DataInputStream
 import java.io.File
@@ -11,7 +12,7 @@ import java.io.InputStreamReader
 import java.net.ServerSocket
 
 
-@Autonomous
+@TeleOp
 class FileSync : LinearOpMode()
 {
 	override fun runOpMode()

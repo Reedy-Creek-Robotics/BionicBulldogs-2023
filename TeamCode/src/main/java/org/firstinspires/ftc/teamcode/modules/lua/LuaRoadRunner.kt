@@ -33,55 +33,46 @@ class LuaRoadRunner
 	}
 	fun makeBuilder(x: Double, y: Double, heading: Double)
 	{
-		Log.d("Lua", "make builder");
 		builder = drive?.trajectorySequenceBuilder(Pose2d(x, y, heading));
 	}
 
 	fun lineTo(x: Double, y: Double)
 	{
-		Log.d("Lua", "line to");
 		builder?.lineTo(Vector2d(x, y));
 	}
 
 	fun splineTo(x: Double, y: Double, heading: Double)
 	{
-		Log.d("Lua", "spline to");
 		builder?.splineTo(Vector2d(x, y), heading);
 	}
 
 	fun lineToLinearHeading(x: Double, y: Double, heading: Double)
 	{
-		Log.d("Lua", "line to linear heading");
 		builder?.lineToLinearHeading(Pose2d(x, y, heading));
 	}
 
 	fun splineToLinearHeading(x: Double, y: Double, heading: Double, angle: Double)
 	{
-		Log.d("Lua", "spline to linear heading");
 		builder?.splineToLinearHeading(Pose2d(x, y, heading), angle);
 	}
 
 	fun lineToConstantHeading(x: Double, y: Double)
 	{
-		Log.d("Lua", "line to constant heading");
 		builder?.lineToConstantHeading(Vector2d(x, y));
 	}
 
 	fun splineToConstantHeading(x: Double, y: Double, heading: Double)
 	{
-		Log.d("Lua", "spline to constant heading");
 		builder?.splineToConstantHeading(Vector2d(x, y), heading);
 	}
 
 	fun lineToSplineHeading(x: Double, y: Double, heading: Double)
 	{
-		Log.d("Lua", "line to spline heading");
 		builder?.lineToSplineHeading(Pose2d(x, y, heading));
 	}
 
 	fun splineToSplineHeading(x: Double, y: Double, heading: Double, angle: Double)
 	{
-		Log.d("Lua", "spline to spline heading");
 		builder?.splineToSplineHeading(Pose2d(x, y, heading), angle);
 	}
 

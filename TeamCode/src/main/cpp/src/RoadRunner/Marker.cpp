@@ -27,12 +27,14 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	Save::marker.init("marker", "()V");
 	Save::wait.init("wait", "(D)V");
 	Save::rotate.init("turn", "(D)V");
-  print("found functions");
 
 	NodeGrid grid = NodeGrid();
   std::string str = env->GetStringUTFChars(name, NULL);
   std::string path = getPathName(str);
-  print(path.c_str());
+  if(path == "")
+  {
+    return;
+  }
 	Save::load(&grid, (FuncStat::storageDir + '/' + path));
 	Save::exp(&grid);
 }

@@ -5,13 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.modules.lua.Lua
 
 @Autonomous
-class LuaMain: LinearOpMode
+class LuaMain: LinearOpMode()
 {
-	constructor(){}
 	override fun runOpMode(){
 		val lua = Lua(this);
 		lua.init();
 		waitForStart();
-		lua.start("main");
+		lua.start("main", 1);
 	}
 }

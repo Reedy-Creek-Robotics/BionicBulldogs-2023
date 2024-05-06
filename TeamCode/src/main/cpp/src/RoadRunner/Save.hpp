@@ -5,6 +5,7 @@
 #include <string>
 
 void print(const char* msg);
+void err(const char* msg);
 
 class Save
 {

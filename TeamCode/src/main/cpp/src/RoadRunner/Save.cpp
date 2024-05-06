@@ -1,5 +1,4 @@
 #include "Save.hpp"
-#include <fstream>
 #include <json/json.hpp>
 #include <sstream>
 
@@ -19,19 +18,21 @@ JFunc<void> Save::marker = {};
 void Save::load(NodeGrid* grid, const std::string& path)
 {
 	FILE* file = fopen(path.c_str(), "r");
-  if(file == nullptr){
-    print(("could not open file at " + path).c_str());
-    return;
-  }
+	if (file == nullptr)
+	{
+		err(("could not open file at " + path).c_str());
+		return;
+	}
+
 	fseek(file, 0, SEEK_END);
 	int size = ftell(file);
 	fseek(file, 0, SEEK_SET);
 	char* mem = (char*)calloc(size, 1);
 	fread(mem, size, 1, file);
 	std::stringstream sstream;
-  sstream << mem;
+	sstream << mem;
 	nlohmann::json json = nlohmann::json::parse(sstream);
-  delete[] mem;
+	delete[] mem;
 
 	int i = 0;
 	for (auto jNode : json["nodes"])
@@ -64,7 +65,6 @@ void Save::load(NodeGrid* grid, const std::string& path)
 			}
 		}
 		i++;
-		print(std::to_string(i).c_str());
 	}
 	for (auto jNode : json["segs"])
 	{
@@ -75,7 +75,6 @@ void Save::load(NodeGrid* grid, const std::string& path)
 		seg->headingMode = jNode["heading"];
 		seg->pathType = jNode["path"];
 		i++;
-		print(std::to_string(i).c_str());
 	}
 }
 
@@ -101,7 +100,7 @@ void Save::exp(NodeGrid* grid)
 			}
 			else
 			{
-				print("error: path has multiple start nodes");
+				err("path has multiple start nodes");
 				return;
 			}
 		}
@@ -128,7 +127,7 @@ void Save::exp(NodeGrid* grid)
 			{
 				if (foundNode)
 				{
-					print((std::string("error: fork found at node ") + std::to_string((int)seg->startNode)).c_str());
+					err((std::string("fork found at node ") + std::to_string((int)seg->startNode)).c_str());
 					return;
 				}
 				foundNode = true;
@@ -145,8 +144,6 @@ void Save::exp(NodeGrid* grid)
 	PathNode* startNode = grid->nodes.get(startInd);
 	prevPos = startNode->pos;
 	makeBuilder.callV(startNode->pos.x, startNode->pos.y, -(startNode->rot - 90));
-
-	print(std::to_string(grid->segs.count).c_str());
 
 	for (int i = 0; i < segments.size(); i++)
 	{
