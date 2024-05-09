@@ -1,7 +1,16 @@
-#pragma once
-#include <lua/lua.hpp>
+#include "Macros.hpp"
 
-namespace Functions
-{
-void loadFunctions(lua_State* l);
-}
+FunctionS(print);
+
+FunctionCD(delay);
+FunctionVB(isActive);
+
+NewClass();
+CFunctionSS(telem, addData);
+CFunctionV(updateTelem, update);
+EndClass(telem);
+
+NewClass();
+CFunctionD(setPos, setPos);
+CFunctionD(setPos2, setPos2);
+EndClass(servos);

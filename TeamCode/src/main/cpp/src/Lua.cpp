@@ -1,4 +1,4 @@
-#include "Functions.hpp"
+#include "LoadFunc.hpp"
 #include "JFunc.hpp"
 #include <lua/lua.hpp>
 #include <string>
@@ -33,7 +33,7 @@ std::string getPathName(const std::string& name)
 			break;
 		}
 	}
-	lua_getglobal(l, "opmodes");
+	lua_getglobal(l, "Opmodes");
 	lua_rawgeti(l, -1, i);
 	lua_getfield(l, -1, "path");
 	if (lua_type(l, -1) == LUA_TSTRING)
@@ -71,14 +71,14 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	l = luaL_newstate();
   luaL_openlibs(l);
 
-	Functions::loadFunctions(l);
+	loadFuncs(l);
 
 	if (luaL_dofile(l, (dataDir + "/lua/main.lua").c_str()))
 	{
 		err(lua_tostring(l, -1));
 		return NULL;
 	}
-	lua_getglobal(l, "opmodes");
+	lua_getglobal(l, "Opmodes");
 	if (lua_type(l, -1) != LUA_TTABLE)
 	{
 		err("opmodes table must be a table");
@@ -130,7 +130,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
   lua_settop(l, 0);
   lua_newtable(l);
 	FuncStat::obj = thiz;
-	lua_getglobal(l, "opmodes");
+	lua_getglobal(l, "Opmodes");
 	int ind = -1;
 	const char* c = env->GetStringUTFChars(name, NULL);
 	for (auto& [k, v] : opmodes)
@@ -159,7 +159,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 		}
 	}
 	lua_settop(l, 1);
-	lua_getglobal(l, "opmodes");
+	lua_getglobal(l, "Opmodes");
 	lua_rawgeti(l, -1, ind);
 	lua_getfield(l, -1, "markers");
 	if (lua_type(l, -1) != LUA_TTABLE)

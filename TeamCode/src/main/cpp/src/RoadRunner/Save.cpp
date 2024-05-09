@@ -17,7 +17,7 @@ JFunc<void> Save::marker = {};
 
 void Save::load(NodeGrid* grid, const std::string& path)
 {
-	FILE* file = fopen(path.c_str(), "r");
+	FILE* file = fopen(("paths/" + path).c_str(), "r");
 	if (file == nullptr)
 	{
 		err(("could not open file at " + path).c_str());
