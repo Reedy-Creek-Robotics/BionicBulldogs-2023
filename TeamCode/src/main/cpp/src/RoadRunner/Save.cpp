@@ -150,6 +150,9 @@ void Save::exp(NodeGrid* grid)
 		PathSegment* seg = grid->segs.get(segments[i]);
 		PathNode* node = grid->nodes.get(seg->endNode);
 
+    node->rot = -(node->rot - 90);
+    node->heading = -(node->heading - 90);
+
 		bool ins = false;
 		bool constantHeading = false;
 		switch (seg->headingMode)
