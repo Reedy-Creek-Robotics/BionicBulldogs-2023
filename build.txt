@@ -1,0 +1,177 @@
+> Task :FtcRobotController:preBuild UP-TO-DATE
+> Task :FtcRobotController:preDebugBuild UP-TO-DATE
+> Task :FtcRobotController:compileDebugAidl NO-SOURCE
+> Task :FtcRobotController:mergeDebugJniLibFolders UP-TO-DATE
+> Task :FtcRobotController:mergeDebugNativeLibs NO-SOURCE
+> Task :FtcRobotController:stripDebugDebugSymbols NO-SOURCE
+> Task :FtcRobotController:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :FtcRobotController:compileDebugRenderscript NO-SOURCE
+> Task :FtcRobotController:generateDebugBuildConfig
+> Task :FtcRobotController:generateDebugResValues UP-TO-DATE
+> Task :FtcRobotController:generateDebugResources UP-TO-DATE
+> Task :FtcRobotController:packageDebugResources UP-TO-DATE
+> Task :FtcRobotController:parseDebugLocalResources UP-TO-DATE
+> Task :FtcRobotController:processDebugManifest UP-TO-DATE
+> Task :FtcRobotController:generateDebugRFile UP-TO-DATE
+> Task :FtcRobotController:extractDebugAnnotations
+> Task :FtcRobotController:javaPreCompileDebug UP-TO-DATE
+
+> Task :FtcRobotController:compileDebugJavaWithJavac
+
+> Task :FtcRobotController:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :FtcRobotController:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :FtcRobotController:mergeDebugShaders UP-TO-DATE
+> Task :FtcRobotController:compileDebugShaders NO-SOURCE
+> Task :FtcRobotController:generateDebugAssets UP-TO-DATE
+> Task :FtcRobotController:packageDebugAssets UP-TO-DATE
+> Task :FtcRobotController:packageDebugRenderscript NO-SOURCE
+> Task :FtcRobotController:prepareDebugArtProfile UP-TO-DATE
+> Task :FtcRobotController:prepareLintJarForPublish UP-TO-DATE
+> Task :FtcRobotController:processDebugJavaRes NO-SOURCE
+> Task :FtcRobotController:mergeDebugJavaResource UP-TO-DATE
+> Task :FtcRobotController:syncDebugLibJars
+> Task :FtcRobotController:writeDebugAarMetadata UP-TO-DATE
+> Task :FtcRobotController:bundleDebugAar
+> Task :FtcRobotController:assembleDebug
+> Task :FtcRobotController:preReleaseBuild UP-TO-DATE
+> Task :FtcRobotController:compileReleaseAidl NO-SOURCE
+> Task :FtcRobotController:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :FtcRobotController:mergeReleaseNativeLibs NO-SOURCE
+> Task :FtcRobotController:stripReleaseDebugSymbols NO-SOURCE
+> Task :FtcRobotController:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :FtcRobotController:compileReleaseRenderscript NO-SOURCE
+> Task :FtcRobotController:generateReleaseBuildConfig
+> Task :FtcRobotController:generateReleaseResValues UP-TO-DATE
+> Task :FtcRobotController:generateReleaseResources UP-TO-DATE
+> Task :FtcRobotController:packageReleaseResources UP-TO-DATE
+> Task :FtcRobotController:parseReleaseLocalResources UP-TO-DATE
+> Task :FtcRobotController:processReleaseManifest UP-TO-DATE
+> Task :FtcRobotController:generateReleaseRFile UP-TO-DATE
+> Task :FtcRobotController:extractReleaseAnnotations
+> Task :FtcRobotController:javaPreCompileRelease UP-TO-DATE
+
+> Task :FtcRobotController:compileReleaseJavaWithJavac
+
+> Task :FtcRobotController:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :FtcRobotController:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :FtcRobotController:mergeReleaseShaders UP-TO-DATE
+> Task :FtcRobotController:compileReleaseShaders NO-SOURCE
+> Task :FtcRobotController:generateReleaseAssets UP-TO-DATE
+> Task :FtcRobotController:packageReleaseAssets UP-TO-DATE
+> Task :FtcRobotController:packageReleaseRenderscript NO-SOURCE
+> Task :FtcRobotController:prepareReleaseArtProfile UP-TO-DATE
+> Task :FtcRobotController:processReleaseJavaRes NO-SOURCE
+> Task :FtcRobotController:mergeReleaseJavaResource UP-TO-DATE
+> Task :FtcRobotController:syncReleaseLibJars
+> Task :FtcRobotController:writeReleaseAarMetadata UP-TO-DATE
+> Task :FtcRobotController:bundleReleaseAar
+> Task :FtcRobotController:mergeReleaseResources UP-TO-DATE
+> Task :FtcRobotController:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :FtcRobotController:verifyReleaseResources UP-TO-DATE
+> Task :FtcRobotController:assembleRelease
+> Task :FtcRobotController:assemble
+> Task :MeepMeep:compileJava UP-TO-DATE
+> Task :MeepMeep:processResources NO-SOURCE
+> Task :MeepMeep:classes UP-TO-DATE
+> Task :MeepMeep:jar UP-TO-DATE
+> Task :MeepMeep:assemble UP-TO-DATE
+> Task :TeamCode:preBuild UP-TO-DATE
+> Task :TeamCode:preDebugBuild UP-TO-DATE
+> Task :TeamCode:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :TeamCode:compileDebugAidl NO-SOURCE
+> Task :TeamCode:compileDebugRenderscript NO-SOURCE
+> Task :TeamCode:generateDebugBuildConfig UP-TO-DATE
+> Task :FtcRobotController:compileDebugLibraryResources UP-TO-DATE
+> Task :TeamCode:checkDebugAarMetadata UP-TO-DATE
+> Task :TeamCode:generateDebugResValues UP-TO-DATE
+> Task :TeamCode:generateDebugResources UP-TO-DATE
+> Task :TeamCode:mergeDebugResources UP-TO-DATE
+> Task :TeamCode:mapDebugSourceSetPaths UP-TO-DATE
+> Task :TeamCode:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :FtcRobotController:extractDeepLinksDebug UP-TO-DATE
+> Task :TeamCode:extractDeepLinksDebug UP-TO-DATE
+> Task :TeamCode:processDebugMainManifest UP-TO-DATE
+> Task :TeamCode:processDebugManifest UP-TO-DATE
+> Task :TeamCode:processDebugManifestForPackage UP-TO-DATE
+> Task :FtcRobotController:bundleLibCompileToJarDebug
+> Task :TeamCode:processDebugResources UP-TO-DATE
+> Task :TeamCode:javaPreCompileDebug UP-TO-DATE
+> Task :TeamCode:mergeDebugShaders UP-TO-DATE
+> Task :TeamCode:compileDebugShaders NO-SOURCE
+> Task :TeamCode:generateDebugAssets UP-TO-DATE
+> Task :TeamCode:mergeDebugAssets UP-TO-DATE
+> Task :TeamCode:compressDebugAssets UP-TO-DATE
+> Task :FtcRobotController:bundleLibResDebug NO-SOURCE
+> Task :TeamCode:processDebugJavaRes NO-SOURCE
+> Task :TeamCode:checkDebugDuplicateClasses UP-TO-DATE
+> Task :TeamCode:desugarDebugFileDependencies UP-TO-DATE
+> Task :TeamCode:mergeExtDexDebug UP-TO-DATE
+> Task :FtcRobotController:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :TeamCode:mergeDebugJniLibFolders UP-TO-DATE
+> Task :FtcRobotController:bundleLibRuntimeToDirDebug
+> Task :TeamCode:mergeDebugNativeLibs UP-TO-DATE
+> Task :TeamCode:stripDebugDebugSymbols UP-TO-DATE
+> Task :TeamCode:validateSigningDebug UP-TO-DATE
+> Task :TeamCode:writeDebugAppMetadata UP-TO-DATE
+> Task :TeamCode:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :FtcRobotController:bundleReleaseLocalLintAar
+> Task :FtcRobotController:bundleLibResRelease NO-SOURCE
+> Task :FtcRobotController:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :TeamCode:buildKotlinToolingMetadata UP-TO-DATE
+> Task :TeamCode:preReleaseBuild UP-TO-DATE
+> Task :TeamCode:compileReleaseAidl NO-SOURCE
+> Task :TeamCode:compileReleaseRenderscript NO-SOURCE
+> Task :TeamCode:generateReleaseBuildConfig UP-TO-DATE
+> Task :FtcRobotController:compileReleaseLibraryResources UP-TO-DATE
+> Task :TeamCode:checkReleaseAarMetadata UP-TO-DATE
+> Task :TeamCode:generateReleaseResValues UP-TO-DATE
+> Task :TeamCode:generateReleaseResources UP-TO-DATE
+> Task :TeamCode:mergeReleaseResources UP-TO-DATE
+> Task :TeamCode:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :TeamCode:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :FtcRobotController:extractDeepLinksRelease UP-TO-DATE
+> Task :TeamCode:extractDeepLinksRelease UP-TO-DATE
+> Task :TeamCode:processReleaseMainManifest UP-TO-DATE
+> Task :TeamCode:processReleaseManifest UP-TO-DATE
+> Task :TeamCode:processReleaseManifestForPackage UP-TO-DATE
+> Task :TeamCode:processReleaseResources UP-TO-DATE
+> Task :TeamCode:javaPreCompileRelease UP-TO-DATE
+> Task :TeamCode:writeReleaseApplicationId UP-TO-DATE
+> Task :TeamCode:analyticsRecordingRelease
+> Task :TeamCode:extractProguardFiles UP-TO-DATE
+> Task :FtcRobotController:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :TeamCode:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :TeamCode:mergeReleaseNativeLibs UP-TO-DATE
+> Task :TeamCode:stripReleaseDebugSymbols UP-TO-DATE
+> Task :TeamCode:extractReleaseNativeSymbolTables UP-TO-DATE
+> Task :TeamCode:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :TeamCode:checkReleaseDuplicateClasses UP-TO-DATE
+> Task :TeamCode:desugarReleaseFileDependencies UP-TO-DATE
+> Task :FtcRobotController:bundleLibRuntimeToDirRelease
+> Task :TeamCode:mergeExtDexRelease UP-TO-DATE
+> Task :TeamCode:mergeReleaseArtProfile UP-TO-DATE
+> Task :TeamCode:mergeReleaseShaders UP-TO-DATE
+> Task :TeamCode:compileReleaseShaders NO-SOURCE
+> Task :TeamCode:generateReleaseAssets UP-TO-DATE
+> Task :TeamCode:mergeReleaseAssets UP-TO-DATE
+> Task :TeamCode:compressReleaseAssets UP-TO-DATE
+> Task :TeamCode:processReleaseJavaRes NO-SOURCE
+> Task :TeamCode:optimizeReleaseResources UP-TO-DATE
+> Task :TeamCode:collectReleaseDependencies UP-TO-DATE
+> Task :TeamCode:sdkReleaseDependencyData UP-TO-DATE
+> Task :TeamCode:validateSigningRelease UP-TO-DATE
+> Task :TeamCode:writeReleaseAppMetadata UP-TO-DATE
+> Task :TeamCode:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :FtcRobotController:bundleLibRuntimeToJarRelease
+> Task :FtcRobotController:bundleLibCompileToJarRelease
+> Task :FtcRobotController:createFullJarRelease
+> Task :TeamCode:mergeLibDexDebug
+
+> Task :TeamCode:compileDebugKotlin
+
+> Task :TeamCode:compileDebugKotlin FAILED
+
+> Task :TeamCode:compileReleaseKotlin
+
+> Task :TeamCode:compileReleaseKotlin FAILED
+120 actionable tasks: 21 executed, 99 up-to-date

@@ -1,5 +1,5 @@
-#include "LoadFunc.hpp"
 #include "JFunc.hpp"
+#include "LoadFunc.hpp"
 #include <lua/lua.hpp>
 #include <string>
 #include <unordered_map>
@@ -49,10 +49,10 @@ std::string getPathName(const std::string& name)
 extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_init(JNIEnv* env,
 																								   jobject thiz)
 {
-  if(l != nullptr)
-  {
-    lua_close(l);
-  }
+	if (l != nullptr)
+	{
+		lua_close(l);
+	}
 	jobject ref = env->NewGlobalRef(thiz);
 	FuncStat::setVals(env, ref);
 
@@ -69,7 +69,7 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	FuncStat::storageDir = dataDir;
 
 	l = luaL_newstate();
-  luaL_openlibs(l);
+	luaL_openlibs(l);
 
 	loadFuncs(l);
 
@@ -127,8 +127,8 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 																							jstring name,
 																							int recognition)
 {
-  lua_settop(l, 0);
-  lua_newtable(l);
+	lua_settop(l, 0);
+	lua_newtable(l);
 	FuncStat::obj = thiz;
 	lua_getglobal(l, "Opmodes");
 	int ind = -1;
@@ -150,8 +150,8 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	lua_getfield(l, -1, "start");
 	if (lua_type(l, -1) == LUA_TFUNCTION)
 	{
-    lua_pushvalue(l, 1);
-    lua_pushinteger(l, recognition);
+		lua_pushvalue(l, 1);
+		lua_pushinteger(l, recognition);
 		if (lua_pcall(l, 2, 0, 0))
 		{
 			err(lua_tostring(l, -1));
@@ -173,7 +173,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_stop(JNIEnv* env, jobject thiz)
 {
 	lua_close(l);
-  l = nullptr;
+	l = nullptr;
 }
 void callNextDispMarker()
 {
@@ -181,11 +181,18 @@ void callNextDispMarker()
 	lua_rawgeti(l, 4, dispMarkerInd);
 	if (lua_type(l, -1) == LUA_TFUNCTION)
 	{
-    lua_pushvalue(l, 1);
+		lua_pushvalue(l, 1);
 		if (lua_pcall(l, 1, 0, 0))
 		{
 			err(lua_tostring(l, -1));
 			return;
 		}
 	}
+}
+
+extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_addObject(JNIEnv* env,
+																								jobject thiz,
+																								jobject thing)
+{
+  addObject(thing);
 }

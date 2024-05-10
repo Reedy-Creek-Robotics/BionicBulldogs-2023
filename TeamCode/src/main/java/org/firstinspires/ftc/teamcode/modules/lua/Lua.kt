@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
+import java.util.Objects
 import java.util.concurrent.TimeUnit
 
 class Lua
@@ -19,23 +20,16 @@ class Lua
 	}
 	
 	val opmode: LinearOpMode;
-	private var servo: Servo? = null;
-	private var servo2: Servo? = null;
-	
 	private var trajectory: TrajectorySequence? = null;
 	private var lrr: LuaRoadRunner? = null;
 	
 	constructor(a: LinearOpMode)
 	{
 		opmode = a;
-		if(opmode.hardwareMap.servo.contains("servo"))
-		{
-			servo = opmode.hardwareMap.servo.get("servo");
-			servo2 = opmode.hardwareMap.servo.get("servo2");
-		}
 	}
 	
 	external fun init(): Array<String>;
+	external fun addObject(thing: Any);
 	external fun start(name: String, recognition: Int);
 	external fun stop();
 	
@@ -86,22 +80,7 @@ class Lua
 		opmode.telemetry.update();
 	}
 	
-	fun setPos(pos: Double)
-	{
-		if(servo != null)
-		{
-			servo?.position = pos;
-		}
-	}
-	
-	fun setPos2(pos: Double)
-	{
-		if(servo2 != null)
-		{
-			servo2?.position = pos;
-		}
-	}
-	
+
 	fun delay(time: Double): Boolean
 	{
 		val e = ElapsedTime();
