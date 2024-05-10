@@ -1,16 +1,16 @@
 #include "Macros.hpp"
 
-FunctionS(print);
+FunctionS(print, print);
 
-FunctionCD(delay);
-FunctionVB(isActive);
+FunctionCD(delay, delay);
+FunctionVB(isActive, isActive);
 
 NewClass();
-CFunctionSS(telem, addData);
-CFunctionV(updateTelem, update);
+FunctionSS(telem, addData);
+FunctionV(updateTelem, update);
 EndClass(telem);
 
 NewClass();
-CFunctionD(setPos, setPos);
-CFunctionD(setPos2, setPos2);
+FunctionD(setPos, setPos);
+FunctionD(setPos2, setPos2);
 EndClass(servos);

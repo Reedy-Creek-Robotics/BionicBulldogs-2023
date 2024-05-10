@@ -22,6 +22,6 @@ class Save
 	static JFunc<void, jdouble> wait;
 	static JFunc<void, jdouble> rotate;
 	static JFunc<void> marker;
-	static void load(NodeGrid* grid, const std::string& path);
+	static int load(NodeGrid* grid, const std::string& path);
 	static void exp(NodeGrid* grid);
 };

@@ -15,13 +15,13 @@ JFunc<void, jdouble> Save::wait = {};
 JFunc<void, jdouble> Save::rotate = {};
 JFunc<void> Save::marker = {};
 
-void Save::load(NodeGrid* grid, const std::string& path)
+int Save::load(NodeGrid* grid, const std::string& path)
 {
-	FILE* file = fopen(("paths/" + path).c_str(), "r");
+	FILE* file = fopen(path.c_str(), "r");
 	if (file == nullptr)
 	{
-		err(("could not open file at " + path).c_str());
-		return;
+		err(("could not open file at" + path).c_str());
+		return false;
 	}
 
 	fseek(file, 0, SEEK_END);
@@ -76,6 +76,7 @@ void Save::load(NodeGrid* grid, const std::string& path)
 		seg->pathType = jNode["path"];
 		i++;
 	}
+	return true;
 }
 
 void Save::exp(NodeGrid* grid)

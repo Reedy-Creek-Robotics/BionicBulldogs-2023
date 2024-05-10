@@ -1,6 +1,6 @@
 #include "JFunc.hpp"
-#include <lua/lua.hpp>
 #include <LoadFunc.hpp>
+#include <lua/lua.hpp>
 
 #define MacroDef
 #include "Functions.hpp"
@@ -9,5 +9,6 @@
 
 void loadFuncs(lua_State* l)
 {
+	bool inClass = false;
 #include "Functions.hpp"
 }

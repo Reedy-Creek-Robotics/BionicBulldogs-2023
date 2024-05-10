@@ -5,87 +5,96 @@
 #undef FunctionSS
 #undef FunctionS
 #undef FunctionCD
-#undef CFunctionD
-#undef CFunctionVB
-#undef CFunctionV
-#undef CFunctionSS
-#undef CFunctionS
-#undef CFunctionCD
 #undef NewClass
 #undef EndClass
 #endif
 
 #ifndef MacroDef
-#define FunctionCD(name)                                                                                               \
+
+#define NewClass()                                                                                                     \
+	lua_newtable(l);                                                                                                   \
+	inClass = true
+
+#define EndClass(name)                                                                                                 \
+	lua_setglobal(l, #name);                                                                                           \
+	inClass = false
+
+#define FunctionCD(name, funcName)                                                                                     \
 	name.init(#name, "(D)Z");                                                                                          \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setglobal(l, #name)
+	if (inClass)                                                                                                       \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
 
-#define FunctionD(name)                                                                                                \
+#define FunctionD(name, funcName)                                                                                      \
 	name.init(#name, "(D)V");                                                                                          \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setglobal(l, #name)
+	if (inClass)                                                                                                       \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
 
-#define FunctionS(name)                                                                                                \
+#define FunctionS(name, funcName)                                                                                      \
 	name.init(#name, "(Ljava/lang/String;)V");                                                                         \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setglobal(l, #name)
+	if (inClass)                                                                                                       \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
 
-#define FunctionSS(name)                                                                                               \
+#define FunctionSS(name, funcName)                                                                                     \
 	name.init(#name, "(Ljava/lang/String;Ljava/lang/String;)V");                                                       \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setglobal(l, #name)
+	if (inClass)                                                                                                       \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
 
-#define FunctionV(name)                                                                                                \
+#define FunctionV(name, funcName)                                                                                      \
 	name.init(#name, "()V");                                                                                           \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setglobal(l, #name)
+	if (inClass)                                                                                                       \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
 
-#define FunctionVB(name)                                                                                               \
+#define FunctionVB(name, funcName)                                                                                     \
 	name.init(#name, "()Z");                                                                                           \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setglobal(l, #name)
-
-// class functions
-
-#define NewClass() lua_newtable(l)
-
-#define EndClass(name) lua_setglobal(l, #name)
-
-#define CFunctionCD(name, funcName)                                                                                    \
-	name.init(#name, "(D)Z");                                                                                          \
-	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setfield(l, -2, #funcName)
-
-#define CFunctionD(name, funcName)                                                                                     \
-	name.init(#name, "(D)V");                                                                                          \
-	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setfield(l, -2, #funcName)
-
-#define CFunctionS(name, funcName)                                                                                     \
-	name.init(#name, "(Ljava/lang/String;)V");                                                                         \
-	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setfield(l, -2, #funcName)
-
-#define CFunctionSS(name, funcName)                                                                                    \
-	name.init(#name, "(Ljava/lang/String;Ljava/lang/String;)V");                                                       \
-	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setfield(l, -2, #funcName)
-
-#define CFunctionV(name, funcName)                                                                                     \
-	name.init(#name, "()V");                                                                                           \
-	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setfield(l, -2, #funcName)
-
-#define CFunctionVB(name, funcName)                                                                                    \
-	name.init(#name, "()Z");                                                                                           \
-	lua_pushcfunction(l, name##F);                                                                                     \
-	lua_setfield(l, -2, #funcName)
+	if (inClass)                                                                                                       \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
 
 #endif
 #ifdef MacroDef
 
-#define FunctionCD(name)                                                                                               \
+#define FunctionCD(name, _)                                                                                            \
 	JFunc<jboolean, jdouble> name;                                                                                     \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
@@ -98,7 +107,7 @@
 		return 0;                                                                                                      \
 	}
 
-#define FunctionD(name)                                                                                                \
+#define FunctionD(name, _)                                                                                             \
 	JFunc<void, jdouble> name;                                                                                         \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
@@ -107,7 +116,7 @@
 		return 0;                                                                                                      \
 	}
 
-#define FunctionS(name)                                                                                                \
+#define FunctionS(name, _)                                                                                             \
 	JFunc<void, jstring> name;                                                                                         \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
@@ -118,7 +127,7 @@
 		return 0;                                                                                                      \
 	}
 
-#define FunctionSS(name)                                                                                               \
+#define FunctionSS(name, _)                                                                                            \
 	JFunc<void, jstring, jstring> name;                                                                                \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
@@ -132,7 +141,7 @@
 		return 0;                                                                                                      \
 	}
 
-#define FunctionV(name)                                                                                                \
+#define FunctionV(name, _)                                                                                             \
 	JFunc<void> name;                                                                                                  \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
@@ -140,7 +149,7 @@
 		return 0;                                                                                                      \
 	}
 
-#define FunctionVB(name)                                                                                               \
+#define FunctionVB(name, _)                                                                                            \
 	JFunc<jboolean> name;                                                                                              \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
@@ -152,17 +161,5 @@
 #define NewClass()
 
 #define EndClass(name)
-
-#define CFunctionCD(name, funcName) FunctionCD(name)
-
-#define CFunctionD(name, funcName) FunctionD(name)
-
-#define CFunctionS(name, funcName) FunctionS(name)
-
-#define CFunctionSS(name, funcName) FunctionSS(name)
-
-#define CFunctionV(name, funcName) FunctionV(name)
-
-#define CFunctionVB(name, funcName) FunctionVB(name)
 
 #endif
