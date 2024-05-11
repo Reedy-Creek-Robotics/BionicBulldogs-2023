@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules.lua
 
+import android.util.Log
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.Servo
 
@@ -10,6 +11,7 @@ class TestModule
 
 	constructor(opmode: OpMode)
 	{
+		Log.d("LuaDebug", javaClass.canonicalName);
 		servo = opmode.hardwareMap.servo.get("servo");
 		servo2 = opmode.hardwareMap.servo.get("servo2");
 	}

@@ -13,7 +13,6 @@ struct FuncStat
 template <typename T, typename... Args> class JFunc
 {
   public:
-  JNIEnv* env;
 	JFunc()
 	{
 	}
@@ -25,7 +24,6 @@ template <typename T, typename... Args> class JFunc
 	{
 		method = FuncStat::env->GetMethodID(FuncStat::clazz, name, sig);
     obj = FuncStat::obj;
-    env = FuncStat::env;
 	}
 	void callV(Args... args)
 	{

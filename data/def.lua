@@ -2,12 +2,13 @@
 function print(msg)
 end
 
+telem = {}
 ---@param lbl string
 ---@param msg string
-function telem(lbl, msg)
+function telem.addData(lbl, msg)
 end
 
-function updateTelem()
+function telem.update()
 end
 
 servos = {}

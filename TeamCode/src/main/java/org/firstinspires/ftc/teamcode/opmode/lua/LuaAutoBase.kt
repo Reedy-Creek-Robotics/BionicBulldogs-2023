@@ -17,6 +17,9 @@ abstract class LuaAutoBase : LinearOpMode()
 
 		val obj = TestModule(this);
 		lua.addObject(obj);
+		
+		telemetry.addLine("initing lua2");
+		telemetry.update();
 
 		lua.init();
 

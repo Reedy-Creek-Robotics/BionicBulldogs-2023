@@ -4,18 +4,18 @@
 #include <string>
 #include <unordered_map>
 
-static lua_State* l = nullptr;
+lua_State* l = nullptr;
 JFunc<void, jstring> printF;
 JFunc<void, jstring> errorF;
 void print(const char* str)
 {
-	jstring j = printF.env->NewStringUTF(str);
+	jstring j = FuncStat::env->NewStringUTF(str);
 	printF.callV(j);
-	printF.env->ReleaseStringUTFChars(j, printF.env->GetStringUTFChars(j, NULL));
+	FuncStat::env->ReleaseStringUTFChars(j, FuncStat::env->GetStringUTFChars(j, nullptr));
 }
 void err(const char* str)
 {
-	jstring j = errorF.env->NewStringUTF(str);
+	jstring j = FuncStat::env->NewStringUTF(str);
 	errorF.callV(j);
 }
 
@@ -55,14 +55,14 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	}
 	jobject ref = env->NewGlobalRef(thiz);
 	FuncStat::setVals(env, ref);
-
 	printF.init("print", "(Ljava/lang/String;)V");
 	errorF.init("err", "(Ljava/lang/String;)V");
-
+	
+	print("init called");
 	JFunc<jstring> getDataDir("getDataDir", "()Ljava/lang/String;");
 
 	jstring dataDirJ = getDataDir.call();
-	const char* dataDirC = env->GetStringUTFChars(dataDirJ, NULL);
+	const char* dataDirC = env->GetStringUTFChars(dataDirJ, nullptr);
 	std::string dataDir = dataDirC;
 	env->ReleaseStringUTFChars(dataDirJ, dataDirC);
 
@@ -70,19 +70,21 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 
 	l = luaL_newstate();
 	luaL_openlibs(l);
-
+	
+	print("loading funcs");
 	loadFuncs(l);
+	print("funcs loaded");
 
 	if (luaL_dofile(l, (dataDir + "/lua/main.lua").c_str()))
 	{
 		err(lua_tostring(l, -1));
-		return NULL;
+		return nullptr;
 	}
 	lua_getglobal(l, "Opmodes");
 	if (lua_type(l, -1) != LUA_TTABLE)
 	{
 		err("opmodes table must be a table");
-		return NULL;
+		return nullptr;
 	}
 	lua_pushnil(l);
 
@@ -97,14 +99,14 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 		{
 			lua_pop(l, 2);
 			err("opmode must be a table");
-			return NULL;
+			return nullptr;
 		}
 
 		lua_getfield(l, -2, "name");
 		if (lua_type(l, -1) != LUA_TSTRING)
 		{
 			err("opmode name must be a string");
-			return NULL;
+			return nullptr;
 		}
 		std::string name = lua_tostring(l, -1);
 		lua_pop(l, 1);
@@ -132,7 +134,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	FuncStat::obj = thiz;
 	lua_getglobal(l, "Opmodes");
 	int ind = -1;
-	const char* c = env->GetStringUTFChars(name, NULL);
+	const char* c = env->GetStringUTFChars(name, nullptr);
 	for (auto& [k, v] : opmodes)
 	{
 		if (k == c)
@@ -194,5 +196,6 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 																								jobject thiz,
 																								jobject thing)
 {
+	FuncStat::setVals(env, thiz);
   addObject(thing);
 }

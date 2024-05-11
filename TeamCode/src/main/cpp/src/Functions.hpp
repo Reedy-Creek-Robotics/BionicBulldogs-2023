@@ -28,14 +28,12 @@ FunctionV_S(print, print);
 
 FunctionC_D(delay, delay);
 FunctionV_B(isActive, isActive);
-
 NewClass();
 FunctionV_SS(telem, addData);
 FunctionV_V(updateTelem, update);
 EndClass(telem);
 
-SetJavaObject(org/firstinspires/ftc/teamcode/opmode/lua/TestModule);
-
+SetJavaObject(org/firstinspires/ftc/teamcode/modules/lua/TestModule);
 NewClass();
 FunctionV_D(setPos, setPos);
 FunctionV_D(setPos2, setPos2);

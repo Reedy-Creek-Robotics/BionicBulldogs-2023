@@ -8,12 +8,14 @@
 #undef NewClass
 #undef EndClass
 #undef SetJavaObject
+#undef err
 #endif
 
 #ifndef MacroDef
+#define err() int* i; *i = 1
 #define SetJavaObject(className)                                                                                       \
 	FuncStat::clazz = FuncStat::env->FindClass(#className);                                                            \
-	FuncStat::obj = objects[FuncStat::clazz]
+	FuncStat::obj = objects[#className]
 
 #define NewClass()                                                                                                     \
 	lua_newtable(l);                                                                                                   \
@@ -26,7 +28,7 @@
 #define FunctionC_D(name, funcName)                                                                                    \
 	name.init(#name, "(D)Z");                                                                                          \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (inClass)                                                                                                       \
+	if (!inClass)                                                                                                       \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -38,7 +40,7 @@
 #define FunctionV_D(name, funcName)                                                                                    \
 	name.init(#name, "(D)V");                                                                                          \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (inClass)                                                                                                       \
+	if (!inClass)                                                                                                       \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -50,7 +52,7 @@
 #define FunctionV_S(name, funcName)                                                                                    \
 	name.init(#name, "(Ljava/lang/String;)V");                                                                         \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (inClass)                                                                                                       \
+	if (!inClass)                                                                                                       \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -62,7 +64,7 @@
 #define FunctionV_SS(name, funcName)                                                                                   \
 	name.init(#name, "(Ljava/lang/String;Ljava/lang/String;)V");                                                       \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (inClass)                                                                                                       \
+	if (!inClass)                                                                                                       \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -74,7 +76,7 @@
 #define FunctionV_V(name, funcName)                                                                                    \
 	name.init(#name, "()V");                                                                                           \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (inClass)                                                                                                       \
+	if (!inClass)                                                                                                       \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -86,7 +88,7 @@
 #define FunctionV_B(name, funcName)                                                                                    \
 	name.init(#name, "()Z");                                                                                           \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (inClass)                                                                                                       \
+	if (!inClass)                                                                                                       \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -97,7 +99,7 @@
 
 #endif
 #ifdef MacroDef
-
+#define err()
 #define SetJavaObject(className)
 
 #define FunctionC_D(name, _)                                                                                           \

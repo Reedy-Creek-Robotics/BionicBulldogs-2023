@@ -9,6 +9,8 @@ Opmodes = {
 			function(self)
 				servos.setPos(0)
 				servos.setPos2(1)
+				telem.addData("Lua", "made it to marker :)")
+        telem.update()
 			end,
 			function(self)
 				servos.setPos(1)

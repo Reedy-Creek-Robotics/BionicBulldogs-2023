@@ -29,7 +29,7 @@ class Lua
 	}
 	
 	external fun init(): Array<String>;
-	external fun addObject(thing: Any);
+	external fun<T> addObject(thing: T);
 	external fun start(name: String, recognition: Int);
 	external fun stop();
 	
