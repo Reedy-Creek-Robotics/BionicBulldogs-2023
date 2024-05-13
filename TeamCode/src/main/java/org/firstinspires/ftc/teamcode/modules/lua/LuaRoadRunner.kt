@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.modules.lua
 
-import android.util.Log
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.apache.commons.math3.geometry.euclidean.twod.Line
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder
@@ -86,11 +84,13 @@ class LuaRoadRunner
 		builder?.waitSeconds(time);
 	}
 
-	fun marker()
+	fun marker(string: String)
 	{
-		builder?.addDisplacementMarker { callDisplacement() };
+		builder?.addDisplacementMarker {
+			callDisplacement(string);
+		};
 	}
 
-	private external fun callDisplacement();
+	private external fun callDisplacement(string: String);
 	external fun buildPath(name: String);
 }

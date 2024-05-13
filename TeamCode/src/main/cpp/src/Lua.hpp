@@ -2,5 +2,5 @@
 
 #include <string>
 
-void callNextDispMarker();
+void callNextDispMarker(std::string str);
 std::string getPathName(const std::string& name);

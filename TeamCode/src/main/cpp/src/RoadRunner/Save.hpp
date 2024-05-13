@@ -21,7 +21,7 @@ class Save
 	static JFunc<void, jdouble, jdouble, jdouble, jdouble> splineToSplineHeading;
 	static JFunc<void, jdouble> wait;
 	static JFunc<void, jdouble> rotate;
-	static JFunc<void> marker;
+	static JFunc<void, jstring> marker;
 	static int load(NodeGrid* grid, const std::string& path);
 	static void exp(NodeGrid* grid);
 };

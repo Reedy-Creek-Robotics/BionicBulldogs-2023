@@ -5,9 +5,9 @@
 #include <jni.h>
 
 extern "C" JNIEXPORT void JNICALL
-Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_callDisplacement(JNIEnv* env, jobject thiz)
+Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_callDisplacement(JNIEnv* env, jobject thiz, jstring str)
 {
-  callNextDispMarker();
+  callNextDispMarker(env->GetStringUTFChars(str, nullptr));
 }
 
 extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_buildPath(JNIEnv* env,
@@ -24,7 +24,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	Save::splineToConstantHeading.init("splineToConstantHeading", "(DDD)V");
 	Save::lineToSplineHeading.init("lineToSplineHeading", "(DDD)V");
 	Save::splineToSplineHeading.init("splineToSplineHeading", "(DDDD)V");
-	Save::marker.init("marker", "()V");
+	Save::marker.init("marker", "(Ljava/lang/String;)V");
 	Save::wait.init("wait", "(D)V");
 	Save::rotate.init("turn", "(D)V");
 

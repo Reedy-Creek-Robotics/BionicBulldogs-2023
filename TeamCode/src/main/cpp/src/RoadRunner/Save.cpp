@@ -13,7 +13,7 @@ JFunc<void, jdouble, jdouble, jdouble> Save::lineToSplineHeading = {};
 JFunc<void, jdouble, jdouble, jdouble, jdouble> Save::splineToSplineHeading = {};
 JFunc<void, jdouble> Save::wait = {};
 JFunc<void, jdouble> Save::rotate = {};
-JFunc<void> Save::marker = {};
+JFunc<void, jstring> Save::marker = {};
 
 int Save::load(NodeGrid* grid, const std::string& path)
 {
@@ -151,8 +151,8 @@ void Save::exp(NodeGrid* grid)
 		PathSegment* seg = grid->segs.get(segments[i]);
 		PathNode* node = grid->nodes.get(seg->endNode);
 
-    node->rot = -(node->rot - 90);
-    node->heading = -(node->heading - 90);
+		node->rot = -(node->rot - 90);
+		node->heading = -(node->heading - 90);
 
 		bool ins = false;
 		bool constantHeading = false;
@@ -225,7 +225,9 @@ void Save::exp(NodeGrid* grid)
 					break;
 				}
 				case NodePartMarker: {
-					marker.callV();
+					jstring str = FuncStat::env->NewStringUTF(((Marker*)part)->text);
+					marker.callV(str);
+					FuncStat::env->ReleaseStringUTFChars(str, FuncStat::env->GetStringUTFChars(str, nullptr));
 					break;
 				}
 				}

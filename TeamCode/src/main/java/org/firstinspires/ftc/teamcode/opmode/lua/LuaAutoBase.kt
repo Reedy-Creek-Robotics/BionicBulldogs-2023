@@ -31,7 +31,7 @@ abstract class LuaAutoBase : LinearOpMode()
 		lua.initRR(str);
 
 		telemetry.clearAll();
-		telemetry.addLine("inited");
+		telemetry.addLine("inited"); 
 		telemetry.update();
 
 		waitForStart();

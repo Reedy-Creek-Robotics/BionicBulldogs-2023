@@ -57,7 +57,7 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	FuncStat::setVals(env, ref);
 	printF.init("print", "(Ljava/lang/String;)V");
 	errorF.init("err", "(Ljava/lang/String;)V");
-	
+
 	print("init called");
 	JFunc<jstring> getDataDir("getDataDir", "()Ljava/lang/String;");
 
@@ -70,7 +70,7 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 
 	l = luaL_newstate();
 	luaL_openlibs(l);
-	
+
 	print("loading funcs");
 	loadFuncs(l);
 	print("funcs loaded");
@@ -177,17 +177,33 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	lua_close(l);
 	l = nullptr;
 }
-void callNextDispMarker()
+void callNextDispMarker(std::string str)
 {
-	dispMarkerInd++;
-	lua_rawgeti(l, 4, dispMarkerInd);
-	if (lua_type(l, -1) == LUA_TFUNCTION)
+	if (str == "")
 	{
-		lua_pushvalue(l, 1);
-		if (lua_pcall(l, 1, 0, 0))
+		dispMarkerInd++;
+		lua_rawgeti(l, 4, dispMarkerInd);
+		if (lua_type(l, -1) == LUA_TFUNCTION)
 		{
-			err(lua_tostring(l, -1));
-			return;
+			lua_pushvalue(l, 1);
+			if (lua_pcall(l, 1, 0, 0))
+			{
+				err(lua_tostring(l, -1));
+				return;
+			}
+		}
+	}
+	else
+	{
+		lua_getfield(l, 4, str.c_str());
+		if (lua_type(l, -1) == LUA_TFUNCTION)
+		{
+			lua_pushvalue(l, 1);
+			if (lua_pcall(l, 1, 0, 0))
+			{
+				err(lua_tostring(l, -1));
+				return;
+			}
 		}
 	}
 }
@@ -197,5 +213,5 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 																								jobject thing)
 {
 	FuncStat::setVals(env, thiz);
-  addObject(thing);
+	addObject(thing);
 }

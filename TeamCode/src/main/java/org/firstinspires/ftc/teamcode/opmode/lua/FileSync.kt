@@ -39,6 +39,15 @@ class FileSync
 						}
 						if(s.toInt() == 1)
 						{
+							val a = path.split('/');
+							var folders = "";
+							var i = 0;
+							while(i < a.size - 2)
+							{
+								folders += a[i];
+								i++;
+							}
+							File(Environment.getExternalStorageDirectory(), folders).mkdirs();
 							val file = File(Environment.getExternalStorageDirectory(), path);
 							val c = file.outputStream();
 							c.write(data.toByteArray());
