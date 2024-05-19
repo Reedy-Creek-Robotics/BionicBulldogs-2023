@@ -92,5 +92,5 @@ class LuaRoadRunner
 	}
 
 	private external fun callDisplacement(string: String);
-	external fun buildPath(name: String);
+	external fun buildPath(name: String, recognition: Int);
 }

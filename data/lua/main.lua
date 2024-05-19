@@ -1,7 +1,7 @@
 Opmodes = {
 	{
 		name = "main",
-		path = "folder/thing3.path",
+		path = "no.path",
 		start = function(self, recognition)
 			servos.setPos(0.5)
 		end,

@@ -12,21 +12,16 @@ abstract class LuaAutoBase : LinearOpMode()
 	{
 		telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry);
 		val lua = Lua(this);
-		telemetry.addLine("initing lua");
-		telemetry.update();
 
 		val obj = TestModule(this);
 		lua.addObject(obj);
 		
-		telemetry.addLine("initing lua2");
+		telemetry.addLine("initing lua");
 		telemetry.update();
 
 		lua.init();
 
 		val str = getOpmodeName();
-		telemetry.clearAll();
-		telemetry.addLine("building path");
-		telemetry.update();
 
 		lua.initRR(str);
 
@@ -39,7 +34,7 @@ abstract class LuaAutoBase : LinearOpMode()
 		telemetry.clearAll();
 		telemetry.update();
 
-		lua.startRR(str, 2);
+		lua.startRR(str);
 	}
 
 	abstract fun getOpmodeName(): String;

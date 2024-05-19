@@ -7,20 +7,22 @@
 lua_State* l = nullptr;
 JFunc<void, jstring> printF;
 JFunc<void, jstring> errorF;
+
+std::unordered_map<std::string, int> opmodes;
+int dispMarkerInd = 0;
+
 void print(const char* str)
 {
 	jstring j = FuncStat::env->NewStringUTF(str);
 	printF.callV(j);
 	FuncStat::env->ReleaseStringUTFChars(j, FuncStat::env->GetStringUTFChars(j, nullptr));
 }
+
 void err(const char* str)
 {
 	jstring j = FuncStat::env->NewStringUTF(str);
 	errorF.callV(j);
 }
-
-std::unordered_map<std::string, int> opmodes;
-int dispMarkerInd = 0;
 
 std::string getPathName(const std::string& name)
 {
@@ -49,11 +51,8 @@ std::string getPathName(const std::string& name)
 extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_init(JNIEnv* env,
 																								   jobject thiz)
 {
-	if (l != nullptr)
-	{
-		lua_close(l);
-	}
 	jobject ref = env->NewGlobalRef(thiz);
+  addObject(ref);
 	FuncStat::setVals(env, ref);
 	printF.init("print", "(Ljava/lang/String;)V");
 	errorF.init("err", "(Ljava/lang/String;)V");
@@ -212,6 +211,11 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 																								jobject thiz,
 																								jobject thing)
 {
+	if (l != nullptr)
+	{
+    deleteRefs();
+		lua_close(l);
+	}
 	FuncStat::setVals(env, thiz);
 	addObject(thing);
 }

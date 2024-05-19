@@ -5,8 +5,8 @@
 #include <string>
 #define MacroDef
 
-#include "Functions.hpp"
-
+#include "Macros.hpp"
+#include "../../java/org/firstinspires/ftc/teamcode/LuaFunctions.hpp"
 #undef MacroDef
 
 std::unordered_map<std::string, jobject> objects = {};
@@ -38,6 +38,17 @@ void addObject(jobject object)
 
 void loadFuncs(lua_State* l)
 {
-	bool inClass = false;
-#include "Functions.hpp"
+	bool inClass =
+false;
+#include "Macros.hpp"
+#include "../../java/org/firstinspires/ftc/teamcode/LuaFunctions.hpp"
+}
+
+void deleteRefs()
+{
+  for(auto& [k, v] : objects)
+  {
+      FuncStat::env->DeleteGlobalRef(v);
+  }
+  objects.clear();
 }

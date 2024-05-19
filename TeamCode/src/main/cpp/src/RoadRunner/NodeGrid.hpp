@@ -12,6 +12,7 @@
 
 class NodeGrid{
 	public:
+  int recognitionId = -1;
 	List<PathNode> nodes;
 	List<PathSegment> segs;
 	

@@ -12,7 +12,8 @@ Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_callDisplacement(J
 
 extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_buildPath(JNIEnv* env,
 																										  jobject thiz,
-																										  jstring name)
+																										  jstring name,
+                                                                                                          int recognition)
 {
 	FuncStat::setVals(env, thiz);
 	Save::makeBuilder.init("makeBuilder", "(DDD)V");
@@ -29,6 +30,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	Save::rotate.init("turn", "(D)V");
 
 	NodeGrid grid = NodeGrid();
+  grid.recognitionId = recognition;
   std::string str = env->GetStringUTFChars(name, NULL);
   std::string path = getPathName(str);
   if(path == "")

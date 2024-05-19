@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.modules.lua
 import android.os.Environment
 import android.util.Log
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
-import java.util.Objects
+import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 
-class Lua
+class Lua(a: LinearOpMode)
 {
 	companion object
 	{
@@ -19,14 +18,9 @@ class Lua
 		}
 	}
 	
-	val opmode: LinearOpMode;
-	private var trajectory: TrajectorySequence? = null;
+	val opmode: LinearOpMode = a;
+	private var trajectory: ArrayList<TrajectorySequence> = ArrayList<TrajectorySequence>();
 	private var lrr: LuaRoadRunner? = null;
-	
-	constructor(a: LinearOpMode)
-	{
-		opmode = a;
-	}
 	
 	external fun init(): Array<String>;
 	external fun<T> addObject(thing: T);
@@ -36,19 +30,40 @@ class Lua
 	fun initRR(name: String)
 	{
 		lrr = LuaRoadRunner(opmode);
-		lrr?.buildPath(name);
-		trajectory = lrr?.getTrajectory();
+		opmode.telemetry.clearAll();
+		opmode.telemetry.addLine("building path 1");
+		opmode.telemetry.update();
+		lrr?.buildPath(name, 0);
+		lrr?.getTrajectory()?.let { trajectory.add(it) };
+		opmode.telemetry.clearAll();
+		opmode.telemetry.addLine("building path 2");
+		opmode.telemetry.update();
+		lrr?.buildPath(name, 1);
+		lrr?.getTrajectory()?.let { trajectory.add(it) };
+		opmode.telemetry.clearAll();
+		opmode.telemetry.addLine("building path 3");
+		opmode.telemetry.update();
+		lrr?.buildPath(name, 2);
+		lrr?.getTrajectory()?.let { trajectory.add(it) };
+		opmode.telemetry.clearAll();
+		opmode.telemetry.addLine("done");
+		opmode.telemetry.update();
 	}
 	
-	fun startRR(name: String, recognition: Int)
+	fun startRR(name: String, recognition: Int = -1)
 	{
-		start(name, recognition);
-		lrr?.drive?.followTrajectorySequence(trajectory);
+		var r2 = recognition;
+		if(r2 == -1)
+		{
+			r2 = LuaSettings.defultRecognition;
+		}
+		start(name, r2);
+		lrr?.drive?.followTrajectorySequence(trajectory[r2]);
 	}
 	
 	fun isRR(): Boolean
 	{
-		return trajectory != null;
+		return trajectory.size > 0;
 	}
 	
 	fun getDataDir(): String
@@ -67,7 +82,7 @@ class Lua
 		opmode.telemetry.clearAll();
 		opmode.telemetry.addData("Lua Error", msg);
 		opmode.telemetry.update();
-		opmode.terminateOpModeNow();
+		throw LuaError(msg);
 	}
 	
 	fun telem(label: String, msg: String)

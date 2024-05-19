@@ -74,6 +74,7 @@ int Save::load(NodeGrid* grid, const std::string& path)
 		seg->layer = jNode["layer"];
 		seg->headingMode = jNode["heading"];
 		seg->pathType = jNode["path"];
+    seg->recognitionId = jNode["recognitionId"];
 		i++;
 	}
 	return true;
@@ -86,6 +87,8 @@ void Save::exp(NodeGrid* grid)
 	for (int i = 0; i < grid->segs.count; i++)
 	{
 		PathSegment* s = grid->segs.get(i);
+		if (s->recognitionId != grid->recognitionId || s->recognitionId == -1)
+			continue;
 		segUsage[s->startNode] |= 1;
 		segUsage[s->endNode] |= 2;
 	}
@@ -124,6 +127,8 @@ void Save::exp(NodeGrid* grid)
 		for (int i = 0; i < grid->segs.count; i++)
 		{
 			PathSegment* seg = grid->segs.get(i);
+			if (seg->recognitionId != grid->recognitionId || seg->recognitionId == -1)
+				continue;
 			if (seg->startNode == targetInd)
 			{
 				if (foundNode)
