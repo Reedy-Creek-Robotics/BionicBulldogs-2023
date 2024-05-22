@@ -28,6 +28,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	Save::marker.init("marker", "(Ljava/lang/String;)V");
 	Save::wait.init("wait", "(D)V");
 	Save::rotate.init("turn", "(D)V");
+	Save::pathErr.init("pathErr", "(Ljava/lang/String;)V");
 
 	NodeGrid grid = NodeGrid();
   grid.recognitionId = recognition;

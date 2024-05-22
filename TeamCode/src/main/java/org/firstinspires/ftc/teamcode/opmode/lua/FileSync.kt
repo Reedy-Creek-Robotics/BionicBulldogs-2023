@@ -32,7 +32,7 @@ class FileSync
 					var d = false;
 					for(s in str)
 					{
-						if(s == '?')
+						if(s == '?' && !d)
 						{
 							d = true;
 							continue;
@@ -41,14 +41,24 @@ class FileSync
 						{
 							val a = path.split('/');
 							var folders = "";
-							var i = 0;
-							while(i < a.size - 2)
+							for(i in 0..a.size - 2)
 							{
 								folders += a[i];
-								i++;
+								if(i < a.size - 2)
+								{
+									folders += '/';
+								}
 							}
-							File(Environment.getExternalStorageDirectory(), folders).mkdirs();
+							Log.d("FServer", folders);
+							if(!File(Environment.getExternalStorageDirectory(), folders).mkdirs())
+							{
+								Log.d("FServer", "could not create folders at $folders");
+							}
 							val file = File(Environment.getExternalStorageDirectory(), path);
+							if(!file.exists())
+							{
+								file.createNewFile();
+							}
 							val c = file.outputStream();
 							c.write(data.toByteArray());
 							c.close();

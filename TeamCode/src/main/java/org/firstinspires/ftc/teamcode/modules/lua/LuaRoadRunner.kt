@@ -25,6 +25,10 @@ class LuaRoadRunner
 		drive = SampleMecanumDrive(opMode.hardwareMap);
 		opmode = opMode;
 	}
+	fun pathErr(msg: String)
+	{
+		throw PathError(msg);
+	}
 	fun getTrajectory(): TrajectorySequence?
 	{
 		return builder?.build();

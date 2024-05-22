@@ -52,7 +52,7 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 																								   jobject thiz)
 {
 	jobject ref = env->NewGlobalRef(thiz);
-  addObject(ref);
+	addObject(ref);
 	FuncStat::setVals(env, ref);
 	printF.init("print", "(Ljava/lang/String;)V");
 	errorF.init("err", "(Ljava/lang/String;)V");
@@ -69,7 +69,13 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 
 	l = luaL_newstate();
 	luaL_openlibs(l);
-
+  print(dataDir.c_str());
+  if(luaL_dostring(l, ("package.path = package.path .. ';" + dataDir + "/lua/?.lua'").c_str()))
+  {
+    err(lua_tostring(l, -1));
+    return nullptr;
+  }
+	//luaL_dostring(l, ("package.path = " + dataDir + " .. '/?.lua' .. package.path;").c_str());
 	print("loading funcs");
 	loadFuncs(l);
 	print("funcs loaded");
@@ -94,12 +100,11 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 		lua_pushvalue(l, -2);
 		std::string key = lua_tostring(l, -1);
 
-		if (lua_type(l, -2) != LUA_TTABLE)
-		{
-			lua_pop(l, 2);
-			err("opmode must be a table");
-			return nullptr;
-		}
+    if(lua_type(l, -2) != LUA_TTABLE)
+    {
+      lua_pop(l, 2);
+      continue;
+    }
 
 		lua_getfield(l, -2, "name");
 		if (lua_type(l, -1) != LUA_TSTRING)
@@ -213,7 +218,7 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 {
 	if (l != nullptr)
 	{
-    deleteRefs();
+		deleteRefs();
 		lua_close(l);
 	}
 	FuncStat::setVals(env, thiz);

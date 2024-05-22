@@ -14,13 +14,21 @@ JFunc<void, jdouble, jdouble, jdouble, jdouble> Save::splineToSplineHeading = {}
 JFunc<void, jdouble> Save::wait = {};
 JFunc<void, jdouble> Save::rotate = {};
 JFunc<void, jstring> Save::marker = {};
+JFunc<void, jstring> Save::pathErr = {};
+
+void perr(const std::string& str)
+{
+	jstring s = FuncStat::env->NewStringUTF(str.c_str());
+	Save::pathErr.call(s);
+	FuncStat::env->ReleaseStringUTFChars(s, FuncStat::env->GetStringUTFChars(s, nullptr));
+}
 
 int Save::load(NodeGrid* grid, const std::string& path)
 {
 	FILE* file = fopen(path.c_str(), "r");
 	if (file == nullptr)
 	{
-		err(("could not open file at" + path).c_str());
+		perr(("could not open file at" + path).c_str());
 		return false;
 	}
 
@@ -31,51 +39,68 @@ int Save::load(NodeGrid* grid, const std::string& path)
 	fread(mem, size, 1, file);
 	std::stringstream sstream;
 	sstream << mem;
-	nlohmann::json json = nlohmann::json::parse(sstream);
-	delete[] mem;
-
-	int i = 0;
-	for (auto jNode : json["nodes"])
+	nlohmann::json json;
+	try
 	{
-		PathNode* node = grid->nodes.add();
-		node->pos = {jNode["pos"]["x"], jNode["pos"]["y"]};
-		node->layer = jNode["layer"];
-		node->rot = jNode["rot"];
-		node->heading = jNode["heading"];
-		for (auto jPart : jNode["other"])
-		{
-			if (jPart.contains("text"))
-			{
-				Marker* marker = new Marker();
-				std::string text = jPart["text"];
-				strcpy(marker->text, text.c_str());
-				node->parts.push_back(marker);
-			}
-			if (jPart.contains("time"))
-			{
-				Delay* delay = new Delay();
-				delay->time = jPart["time"];
-				node->parts.push_back(delay);
-			}
-			if (jPart.contains("angle"))
-			{
-				Turn* turn = new Turn();
-				turn->angle = jPart["angle"];
-				node->parts.push_back(turn);
-			}
-		}
-		i++;
+		json = nlohmann::json::parse(sstream);
 	}
-	for (auto jNode : json["segs"])
+	catch (nlohmann::json::parse_error)
 	{
-		PathSegment* seg = grid->segs.add();
-		seg->startNode = jNode["startNode"];
-		seg->endNode = jNode["endNode"];
-		seg->layer = jNode["layer"];
-		seg->headingMode = jNode["heading"];
-		seg->pathType = jNode["path"];
-    seg->recognitionId = jNode["recognitionId"];
-		i++;
+		perr(("could not parse file at " + path).c_str());
+		return false;
+	}
+	delete[] mem;
+	try
+	{
+
+		int i = 0;
+		for (auto jNode : json["nodes"])
+		{
+			PathNode* node = grid->nodes.add();
+			node->pos = {jNode["pos"]["x"], jNode["pos"]["y"]};
+			node->layer = jNode["layer"];
+			node->rot = jNode["rot"];
+			node->heading = jNode["heading"];
+			for (auto jPart : jNode["other"])
+			{
+				if (jPart.contains("text"))
+				{
+					Marker* marker = new Marker();
+					std::string text = jPart["text"];
+					strcpy(marker->text, text.c_str());
+					node->parts.push_back(marker);
+				}
+				if (jPart.contains("time"))
+				{
+					Delay* delay = new Delay();
+					delay->time = jPart["time"];
+					node->parts.push_back(delay);
+				}
+				if (jPart.contains("angle"))
+				{
+					Turn* turn = new Turn();
+					turn->angle = jPart["angle"];
+					node->parts.push_back(turn);
+				}
+			}
+			i++;
+		}
+		for (auto jNode : json["segs"])
+		{
+			PathSegment* seg = grid->segs.add();
+			seg->startNode = jNode["startNode"];
+			seg->endNode = jNode["endNode"];
+			seg->layer = jNode["layer"];
+			seg->headingMode = jNode["heading"];
+			seg->pathType = jNode["path"];
+			seg->recognitionId = jNode["recognitionId"];
+			i++;
+		}
+	}
+	catch (nlohmann::json::type_error e)
+	{
+		perr(e.what());
+		return false;
 	}
 	return true;
 }
@@ -87,10 +112,11 @@ void Save::exp(NodeGrid* grid)
 	for (int i = 0; i < grid->segs.count; i++)
 	{
 		PathSegment* s = grid->segs.get(i);
-		if (s->recognitionId != grid->recognitionId || s->recognitionId == -1)
-			continue;
-		segUsage[s->startNode] |= 1;
-		segUsage[s->endNode] |= 2;
+		if (s->recognitionId == grid->recognitionId || s->recognitionId == -1)
+		{
+			segUsage[s->startNode] |= 1;
+			segUsage[s->endNode] |= 2;
+		}
 	}
 	int startInd = -1;
 	bool emptyNodes = false;
@@ -104,7 +130,8 @@ void Save::exp(NodeGrid* grid)
 			}
 			else
 			{
-				err("path has multiple start nodes");
+				perr((std::string("path has multiple start nodes | recognition: ") +
+					  std::to_string(grid->recognitionId)));
 				return;
 			}
 		}
@@ -127,18 +154,21 @@ void Save::exp(NodeGrid* grid)
 		for (int i = 0; i < grid->segs.count; i++)
 		{
 			PathSegment* seg = grid->segs.get(i);
-			if (seg->recognitionId != grid->recognitionId || seg->recognitionId == -1)
-				continue;
-			if (seg->startNode == targetInd)
+			if (seg->recognitionId == grid->recognitionId || seg->recognitionId == -1)
 			{
-				if (foundNode)
+				if (seg->startNode == targetInd)
 				{
-					err((std::string("fork found at node ") + std::to_string((int)seg->startNode)).c_str());
-					return;
+					if (foundNode)
+					{
+						perr((std::string("fork found at node ") + std::to_string((int)seg->startNode) +
+							  " | recognition: " + std::to_string(grid->recognitionId))
+								 .c_str());
+						return;
+					}
+					foundNode = true;
+					foundInd = seg->endNode;
+					segments.push_back(i);
 				}
-				foundNode = true;
-				foundInd = seg->endNode;
-				segments.push_back(i);
 			}
 		}
 		targetInd = foundInd;
