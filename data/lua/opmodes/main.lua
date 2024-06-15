@@ -1,22 +1,26 @@
-return {
+---@type Opmode
+local opmode = {
 	name = "main",
 	path = "testPath.path",
-	start = function(self, recognition)
-		servos.setPos(0.5)
-	end,
-	markers = {
-		function(self)
-			servos.setPos(0)
-			servos.setPos2(1)
-			telem.addData("Lua", "made it to marker :)")
-			telem.update()
-		end,
-		function(self)
-			servos.setPos(1)
-			servos.setPos2(0)
-		end,
-		named = function()
-			print("what")
-		end,
-	},
+	markers = {},
 }
+
+---@param recognition number
+function opmode:start(recognition)
+	servos.setPos(0)
+	servos.setPos2(0.5)
+end
+
+function opmode.markers:grab()
+	servos.setPos(1)
+	delay(1)
+	servos.setPos(0)
+end
+
+function opmode.markers:drop()
+	servos.setPos2(1)
+	delay(1)
+	servos.setPos2(0)
+	delay(1)
+	servos.setPos2(0.5)
+end

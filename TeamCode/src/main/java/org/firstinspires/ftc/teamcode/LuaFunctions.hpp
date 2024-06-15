@@ -11,6 +11,7 @@ argument types:
   V = void
 current macros are:
 FunctionC_D
+FunctionB_V
 FunctionV_V
 FunctionV_B
 FunctionV_D
@@ -28,7 +29,7 @@ call SetJavaObject with the full name of the class using / as a seperator
 FunctionV_S(print, print);
 
 FunctionC_D(delay, delay);
-FunctionV_B(isActive, isActive);
+FunctionB_V(isActive, isActive);
 NewClass();
 FunctionV_SS(telem, addData);
 FunctionV_V(updateTelem, update);

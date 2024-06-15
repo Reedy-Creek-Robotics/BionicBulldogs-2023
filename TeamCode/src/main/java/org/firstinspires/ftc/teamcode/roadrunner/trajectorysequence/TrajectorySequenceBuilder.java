@@ -22,6 +22,7 @@ import com.acmerobotics.roadrunner.util.Angle;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.TurnSegment;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.WaitForSegment;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.WaitSegment;
 
 import java.util.ArrayList;
@@ -463,6 +464,15 @@ public class TrajectorySequenceBuilder {
 
         currentDuration += seconds;
         return this;
+    }
+
+    public WaitForSegment waitFor(Pose2d pos)
+    {
+        pushPath();
+        WaitForSegment seg = new WaitForSegment(pos, Collections.emptyList());
+        sequenceSegments.add(seg);
+        currentDuration += 1;
+        return seg;
     }
 
     public TrajectorySequenceBuilder addTrajectory(Trajectory trajectory) {

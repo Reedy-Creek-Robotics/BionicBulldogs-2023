@@ -1,6 +1,4 @@
 {
-  "workspace.libary": ["./def.lua"],
-  "format.defaultConfig": {
-    "end_statement_with_semicolon": "always"
-  }
+  "workspace.library": ["./def.lua"],
+  "diagnostics.disable": ["unused-local", "lowercase-global"]
 }

@@ -5,6 +5,7 @@
 #undef FunctionV_SS
 #undef FunctionV_S
 #undef FunctionC_D
+#undef FunctionB_V
 #undef NewClass
 #undef EndClass
 #undef SetJavaObject
@@ -12,7 +13,9 @@
 #endif
 
 #ifndef MacroDef
-#define err() int* i; *i = 1
+#define err()                                                                                                          \
+	int* i;                                                                                                            \
+	*i = 1
 #define SetJavaObject(className)                                                                                       \
 	FuncStat::clazz = FuncStat::env->FindClass(#className);                                                            \
 	FuncStat::obj = objects[#className]
@@ -27,8 +30,22 @@
 
 #define FunctionC_D(name, funcName)                                                                                    \
 	name.init(#name, "(D)Z");                                                                                          \
+	errCheck();                                                                                                        \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (!inClass)                                                                                                       \
+	if (!inClass)                                                                                                      \
+	{                                                                                                                  \
+		lua_setglobal(l, #funcName);                                                                                   \
+	}                                                                                                                  \
+	else                                                                                                               \
+	{                                                                                                                  \
+		lua_setfield(l, -2, #funcName);                                                                                \
+	}
+
+#define FunctionB_V(name, funcName)                                                                                    \
+	name.init(#name, "()Z");                                                                                           \
+	errCheck();                                                                                                        \
+	lua_pushcfunction(l, name##F);                                                                                     \
+	if (!inClass)                                                                                                      \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -39,8 +56,9 @@
 
 #define FunctionV_D(name, funcName)                                                                                    \
 	name.init(#name, "(D)V");                                                                                          \
+	errCheck();                                                                                                        \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (!inClass)                                                                                                       \
+	if (!inClass)                                                                                                      \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -51,8 +69,9 @@
 
 #define FunctionV_S(name, funcName)                                                                                    \
 	name.init(#name, "(Ljava/lang/String;)V");                                                                         \
+	errCheck();                                                                                                        \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (!inClass)                                                                                                       \
+	if (!inClass)                                                                                                      \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -63,8 +82,9 @@
 
 #define FunctionV_SS(name, funcName)                                                                                   \
 	name.init(#name, "(Ljava/lang/String;Ljava/lang/String;)V");                                                       \
+	errCheck();                                                                                                        \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (!inClass)                                                                                                       \
+	if (!inClass)                                                                                                      \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -75,8 +95,9 @@
 
 #define FunctionV_V(name, funcName)                                                                                    \
 	name.init(#name, "()V");                                                                                           \
+	errCheck();                                                                                                        \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (!inClass)                                                                                                       \
+	if (!inClass)                                                                                                      \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -86,9 +107,10 @@
 	}
 
 #define FunctionV_B(name, funcName)                                                                                    \
-	name.init(#name, "()Z");                                                                                           \
+	name.init(#name, "(Z)V");                                                                                          \
+	errCheck();                                                                                                        \
 	lua_pushcfunction(l, name##F);                                                                                     \
-	if (!inClass)                                                                                                       \
+	if (!inClass)                                                                                                      \
 	{                                                                                                                  \
 		lua_setglobal(l, #funcName);                                                                                   \
 	}                                                                                                                  \
@@ -108,11 +130,22 @@
 	{                                                                                                                  \
 		jdouble i = lua_tonumber(L, -1);                                                                               \
 		bool a = name.callB(i);                                                                                        \
+		errCheck();                                                                                                    \
 		if (a)                                                                                                         \
 		{                                                                                                              \
 			luaL_error(L, "robot stopped :)");                                                                         \
 		}                                                                                                              \
 		return 0;                                                                                                      \
+	}
+
+#define FunctionB_V(name, _)                                                                                           \
+	JFunc<jboolean> name;                                                                                              \
+	int name##F(lua_State* L)                                                                                          \
+	{                                                                                                                  \
+		bool a = name.callB();                                                                                         \
+		errCheck();                                                                                                    \
+		lua_pushboolean(L, a);                                                                                         \
+		return 1;                                                                                                      \
 	}
 
 #define FunctionV_D(name, _)                                                                                           \
@@ -121,6 +154,7 @@
 	{                                                                                                                  \
 		jdouble i = lua_tonumber(L, -1);                                                                               \
 		name.callV(i);                                                                                                 \
+		errCheck();                                                                                                    \
 		return 0;                                                                                                      \
 	}
 
@@ -131,6 +165,7 @@
 		const char* i = lua_tostring(L, -1);                                                                           \
 		jstring j = FuncStat::env->NewStringUTF(i);                                                                    \
 		name.callV(j);                                                                                                 \
+		errCheck();                                                                                                    \
 		FuncStat::env->ReleaseStringUTFChars(j, FuncStat::env->GetStringUTFChars(j, NULL));                            \
 		return 0;                                                                                                      \
 	}
@@ -144,6 +179,7 @@
 		jstring j1 = FuncStat::env->NewStringUTF(i1);                                                                  \
 		jstring j2 = FuncStat::env->NewStringUTF(i2);                                                                  \
 		name.callV(j1, j2);                                                                                            \
+		errCheck();                                                                                                    \
 		FuncStat::env->ReleaseStringUTFChars(j1, FuncStat::env->GetStringUTFChars(j1, NULL));                          \
 		FuncStat::env->ReleaseStringUTFChars(j2, FuncStat::env->GetStringUTFChars(j2, NULL));                          \
 		return 0;                                                                                                      \
@@ -154,16 +190,18 @@
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
 		name.callV();                                                                                                  \
+		errCheck();                                                                                                    \
 		return 0;                                                                                                      \
 	}
 
 #define FunctionV_B(name, _)                                                                                           \
-	JFunc<jboolean> name;                                                                                              \
+	JFunc<void, jboolean> name;                                                                                        \
 	int name##F(lua_State* L)                                                                                          \
 	{                                                                                                                  \
-		bool a = name.callB();                                                                                         \
-		lua_pushboolean(L, a);                                                                                         \
-		return 1;                                                                                                      \
+		bool a = lua_toboolean(L, -1);                                                                                 \
+		name.callV(a);                                                                                                 \
+		errCheck();                                                                                                    \
+		return 0;                                                                                                      \
 	}
 
 #define NewClass()

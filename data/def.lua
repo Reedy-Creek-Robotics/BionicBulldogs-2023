@@ -1,5 +1,10 @@
+---@meta
 ---@param msg string
 function print(msg)
+end
+
+---@param time number
+function delay(time)
 end
 
 telem = {}
@@ -10,6 +15,12 @@ end
 
 function telem.update()
 end
+
+---@class Opmode
+---@field name string
+---@field path string?
+---@field start function?
+---@field markers any[function]? 
 
 servos = {}
 ---@param pos number

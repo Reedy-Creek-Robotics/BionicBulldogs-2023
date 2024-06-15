@@ -23,7 +23,7 @@ class Lua(a: LinearOpMode)
 	private var lrr: LuaRoadRunner? = null;
 	
 	external fun init(): Array<String>;
-	external fun<T> addObject(thing: T);
+	external fun <T> addObject(thing: T);
 	external fun start(name: String, recognition: Int);
 	external fun stop();
 	
@@ -85,6 +85,11 @@ class Lua(a: LinearOpMode)
 		throw LuaError(msg);
 	}
 	
+	fun jniErr(msg: String)
+	{
+		throw JNIError(msg);
+	}
+	
 	fun telem(label: String, msg: String)
 	{
 		opmode.telemetry.addData(label, msg);
@@ -95,7 +100,7 @@ class Lua(a: LinearOpMode)
 		opmode.telemetry.update();
 	}
 	
-
+	
 	fun delay(time: Double): Boolean
 	{
 		val e = ElapsedTime();

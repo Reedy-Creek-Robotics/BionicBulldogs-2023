@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.modules.lua
 
 import java.lang.RuntimeException
 
-class LuaError : RuntimeException
+class JNIError : RuntimeException
 {
-	private var msg: String = "";
-	
-	constructor(m: String)
+	private var msg = "";
+	constructor(_msg: String)
 	{
-		msg = m;
+		msg = _msg;
 	}
 	
 	override fun getLocalizedMessage(): String?

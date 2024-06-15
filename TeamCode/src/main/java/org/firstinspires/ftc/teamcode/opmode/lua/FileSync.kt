@@ -2,16 +2,17 @@ package org.firstinspires.ftc.teamcode.opmode.lua
 
 import android.os.Environment
 import android.util.Log
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 import java.net.ServerSocket
+import kotlin.io.path.Path
+import kotlin.io.path.fileSize
 
 class FileSync
 {
-	constructor()
+	init
 	{
-		val t = Thread{
+		val storageDir = Environment.getExternalStorageDirectory();
+		val t = Thread {
 			kotlin.run {
 				
 				val server = ServerSocket(6969);
@@ -19,68 +20,142 @@ class FileSync
 				while(true)
 				{
 					val socket = server.accept();
-					Log.d("FServer", "got message");
 					var str = "";
-					val reader = BufferedReader(InputStreamReader(socket.getInputStream()));
-					val sb = StringBuilder();
-					var line: String?;
-					while(reader.readLine().also { line = it } != null) sb.append(line)
-						.append("\n");
-					str = sb.toString();
-					var path = "";
-					var data = "";
-					var d = false;
-					for(s in str)
+					var a2 = "lua";
+					var arg = 1;
+					val input = socket.getInputStream();
+					var len: Int;
+					val buf = ByteArray(1);
+					var writing = false;
+					do
 					{
-						if(s == '?' && !d)
+						len = input.read(buf);
+						if(buf[0].toInt() == 2)
+							break;
+						if(buf[0].toInt().toChar() == '\t' && !writing)
+							writing = true;
+						else if(buf[0].toInt().toChar().code == 3)
 						{
-							d = true;
+							arg = 2;
+							a2 = "";
 							continue;
 						}
-						if(s.toInt() == 1)
-						{
-							val a = path.split('/');
-							var folders = "";
-							for(i in 0..a.size - 2)
+						else if(writing)
+							if(arg == 1)
+								str += buf[0].toInt().toChar();
+							else
+								a2 += buf[0].toInt().toChar();
+					}
+					while(len > 0);
+					Log.d("FServer", a2);
+					if(str == "Get")
+					{
+						Log.d("FServer", "get");
+						val d = File("$storageDir/$a2");
+						var out = "";
+						d.walk().forEach { file ->
+							if(file.isFile)
 							{
-								folders += a[i];
-								if(i < a.size - 2)
-								{
-									folders += '/';
-								}
+								Log.d("FServer", "reading ${file.path}");
+								out += file.relativeTo(storageDir).toString() + '\n';
+								out += file.readBytes().toString(Charsets.UTF_8) + '\b';
 							}
-							Log.d("FServer", folders);
-							if(!File(Environment.getExternalStorageDirectory(), folders).mkdirs())
-							{
-								Log.d("FServer", "could not create folders at $folders");
-							}
-							val file = File(Environment.getExternalStorageDirectory(), path);
-							if(!file.exists())
-							{
-								file.createNewFile();
-							}
-							val c = file.outputStream();
-							c.write(data.toByteArray());
-							c.close();
-							path = "";
-							data = "";
-							d = false;
-							continue;
 						}
-						if(!d)
+						out += '\r';
+						socket.getOutputStream().write(out.toByteArray());
+					}
+					else if(str == "Remove")
+					{
+						Log.d("FServer", "remove");
+						if(a2 == "/")
 						{
-							path += s;
+							socket.getOutputStream()
+								.write("you are not allowed to nuke the external storage directory on the robot\r".toByteArray());
 						}
 						else
 						{
-							data += s;
+							File("$storageDir/$a2").walk()
+								.forEach { file -> if(file.isFile) file.delete(); else file.deleteRecursively(); }
+							Log.d("FServer", "done");
+							socket.getOutputStream().write("done\r".toByteArray());
 						}
 					}
-					Log.d("FServer", "done");
+					else if(str == "List")
+					{
+						Log.d("FServer", "list");
+						val d = File("$storageDir/$a2");
+						var out = "";
+						var count = 0;
+						var size: Long = 0;
+						d.walk().forEach { file ->
+							if(file.isFile)
+							{
+								out += file.relativeTo(storageDir).toString() + '\n';
+								size += file.length();
+								count++;
+							}
+						}
+						out += count;
+						out += " files\n";
+						out += size;
+						out += " bytes\n\r";
+						socket.getOutputStream().write(out.toByteArray());
+					}
+					else
+					{
+						Log.d("FServer", "write");
+						var path = "";
+						var data = "";
+						var d = false;
+						for(s in str)
+						{
+							if(s == '?' && !d)
+							{
+								d = true;
+								continue;
+							}
+							if(s.code == 1)
+							{
+								val a = path.split('/');
+								var folders = "";
+								for(i in 0..a.size - 2)
+								{
+									folders += a[i];
+									if(i < a.size - 2)
+									{
+										folders += '/';
+									}
+								}
+								File("$storageDir/$folders").mkdirs();
+								val file = File(storageDir, path);
+								if(!file.exists())
+								{
+									file.createNewFile();
+								}
+								val c = file.outputStream();
+								c.write(data.toByteArray());
+								c.close();
+								Log.d("FServer", "wrote $path");
+								path = "";
+								data = "";
+								d = false;
+								continue;
+							}
+							if(!d)
+							{
+								path += s;
+							}
+							else
+							{
+								data += s;
+							}
+						}
+						socket.getOutputStream().write("done\r".toByteArray());
+					}
 					socket.close();
 				}
 			}
-		};
-		t.start();
+		}
+		t.start()
 	}
 }

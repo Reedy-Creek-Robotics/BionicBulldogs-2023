@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import java.util.List;
 
 public abstract class SequenceSegment {
-    private final double duration;
+    public double duration;
     private final Pose2d startPose;
     private final Pose2d endPose;
     private final List<TrajectoryMarker> markers;

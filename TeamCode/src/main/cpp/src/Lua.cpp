@@ -7,6 +7,7 @@
 lua_State* l = nullptr;
 JFunc<void, jstring> printF;
 JFunc<void, jstring> errorF;
+JFunc<void, jstring> jniErrorF;
 
 std::unordered_map<std::string, int> opmodes;
 int dispMarkerInd = 0;
@@ -22,6 +23,12 @@ void err(const char* str)
 {
 	jstring j = FuncStat::env->NewStringUTF(str);
 	errorF.callV(j);
+}
+
+void jniErr(std::string msg)
+{
+  jstring j = FuncStat::env->NewStringUTF(msg.c_str());
+  jniErrorF.callV(j);
 }
 
 std::string getPathName(const std::string& name)
@@ -56,8 +63,8 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	FuncStat::setVals(env, ref);
 	printF.init("print", "(Ljava/lang/String;)V");
 	errorF.init("err", "(Ljava/lang/String;)V");
+	jniErrorF.init("jniErr", "(Ljava/lang/String;)V");
 
-	print("init called");
 	JFunc<jstring> getDataDir("getDataDir", "()Ljava/lang/String;");
 
 	jstring dataDirJ = getDataDir.call();
@@ -69,16 +76,10 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 
 	l = luaL_newstate();
 	luaL_openlibs(l);
-  print(dataDir.c_str());
-  if(luaL_dostring(l, ("package.path = package.path .. ';" + dataDir + "/lua/?.lua'").c_str()))
-  {
-    err(lua_tostring(l, -1));
-    return nullptr;
-  }
-	//luaL_dostring(l, ("package.path = " + dataDir + " .. '/?.lua' .. package.path;").c_str());
-	print("loading funcs");
+
+	luaL_dostring(l, ("package.path = package.path .. ';" + dataDir + "/lua/?.lua'").c_str());
+
 	loadFuncs(l);
-	print("funcs loaded");
 
 	if (luaL_dofile(l, (dataDir + "/lua/main.lua").c_str()))
 	{
@@ -100,16 +101,16 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 		lua_pushvalue(l, -2);
 		std::string key = lua_tostring(l, -1);
 
-    if(lua_type(l, -2) != LUA_TTABLE)
-    {
-      lua_pop(l, 2);
-      continue;
-    }
+		if (lua_type(l, -2) != LUA_TTABLE)
+		{
+			lua_pop(l, 2);
+			continue;
+		}
 
 		lua_getfield(l, -2, "name");
 		if (lua_type(l, -1) != LUA_TSTRING)
 		{
-			err("opmode name must be a string");
+			err(("name of opmode '" + key + "' must be a string").c_str());
 			return nullptr;
 		}
 		std::string name = lua_tostring(l, -1);

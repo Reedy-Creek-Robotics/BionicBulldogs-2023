@@ -3,6 +3,19 @@
 #include <lua/lua.hpp>
 #include <unordered_map>
 #include <string>
+#include "Lua.hpp"
+
+void errCheck()
+{
+  JNIEnv* env = FuncStat::env;
+  if(env->ExceptionCheck())
+  {
+    env->ExceptionDescribe();
+    env->ExceptionClear();
+    jniErr("JNI error, check logs for error message");
+  }
+}
+
 #define MacroDef
 
 #include "Macros.hpp"
@@ -10,6 +23,14 @@
 #undef MacroDef
 
 std::unordered_map<std::string, jobject> objects = {};
+
+void loadFuncs(lua_State* l)
+{
+	bool inClass =
+false;
+#include "Macros.hpp"
+#include "../../java/org/firstinspires/ftc/teamcode/LuaFunctions.hpp"
+}
 
 void addObject(jobject object)
 {
@@ -34,14 +55,6 @@ void addObject(jobject object)
   }
   
   objects[res] = FuncStat::env->NewGlobalRef(object);
-}
-
-void loadFuncs(lua_State* l)
-{
-	bool inClass =
-false;
-#include "Macros.hpp"
-#include "../../java/org/firstinspires/ftc/teamcode/LuaFunctions.hpp"
 }
 
 void deleteRefs()
