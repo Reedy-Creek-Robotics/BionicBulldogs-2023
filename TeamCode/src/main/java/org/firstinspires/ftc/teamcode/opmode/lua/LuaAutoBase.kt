@@ -12,38 +12,32 @@ abstract class LuaAutoBase : LinearOpMode()
 {
 	override fun runOpMode()
 	{
-		try
-		{
-			telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry);
-			val lua = Lua(this);
-			
-			val obj = TestModule(this);
-			lua.addObject(obj);
-			
-			telemetry.addLine("initing lua");
-			telemetry.update();
-			
-			lua.init();
-			
-			val str = getOpmodeName();
-			
-			lua.initRR(str);
-			
-			telemetry.clearAll();
-			telemetry.addLine("inited");
-			telemetry.update();
-			
-			waitForStart();
-			
-			telemetry.clearAll();
-			telemetry.update();
-			
-			lua.startRR(str);
-		}catch(e: Exception)
-		{
-			throw e.message?.let { LuaError(it) }!!;
-		}
+		telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry);
+		val lua = Lua(this);
+		
+		val obj = TestModule(this);
+		lua.addObject(obj);
+		
+		telemetry.addLine("initing lua");
+		telemetry.update();
+		
+		lua.init();
+		
+		val str = getOpmodeName();
+		
+		lua.initRR(str);
+		
+		telemetry.clearAll();
+		telemetry.addLine("inited");
+		telemetry.update();
+		
+		waitForStart();
+		
+		telemetry.clearAll();
+		telemetry.update();
+		
+		lua.startRR(str);
 	}
-
+	
 	abstract fun getOpmodeName(): String;
 }

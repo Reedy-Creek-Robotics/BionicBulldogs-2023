@@ -25,6 +25,17 @@ void perr(const std::string& str)
 
 int Save::load(NodeGrid* grid, const std::string& path)
 {
+  for(int i = 0; i < grid->nodes.count; i++)
+  {
+    PathNode* node = grid->nodes[i];
+    for(NodePart* part : node->parts)
+    {
+      delete part;
+    }
+    node->parts.clear();
+  }
+	grid->nodes.count = 0;
+	grid->segs.count = 0;
 	FILE* file = fopen(path.c_str(), "r");
 	if (file == nullptr)
 	{
@@ -67,6 +78,7 @@ int Save::load(NodeGrid* grid, const std::string& path)
 				{
 					Marker* marker = new Marker();
 					std::string text = jPart["text"];
+					marker->text = new char[text.size()];
 					strcpy(marker->text, text.c_str());
 					node->parts.push_back(marker);
 				}

@@ -1,21 +1,24 @@
 #include "JFunc.hpp"
-#include "Save.hpp"
 #include "Lua.hpp"
-#include <string>
+#include "Save.hpp"
 #include <jni.h>
+#include <string>
 
 extern "C" JNIEXPORT void JNICALL
 Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_callDisplacement(JNIEnv* env, jobject thiz, jstring str)
 {
-  callNextDispMarker(env->GetStringUTFChars(str, nullptr));
+	callNextDispMarker(env->GetStringUTFChars(str, nullptr));
 }
 
-extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_buildPath(JNIEnv* env,
-																										  jobject thiz,
-																										  jstring name,
-                                                                                                          int recognition)
+NodeGrid grid;
+
+void setup();
+
+extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_LuaRoadRunner_buildPath(
+	JNIEnv* env, jobject thiz, jstring name, int recognition)
 {
 	FuncStat::setVals(env, thiz);
+
 	Save::makeBuilder.init("makeBuilder", "(DDD)V");
 	Save::lineTo.init("lineTo", "(DD)V");
 	Save::splineTo.init("splineTo", "(DDD)V");
@@ -30,17 +33,17 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	Save::rotate.init("turn", "(D)V");
 	Save::pathErr.init("pathErr", "(Ljava/lang/String;)V");
 
-	NodeGrid grid = NodeGrid();
-  grid.recognitionId = recognition;
-  std::string str = env->GetStringUTFChars(name, NULL);
-  std::string path = getPathName(str);
-  if(path == "")
-  {
-    return;
-  }
+	std::string str = env->GetStringUTFChars(name, nullptr);
+	std::string path = getPathName(str);
+	if (path == "")
+	{
+		return;
+	}
 	int rtn = Save::load(&grid, (FuncStat::storageDir + "/paths/" + path));
-  if(rtn == false){
-	  return;
-  }
+	if (rtn == false)
+	{
+		return;
+	}
+	grid.recognitionId = recognition;
 	Save::exp(&grid);
 }

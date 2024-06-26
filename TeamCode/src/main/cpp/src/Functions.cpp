@@ -3,6 +3,7 @@
 #include <lua/lua.hpp>
 #include <unordered_map>
 #include <string>
+#include "macros/Helpers.hpp"
 #include "Lua.hpp"
 
 void errCheck()

@@ -26,6 +26,7 @@ class Lua(a: LinearOpMode)
 	external fun <T> addObject(thing: T);
 	external fun start(name: String, recognition: Int);
 	external fun stop();
+	external fun update(delatTime: Float, elapsedTime: Float);
 	
 	fun initRR(name: String)
 	{
@@ -58,7 +59,17 @@ class Lua(a: LinearOpMode)
 			r2 = LuaSettings.defultRecognition;
 		}
 		start(name, r2);
-		lrr?.drive?.followTrajectorySequence(trajectory[r2]);
+		lrr?.drive?.followTrajectorySequenceAsync(trajectory[r2]);
+		val elapsedTime = ElapsedTime();
+		var prevTime = 0.0f;
+		while(lrr?.drive?.isBusy!!)
+		{
+			val deltaTime = elapsedTime.seconds() - prevTime;
+			prevTime = elapsedTime.seconds().toFloat();
+			lrr?.drive?.update();
+			update(deltaTime.toFloat(), elapsedTime.seconds().toFloat());
+			
+		}
 	}
 	
 	fun isRR(): Boolean
@@ -105,8 +116,13 @@ class Lua(a: LinearOpMode)
 	{
 		val e = ElapsedTime();
 		e.reset();
-		while(e.time(TimeUnit.SECONDS) < time && opmode.opModeIsActive());
+		while(e.seconds() < time && opmode.opModeIsActive());
 		
+		return !opmode.opModeIsActive();
+	}
+	
+	fun checkRunning(): Boolean
+	{
 		return !opmode.opModeIsActive();
 	}
 	

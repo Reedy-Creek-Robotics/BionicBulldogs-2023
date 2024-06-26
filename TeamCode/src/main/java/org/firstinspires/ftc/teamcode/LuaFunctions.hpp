@@ -29,6 +29,7 @@ call SetJavaObject with the full name of the class using / as a seperator
 FunctionV_S(print, print);
 
 FunctionC_D(delay, delay);
+FunctionC_V(checkRunning, checkRunning);
 FunctionB_V(isActive, isActive);
 NewClass();
 FunctionV_SS(telem, addData);

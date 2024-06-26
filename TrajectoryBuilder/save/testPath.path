@@ -41,9 +41,6 @@
             "layer": 0,
             "other": [
                 {
-                    "time": 2.0
-                },
-                {
                     "text": "grab"
                 }
             ],
@@ -94,9 +91,6 @@
             "layer": 0,
             "other": [
                 {
-                    "time": 2.0
-                },
-                {
                     "text": "drop"
                 }
             ],
@@ -128,9 +122,6 @@
             "heading": -90.0,
             "layer": 3,
             "other": [
-                {
-                    "time": 1.0
-                },
                 {
                     "text": "grab"
                 }

@@ -645,7 +645,7 @@ public class TrajectorySequenceBuilder {
 
                 double segmentLength = thisSegment.getTrajectory().getPath().length();
 
-                if (currentDisplacement + segmentLength > s) {
+                if (currentDisplacement + segmentLength >= s) {
                     double target = s - currentDisplacement;
                     double timeInSegment = motionProfileDisplacementToTime(
                             thisSegment.getTrajectory().getProfile(),

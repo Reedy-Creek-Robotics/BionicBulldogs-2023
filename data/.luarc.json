@@ -1,4 +1,5 @@
 {
   "workspace.library": ["./def.lua"],
-  "diagnostics.disable": ["unused-local", "lowercase-global"]
+  "diagnostics.disable": ["unused-local", "lowercase-global"],
+  "hint.semicolon": "All"
 }

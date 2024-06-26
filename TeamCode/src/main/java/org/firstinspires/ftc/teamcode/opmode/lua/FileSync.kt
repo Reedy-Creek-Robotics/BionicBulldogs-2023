@@ -4,8 +4,6 @@ import android.os.Environment
 import android.util.Log
 import java.io.File
 import java.net.ServerSocket
-import kotlin.io.path.Path
-import kotlin.io.path.fileSize
 
 class FileSync
 {
@@ -14,7 +12,6 @@ class FileSync
 		val storageDir = Environment.getExternalStorageDirectory();
 		val t = Thread {
 			kotlin.run {
-				
 				val server = ServerSocket(6969);
 				Log.d("FServer", "server started");
 				while(true)
@@ -68,10 +65,8 @@ class FileSync
 					{
 						Log.d("FServer", "remove");
 						if(a2 == "/")
-						{
 							socket.getOutputStream()
 								.write("you are not allowed to nuke the external storage directory on the robot\r".toByteArray());
-						}
 						else
 						{
 							File("$storageDir/$a2").walk()
@@ -110,11 +105,8 @@ class FileSync
 						for(s in str)
 						{
 							if(s == '?' && !d)
-							{
 								d = true;
-								continue;
-							}
-							if(s.code == 1)
+							else if(s.code == 1)
 							{
 								val a = path.split('/');
 								var folders = "";
@@ -139,16 +131,11 @@ class FileSync
 								path = "";
 								data = "";
 								d = false;
-								continue;
 							}
-							if(!d)
-							{
+							else if(!d)
 								path += s;
-							}
 							else
-							{
 								data += s;
-							}
 						}
 						socket.getOutputStream().write("done\r".toByteArray());
 					}

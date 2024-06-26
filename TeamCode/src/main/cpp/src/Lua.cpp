@@ -27,13 +27,13 @@ void err(const char* str)
 
 void jniErr(std::string msg)
 {
-  jstring j = FuncStat::env->NewStringUTF(msg.c_str());
-  jniErrorF.callV(j);
+	jstring j = FuncStat::env->NewStringUTF(msg.c_str());
+	jniErrorF.callV(j);
 }
 
 std::string getPathName(const std::string& name)
 {
-	int i = 0;
+	int i = -1;
 	for (auto& [k, v] : opmodes)
 	{
 		if (name == k)
@@ -42,6 +42,8 @@ std::string getPathName(const std::string& name)
 			break;
 		}
 	}
+  if(i == -1)
+    err(("opmodes table doesnt contain opmode " + name).c_str());
 	lua_getglobal(l, "Opmodes");
 	lua_rawgeti(l, -1, i);
 	lua_getfield(l, -1, "path");
@@ -66,7 +68,7 @@ extern "C" JNIEXPORT jobjectArray JNICALL Java_org_firstinspires_ftc_teamcode_mo
 	jniErrorF.init("jniErr", "(Ljava/lang/String;)V");
 
 	JFunc<jstring> getDataDir("getDataDir", "()Ljava/lang/String;");
-
+  
 	jstring dataDirJ = getDataDir.call();
 	const char* dataDirC = env->GetStringUTFChars(dataDirJ, nullptr);
 	std::string dataDir = dataDirC;
@@ -148,10 +150,8 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 			break;
 		}
 	}
-	if (ind == -1)
-	{
-		return;
-	}
+  if(ind == -1)
+    err(("opmodes table doesnt contain opmode " + std::string(c)).c_str());
 
 	lua_rawgeti(l, -1, ind);
 	lua_getfield(l, -1, "start");
@@ -177,11 +177,31 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 	dispMarkerInd = 0;
 }
 
+extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_update(JNIEnv* env, jobject thiz, float deltaTime, float elapsedTime)
+{
+	lua_getfield(l, -2, "update");
+	if (lua_isfunction(l, -1))
+	{
+		lua_pushvalue(l, 1);
+    lua_newtable(l);
+    lua_pushnumber(l, deltaTime);
+    lua_setfield(l, -2, "delta");
+    lua_pushnumber(l, elapsedTime);
+    lua_setfield(l, -2, "elapsed");
+		if (lua_pcall(l, 2, 0, 0))
+		{
+			err(lua_tostring(l, -1));
+			return;
+		}
+	}
+}
+
 extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lua_Lua_stop(JNIEnv* env, jobject thiz)
 {
 	lua_close(l);
 	l = nullptr;
 }
+
 void callNextDispMarker(std::string str)
 {
 	if (str == "")
@@ -217,11 +237,11 @@ extern "C" JNIEXPORT void JNICALL Java_org_firstinspires_ftc_teamcode_modules_lu
 																								jobject thiz,
 																								jobject thing)
 {
+	FuncStat::setVals(env, thiz);
 	if (l != nullptr)
 	{
 		deleteRefs();
 		lua_close(l);
 	}
-	FuncStat::setVals(env, thiz);
 	addObject(thing);
 }
