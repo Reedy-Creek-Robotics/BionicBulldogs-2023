@@ -49,6 +49,7 @@ class Lua(a: LinearOpMode)
 		opmode.telemetry.clearAll();
 		opmode.telemetry.addLine("done");
 		opmode.telemetry.update();
+		lrr?.drive?.poseEstimate = trajectory[0].start();
 	}
 	
 	fun startRR(name: String, recognition: Int = -1)
